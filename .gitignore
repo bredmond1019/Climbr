@@ -1,0 +1,15 @@
+.env
+diesel.toml
+.DS_Store
+backend/target/
+
+
+# Flutter/Dart specific
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/ios/Flutter/.last_build_id
+**/.generated
+**/android/.gradle
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
