@@ -1,4 +1,5 @@
 use crate::schema::users;
+use bcrypt::{hash, DEFAULT_COST};
 use diesel::{
     deserialize::Queryable,
     prelude::Insertable,
@@ -31,13 +32,13 @@ pub struct NewUser {
     pub preferred_gym: Option<String>,
 }
 
-// impl NewUser<'_> {
-//     pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {
-//         let hashed = hash(self.password, DEFAULT_COST)?;
-//         self.password = Box::leak(Box::new(hashed));
-//         Ok(())
-//     }
-// }
+impl NewUser {
+    pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {
+        let hashed = hash(self.password.clone(), DEFAULT_COST)?;
+        self.password = hashed;
+        Ok(())
+    }
+}
 
 impl User {
     pub fn find_all(
@@ -58,23 +59,3 @@ impl User {
         user
     }
 }
-
-// use serde::{Deserialize, Serialize};
-// use diesel::prelude::*;
-// use super::schema::users;
-
-// #[derive(Queryable, Serialize, Deserialize, Debug)]
-// pub struct User {
-
-// }
-
-// #[derive(Insertable, Deserialize)]
-// #[table_name = "users"]
-// pub struct NewUser<'a> {
-//     pub name: &'a str,
-//     pub email: &'a str,
-//     pub password: &'a str,
-//     pub skill_level: i32,
-//     pub preferred_climbing_style: Option<&'a str>,
-//     pub preferred_gym: Option<&'a str>,
-// }

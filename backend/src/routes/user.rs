@@ -24,6 +24,7 @@ async fn get_user(pool: web::Data<DbPool>) -> impl Responder {
 async fn create_user(pool: web::Data<DbPool>, item: web::Json<NewUser>) -> impl Responder {
     let new_user: NewUser = item.into_inner();
     let mut conn: PooledConnection<ConnectionManager<PgConnection>> = pool.get().unwrap();
+
     let created_user: Result<User, diesel::result::Error> =
         web::block(move || User::create(new_user, &mut conn))
             .await
