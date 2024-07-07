@@ -14,6 +14,10 @@ pub struct User {
     pub id: i32,
     pub name: String,
     pub email: String,
+    pub password: String,
+    pub skill_level: i32,
+    pub preferred_climbing_style: Option<String>,
+    pub preferred_gym: Option<String>,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -21,7 +25,19 @@ pub struct User {
 pub struct NewUser {
     pub name: String,
     pub email: String,
+    pub password: String,
+    pub skill_level: i32,
+    pub preferred_climbing_style: Option<String>,
+    pub preferred_gym: Option<String>,
 }
+
+// impl NewUser<'_> {
+//     pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {
+//         let hashed = hash(self.password, DEFAULT_COST)?;
+//         self.password = Box::leak(Box::new(hashed));
+//         Ok(())
+//     }
+// }
 
 impl User {
     pub fn find_all(
@@ -42,3 +58,23 @@ impl User {
         user
     }
 }
+
+// use serde::{Deserialize, Serialize};
+// use diesel::prelude::*;
+// use super::schema::users;
+
+// #[derive(Queryable, Serialize, Deserialize, Debug)]
+// pub struct User {
+
+// }
+
+// #[derive(Insertable, Deserialize)]
+// #[table_name = "users"]
+// pub struct NewUser<'a> {
+//     pub name: &'a str,
+//     pub email: &'a str,
+//     pub password: &'a str,
+//     pub skill_level: i32,
+//     pub preferred_climbing_style: Option<&'a str>,
+//     pub preferred_gym: Option<&'a str>,
+// }
