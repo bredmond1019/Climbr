@@ -6,11 +6,12 @@ use diesel::{
     r2d2::{ConnectionManager, PooledConnection},
     PgConnection, RunQueryDsl,
 };
+use juniper::GraphQLObject;
 use log::info;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Serialize, Debug, Clone)]
-#[diesel(table_name = crate::schema::users)]
+#[derive(Queryable, Serialize, Debug, Clone, GraphQLObject)]
+// #[diesel(table_name = crate::schema::users)]
 pub struct User {
     pub id: i32,
     pub name: String,

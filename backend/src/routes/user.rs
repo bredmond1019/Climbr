@@ -45,11 +45,4 @@ async fn create_user(pool: web::Data<DbPool>, item: web::Json<NewUser>) -> impl 
             HttpResponse::InternalServerError().finish()
         }
     }
-
-    // if let Ok(created_user) = created_user {
-    //     info!("Created user: {:?}", created_user);
-    //     HttpResponse::Ok().json(created_user)
-    // } else {
-    //     HttpResponse::InternalServerError().finish()
-    // }
 }
