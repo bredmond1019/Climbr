@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use actix_web::{web, HttpResponse};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::playground::playground_source;
@@ -22,7 +24,7 @@ pub async fn graphiql() -> HttpResponse {
 
 pub async fn graphql_handler(
     pool: web::Data<DbPool>,
-    schema: web::Data<Schema>,
+    schema: web::Data<Arc<Schema>>,
     data: web::Json<GraphQLRequest>,
 ) -> HttpResponse {
     let ctx = create_context(pool.get_ref().clone());
