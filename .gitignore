@@ -13,3 +13,7 @@ backend/target/
 **/android/app/debug
 **/android/app/profile
 **/android/app/release
+
+client/macos/Flutter/GeneratedPluginRegistrant.swift
+client/windows/flutter/generated_plugin_registrant.cc
+client/windows/flutter/generated_plugins.cmake
