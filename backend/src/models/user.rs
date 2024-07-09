@@ -11,7 +11,7 @@ use log::info;
 use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Serialize, Debug, Clone, GraphQLObject)]
-// #[diesel(table_name = crate::schema::users)]
+#[diesel(table_name = crate::schema::users)]
 pub struct User {
     pub id: i32,
     pub name: String,
