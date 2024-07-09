@@ -1,8 +1,8 @@
 type User {
-  id: ID!
+  id: Int!
   name: String!
   email: String!
-  skillLevel: String!
+  skillLevel: Int!
   preferredClimbingStyle: String!
   preferredGym: String!
 }

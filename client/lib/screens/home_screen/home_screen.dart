@@ -6,13 +6,13 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Climbr'),
-      ),
-      body: const Center(
-        child: Text('Welcome to Climbr!'),
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Climbr'),
+        ),
+        body: const Center(
+          child: Text('Welcome to Climbr!'),
+          // child: UserListScreen()),
+        ));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'services/graphql_service.dart';
@@ -19,7 +20,7 @@ class ClimbrApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const HomeScreen(),
+        home: const UserListScreen(),
       ),
     );
   }
