@@ -1,0 +1,10 @@
+query FetchUsers {
+  users {
+    id
+    name
+    email
+    skillLevel
+    preferredClimbingStyle
+    preferredGym
+  }
+}

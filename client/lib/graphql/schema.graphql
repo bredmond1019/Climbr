@@ -1,0 +1,13 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  skillLevel: String!
+  preferredClimbingStyle: String!
+  preferredGym: String!
+}
+
+type Query {
+  query: Query
+  users: [User]!
+}
