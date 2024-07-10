@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart' as widgets;
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart' as graphql;
 import 'package:graphql_flutter/graphql_flutter.dart' as graphql_flutter;
@@ -15,25 +14,24 @@ class Query$FetchUsers {
     final l$$__typename = json['__typename'];
     return Query$FetchUsers(
       users: (l$users as List<dynamic>)
-          .map((e) => e == null
-              ? null
-              : Query$FetchUsers$users.fromJson((e as Map<String, dynamic>)))
+          .map((e) =>
+              Query$FetchUsers$users.fromJson((e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
     );
   }
 
-  final List<Query$FetchUsers$users?> users;
+  final List<Query$FetchUsers$users> users;
 
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$users = users;
-    _resultData['users'] = l$users.map((e) => e?.toJson()).toList();
+    resultData['users'] = l$users.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -51,7 +49,7 @@ class Query$FetchUsers {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$FetchUsers) || runtimeType != other.runtimeType) {
+    if (other is! Query$FetchUsers || runtimeType != other.runtimeType) {
       return false;
     }
     final l$users = users;
@@ -93,14 +91,13 @@ abstract class CopyWith$Query$FetchUsers<TRes> {
       _CopyWithStubImpl$Query$FetchUsers;
 
   TRes call({
-    List<Query$FetchUsers$users?>? users,
+    List<Query$FetchUsers$users>? users,
     String? $__typename,
   });
   TRes users(
-      Iterable<Query$FetchUsers$users?> Function(
-              Iterable<
-                  CopyWith$Query$FetchUsers$users<Query$FetchUsers$users>?>)
-          _fn);
+      Iterable<Query$FetchUsers$users> Function(
+              Iterable<CopyWith$Query$FetchUsers$users<Query$FetchUsers$users>>)
+          fn);
 }
 
 class _CopyWithImpl$Query$FetchUsers<TRes>
@@ -116,6 +113,7 @@ class _CopyWithImpl$Query$FetchUsers<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? users = _undefined,
     Object? $__typename = _undefined,
@@ -123,39 +121,40 @@ class _CopyWithImpl$Query$FetchUsers<TRes>
       _then(Query$FetchUsers(
         users: users == _undefined || users == null
             ? _instance.users
-            : (users as List<Query$FetchUsers$users?>),
+            : (users as List<Query$FetchUsers$users>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 
+  @override
   TRes users(
-          Iterable<Query$FetchUsers$users?> Function(
+          Iterable<Query$FetchUsers$users> Function(
                   Iterable<
-                      CopyWith$Query$FetchUsers$users<Query$FetchUsers$users>?>)
-              _fn) =>
+                      CopyWith$Query$FetchUsers$users<Query$FetchUsers$users>>)
+              fn) =>
       call(
-          users: _fn(_instance.users.map((e) => e == null
-              ? null
-              : CopyWith$Query$FetchUsers$users(
-                  e,
-                  (i) => i,
-                ))).toList());
+          users: fn(_instance.users.map((e) => CopyWith$Query$FetchUsers$users(
+                e,
+                (i) => i,
+              ))).toList());
 }
 
 class _CopyWithStubImpl$Query$FetchUsers<TRes>
     implements CopyWith$Query$FetchUsers<TRes> {
   _CopyWithStubImpl$Query$FetchUsers(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
-    List<Query$FetchUsers$users?>? users,
+    List<Query$FetchUsers$users>? users,
     String? $__typename,
   }) =>
       _res;
 
-  users(_fn) => _res;
+  @override
+  users(fn) => _res;
 }
 
 const documentNodeQueryFetchUsers = DocumentNode(definitions: [
@@ -241,32 +240,25 @@ typedef OnQueryComplete$Query$FetchUsers = FutureOr<void> Function(
 
 class Options$Query$FetchUsers extends graphql.QueryOptions<Query$FetchUsers> {
   Options$Query$FetchUsers({
-    String? operationName,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.operationName,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Query$FetchUsers? typedOptimisticResult,
-    Duration? pollInterval,
-    graphql.Context? context,
+    super.pollInterval,
+    super.context,
     OnQueryComplete$Query$FetchUsers? onComplete,
-    graphql.OnQueryError? onError,
+    super.onError,
   })  : onCompleteWithParsed = onComplete,
         super(
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          pollInterval: pollInterval,
-          context: context,
           onComplete: onComplete == null
               ? null
               : (data) => onComplete(
                     data,
                     data == null ? null : _parserFn$Query$FetchUsers(data),
                   ),
-          onError: onError,
           document: documentNodeQueryFetchUsers,
           parserFn: _parserFn$Query$FetchUsers,
         );
@@ -285,37 +277,27 @@ class Options$Query$FetchUsers extends graphql.QueryOptions<Query$FetchUsers> {
 class WatchOptions$Query$FetchUsers
     extends graphql.WatchQueryOptions<Query$FetchUsers> {
   WatchOptions$Query$FetchUsers({
-    String? operationName,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.operationName,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Query$FetchUsers? typedOptimisticResult,
-    graphql.Context? context,
-    Duration? pollInterval,
-    bool? eagerlyFetchResults,
-    bool carryForwardDataOnException = true,
-    bool fetchResults = false,
+    super.context,
+    super.pollInterval,
+    super.eagerlyFetchResults,
+    super.carryForwardDataOnException,
+    super.fetchResults,
   }) : super(
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          context: context,
           document: documentNodeQueryFetchUsers,
-          pollInterval: pollInterval,
-          eagerlyFetchResults: eagerlyFetchResults,
-          carryForwardDataOnException: carryForwardDataOnException,
-          fetchResults: fetchResults,
           parserFn: _parserFn$Query$FetchUsers,
         );
 }
 
 class FetchMoreOptions$Query$FetchUsers extends graphql.FetchMoreOptions {
-  FetchMoreOptions$Query$FetchUsers({required graphql.UpdateQuery updateQuery})
+  FetchMoreOptions$Query$FetchUsers({required super.updateQuery})
       : super(
-          updateQuery: updateQuery,
           document: documentNodeQueryFetchUsers,
         );
 }
@@ -323,24 +305,24 @@ class FetchMoreOptions$Query$FetchUsers extends graphql.FetchMoreOptions {
 extension ClientExtension$Query$FetchUsers on graphql.GraphQLClient {
   Future<graphql.QueryResult<Query$FetchUsers>> query$FetchUsers(
           [Options$Query$FetchUsers? options]) async =>
-      await this.query(options ?? Options$Query$FetchUsers());
+      await query(options ?? Options$Query$FetchUsers());
   graphql.ObservableQuery<Query$FetchUsers> watchQuery$FetchUsers(
           [WatchOptions$Query$FetchUsers? options]) =>
-      this.watchQuery(options ?? WatchOptions$Query$FetchUsers());
+      watchQuery(options ?? WatchOptions$Query$FetchUsers());
   void writeQuery$FetchUsers({
     required Query$FetchUsers data,
     bool broadcast = true,
   }) =>
-      this.writeQuery(
-        graphql.Request(
+      writeQuery(
+        const graphql.Request(
             operation:
                 graphql.Operation(document: documentNodeQueryFetchUsers)),
         data: data.toJson(),
         broadcast: broadcast,
       );
   Query$FetchUsers? readQuery$FetchUsers({bool optimistic = true}) {
-    final result = this.readQuery(
-      graphql.Request(
+    final result = readQuery(
+      const graphql.Request(
           operation: graphql.Operation(document: documentNodeQueryFetchUsers)),
       optimistic: optimistic,
     );
@@ -357,13 +339,11 @@ graphql.ObservableQuery<Query$FetchUsers> useWatchQuery$FetchUsers(
 
 class Query$FetchUsers$Widget extends graphql_flutter.Query<Query$FetchUsers> {
   Query$FetchUsers$Widget({
-    widgets.Key? key,
+    super.key,
     Options$Query$FetchUsers? options,
-    required graphql_flutter.QueryBuilder<Query$FetchUsers> builder,
+    required super.builder,
   }) : super(
-          key: key,
           options: options ?? Options$Query$FetchUsers(),
-          builder: builder,
         );
 }
 
@@ -412,22 +392,22 @@ class Query$FetchUsers$users {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$id = id;
-    _resultData['id'] = l$id;
+    resultData['id'] = l$id;
     final l$name = name;
-    _resultData['name'] = l$name;
+    resultData['name'] = l$name;
     final l$email = email;
-    _resultData['email'] = l$email;
+    resultData['email'] = l$email;
     final l$skillLevel = skillLevel;
-    _resultData['skillLevel'] = l$skillLevel;
+    resultData['skillLevel'] = l$skillLevel;
     final l$preferredClimbingStyle = preferredClimbingStyle;
-    _resultData['preferredClimbingStyle'] = l$preferredClimbingStyle;
+    resultData['preferredClimbingStyle'] = l$preferredClimbingStyle;
     final l$preferredGym = preferredGym;
-    _resultData['preferredGym'] = l$preferredGym;
+    resultData['preferredGym'] = l$preferredGym;
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -455,7 +435,7 @@ class Query$FetchUsers$users {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$FetchUsers$users) ||
+    if (other is! Query$FetchUsers$users ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -539,6 +519,7 @@ class _CopyWithImpl$Query$FetchUsers$users<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? id = _undefined,
     Object? name = _undefined,
@@ -576,8 +557,9 @@ class _CopyWithStubImpl$Query$FetchUsers$users<TRes>
     implements CopyWith$Query$FetchUsers$users<TRes> {
   _CopyWithStubImpl$Query$FetchUsers$users(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     int? id,
     String? name,

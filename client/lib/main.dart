@@ -1,8 +1,11 @@
+import 'package:client/screens/add_user_screen/add_user_screen.dart';
+import 'package:client/screens/home_screen/home_screen.dart';
 import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'services/graphql_service.dart';
-import 'screens/home_screen/home_screen.dart';
 
 void main() {
   runApp(const ClimbrApp());
@@ -18,9 +21,19 @@ class ClimbrApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Climbr',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xFF2E7D32), // Forest Green
+          highlightColor: const Color(0xFFFFA000), // Amber
+          textTheme: GoogleFonts.openSansTextTheme(
+            Theme.of(context).textTheme,
+          ),
         ),
-        home: const UserListScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/user_list': (context) => const UserListScreen(),
+          '/add_user': (context) => const AddUserScreen(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

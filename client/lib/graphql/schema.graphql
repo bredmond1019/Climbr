@@ -9,5 +9,5 @@ type User {
 
 type Query {
   query: Query
-  users: [User]!
+  users: [User!]!
 }

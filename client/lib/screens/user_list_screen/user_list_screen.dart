@@ -46,21 +46,51 @@ class UserListScreen extends HookWidget {
       );
     }
 
-    List<Query$FetchUsers$users?> users = result.parserFn(data).users;
+    List<Query$FetchUsers$users> users = result.parserFn(data).users;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Users'),
+        title: Text('Users',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.8,
+                )),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView.builder(
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          return ListTile(
-            title: Text(user?.name ?? ''),
-            subtitle: Text(user?.email ?? ''),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(user.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(user.email,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text('Skill Level: ${user.skillLevel}'),
+                    Text('Climbing Style: ${user.preferredClimbingStyle}'),
+                    Text('Gym: ${user.preferredGym}'),
+                  ],
+                ),
+              ),
+            ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_user');
+        },
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

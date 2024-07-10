@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   graphql_flutter: ^5.2.0-beta.6
   provider: ^6.0.0
+  google_fonts: ^6.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,6 +40,7 @@ dependencies:
   graphql: ^5.2.0-beta.7
   flutter_hooks: ^0.20.5
 
+  gql: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -78,6 +80,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  # fonts:
+  #   - family: Roboto
+  #     fonts:
+  #       - asset: fonts/Roboto-Regular.ttf
+  #       - asset: fonts/Roboto-Bold.ttf
+  #         weight: 700
   # fonts:
   #   - family: Schyler
   #     fonts:
