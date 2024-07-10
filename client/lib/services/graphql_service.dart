@@ -3,7 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GraphQLService {
   static final HttpLink httpLink = HttpLink(
-    'http://localhost:8080/graphql',
+    'http://localhost:3000/graphql',
   );
 
   // static final AuthLink authLink = AuthLink(

@@ -4,7 +4,8 @@ class User {
   final String email;
   final String password;
   final String skillLevel;
-  final String gym;
+  final String preferredClimmbingStyle;
+  final String preferredGym;
 
   User(
       {required this.id,
@@ -12,5 +13,6 @@ class User {
       required this.email,
       required this.password,
       required this.skillLevel,
-      required this.gym});
+      required this.preferredClimmbingStyle,
+      required this.preferredGym});
 }

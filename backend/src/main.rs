@@ -41,7 +41,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
             .configure(routes::init_routes)
     })
-    .bind("0.0.0.0:8080")?
+    .bind("0.0.0.0:3000")?
     .run()
     .await
 }
