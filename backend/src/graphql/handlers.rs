@@ -33,16 +33,11 @@ pub async fn graphql_handler(
 ) -> HttpResponse {
     let mut ctx = create_context(pool.get_ref().clone());
 
-    let is_login_mutation = data
-        .operation_name()
-        .map(|name| name == "Login")
-        .unwrap_or(false);
-
-    if !is_login_mutation {
-        if let Err(e) = authenticate(&req, &mut ctx) {
-            return e.into();
-        }
-    }
+    // if !is_login_mutation {
+    //     if let Err(e) = authenticate(&req, &mut ctx) {
+    //         return e.into();
+    //     }
+    // }
 
     let res = data.execute(&schema, &ctx).await;
     HttpResponse::Ok().json(res)

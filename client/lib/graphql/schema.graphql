@@ -17,6 +17,16 @@ input NewUserInput {
   preferredGym: String!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  user: User!
+  token: String!
+}
+
 type Query {
   query: Query
   users: [User!]!
@@ -24,5 +34,6 @@ type Query {
 
 type Mutation {
   mutation: Mutation
+  login(params: LoginInput!): LoginResponse!
   createUser(params: NewUserInput!): User!
 }

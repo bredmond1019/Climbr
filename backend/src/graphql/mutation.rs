@@ -28,6 +28,12 @@ struct LoginInput {
     password: String,
 }
 
+#[derive(juniper::GraphQLObject)]
+struct LoginResponse {
+    user: User,
+    token: String,
+}
+
 #[graphql_object(context = Context)]
 impl Mutation {
     fn create_user(context: &Context, params: NewUserInput) -> FieldResult<User> {
@@ -46,7 +52,7 @@ impl Mutation {
         let user = User::create(new_user, &mut conn)?;
         Ok(user)
     }
-    fn login(context: &Context, params: LoginInput) -> FieldResult<String> {
+    fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
         use crate::schema::users::dsl::*;
         let mut connection = context.pool.get()?;
         let user = users
@@ -57,7 +63,7 @@ impl Mutation {
             Ok(user) => {
                 if user.verify_password(&params.password)? {
                     let token = create_jwt(&user.email)?;
-                    Ok(token)
+                    Ok(LoginResponse { user, token })
                 } else {
                     Err(FieldError::new(
                         "Invalid password",
