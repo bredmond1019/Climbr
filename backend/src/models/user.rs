@@ -1,5 +1,5 @@
 use crate::schema::users;
-use bcrypt::{hash, DEFAULT_COST};
+use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::{
     deserialize::Queryable,
     prelude::Insertable,
@@ -58,5 +58,9 @@ impl User {
             .values(&new_user)
             .get_result(conn);
         user
+    }
+
+    pub fn verify_password(&self, password: &str) -> Result<bool, bcrypt::BcryptError> {
+        verify(password, &self.password)
     }
 }

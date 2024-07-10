@@ -1,12 +1,15 @@
 use std::sync::Arc;
 
-use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpRequest, HttpResponse};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::playground::playground_source;
 use juniper::http::GraphQLRequest;
+use log::info;
+
+use crate::auth::authenticate;
+use crate::graphql::schema::Schema;
 
 use crate::db::DbPool;
-use crate::graphql::schema::Schema;
 
 use super::schema::create_context;
 
@@ -25,9 +28,22 @@ pub async fn graphiql() -> HttpResponse {
 pub async fn graphql_handler(
     pool: web::Data<DbPool>,
     schema: web::Data<Arc<Schema>>,
+    req: HttpRequest,
     data: web::Json<GraphQLRequest>,
 ) -> HttpResponse {
-    let ctx = create_context(pool.get_ref().clone());
+    let mut ctx = create_context(pool.get_ref().clone());
+
+    let is_login_mutation = data
+        .operation_name()
+        .map(|name| name == "Login")
+        .unwrap_or(false);
+
+    if !is_login_mutation {
+        if let Err(e) = authenticate(&req, &mut ctx) {
+            return e.into();
+        }
+    }
+
     let res = data.execute(&schema, &ctx).await;
     HttpResponse::Ok().json(res)
 }

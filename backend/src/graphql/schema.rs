@@ -10,12 +10,16 @@ pub fn create_schema() -> Schema {
 }
 
 pub fn create_context(pool: db::DbPool) -> Context {
-    Context { pool }
+    Context {
+        pool,
+        user_id: None,
+    }
 }
 
 #[derive(Clone)]
 pub struct Context {
     pub pool: db::DbPool,
+    pub user_id: Option<String>,
 }
 
 impl juniper::Context for Context {}

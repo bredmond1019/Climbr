@@ -9,6 +9,7 @@ use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::create_schema;
 
+mod auth;
 mod config;
 mod db;
 mod graphql;
