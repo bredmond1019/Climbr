@@ -11,13 +11,12 @@ class AddUserScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use useState to manage the state of each field
-    final email = useState('');
-    final name = useState('');
-    final password = useState('');
-    final preferredClimbingStyle = useState('');
-    final preferredGym = useState('');
-    final skillLevel = useState(0);
+    final emailController = useTextEditingController();
+    final nameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final preferredClimbingStyleController = useTextEditingController();
+    final preferredGymController = useTextEditingController();
+    final skillLevelController = useTextEditingController();
 
     final mutation = useMutation$CreateUser();
 
@@ -26,12 +25,12 @@ class AddUserScreen extends HookWidget {
         _formKey.currentState!.save();
         mutation.runMutation(Variables$Mutation$CreateUser(
             params: Input$NewUserInput(
-          email: email.value,
-          name: name.value,
-          password: password.value,
-          preferredClimbingStyle: preferredClimbingStyle.value,
-          preferredGym: preferredGym.value,
-          skillLevel: skillLevel.value,
+          email: emailController.text,
+          name: nameController.text,
+          password: passwordController.text,
+          preferredClimbingStyle: preferredClimbingStyleController.text,
+          preferredGym: preferredGymController.text,
+          skillLevel: int.tryParse(skillLevelController.text) ?? 0,
         )));
       }
     }
@@ -47,6 +46,7 @@ class AddUserScreen extends HookWidget {
           child: Column(
             children: [
               TextFormField(
+                controller: emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -54,11 +54,9 @@ class AddUserScreen extends HookWidget {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  email.value = value!;
-                },
               ),
               TextFormField(
+                controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -66,11 +64,9 @@ class AddUserScreen extends HookWidget {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  name.value = value!;
-                },
               ),
               TextFormField(
+                controller: passwordController,
                 decoration: const InputDecoration(labelText: 'Password'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -78,11 +74,9 @@ class AddUserScreen extends HookWidget {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  password.value = value!;
-                },
               ),
               TextFormField(
+                controller: skillLevelController,
                 decoration: const InputDecoration(labelText: 'Skill Level'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -90,11 +84,9 @@ class AddUserScreen extends HookWidget {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  skillLevel.value = int.tryParse(value!) ?? 0;
-                },
               ),
               TextFormField(
+                controller: preferredClimbingStyleController,
                 decoration: const InputDecoration(
                     labelText: 'Preferred Style of Climbing'),
                 validator: (value) {
@@ -103,20 +95,15 @@ class AddUserScreen extends HookWidget {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  preferredClimbingStyle.value = value!;
-                },
               ),
               TextFormField(
+                controller: preferredGymController,
                 decoration: const InputDecoration(labelText: 'Preferred Gym'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a preferred gym';
                   }
                   return null;
-                },
-                onSaved: (value) {
-                  preferredGym.value = value!;
                 },
               ),
               const SizedBox(height: 20),

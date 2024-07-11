@@ -11,6 +11,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends HookWidget {
   const LoginPage({super.key});
 
+  void _loginUser(BuildContext context, CurrentUser user) {
+    Provider.of<CurrentUserProvider>(context, listen: false).setUser(user);
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  void _loginError(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Invalid email or password'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final emailController = useTextEditingController();
@@ -41,16 +54,15 @@ class LoginPage extends HookWidget {
         await prefs.setString('token', token);
         await prefs.setString('user', jsonEncode(user));
 
-        Provider.of<CurrentUserProvider>(context, listen: false)
-            .setUser(CurrentUser.fromJson(user));
-        print(CurrentUser.fromJson(user));
-
-        print('Login successful');
-
-        // Navigate to the Home Page
-        Navigator.pushReplacementNamed(context, '/home');
+        // Useing addPostFrameCallback to ensure that the user is logged in before navigating to the home screen
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _loginUser(context, CurrentUser.fromJson(user));
+        });
       } else {
-        print('Login failed');
+        // Useing addPostFrameCallback to ensure that the error message is displayed after the login button is pressed
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _loginError(context);
+        });
       }
     }
 
