@@ -1,14 +1,13 @@
+import 'package:client/providers/current_user_provider.dart';
 import 'package:client/screens/add_user_screen/add_user_screen.dart';
 import 'package:client/screens/home_screen/home_screen.dart';
 import 'package:client/screens/login_page.dart';
-import 'package:client/screens/login_screen/login_screen.dart';
 import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:provider/provider.dart';
 import 'services/graphql_service.dart';
-
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 
@@ -52,26 +51,28 @@ class ClimbrApp extends StatelessWidget {
           );
         }
 
-        return GraphQLProvider(
-          client: snapshot.data!,
-          child: MaterialApp(
-            title: 'Climbr',
-            theme: ThemeData(
-              primaryColor: const Color(0xFF2E7D32), // Forest Green
-              highlightColor: const Color(0xFFFFA000), // Amber
-              textTheme: GoogleFonts.openSansTextTheme(
-                Theme.of(context).textTheme,
+        return ChangeNotifierProvider(
+          create: (context) => CurrentUserProvider(),
+          child: GraphQLProvider(
+            client: snapshot.data!,
+            child: MaterialApp(
+              title: 'Climbr',
+              theme: ThemeData(
+                primaryColor: const Color(0xFF2E7D32), // Forest Green
+                highlightColor: const Color(0xFFFFA000), // Amber
+                textTheme: GoogleFonts.openSansTextTheme(
+                  Theme.of(context).textTheme,
+                ),
               ),
+              initialRoute: '/',
+              routes: {
+                '/': (context) => const LoginPage(),
+                '/home': (context) => const HomeScreen(),
+                '/user_list': (context) => const UserListScreen(),
+                '/add_user': (context) => AddUserScreen(),
+              },
+              debugShowCheckedModeBanner: false,
             ),
-            initialRoute: '/login',
-            routes: {
-              // '/login': (context) => LoginScreen(),
-              '/login': (context) => LoginPage(),
-              '/': (context) => const HomeScreen(),
-              '/user_list': (context) => const UserListScreen(),
-              '/add_user': (context) => AddUserScreen(),
-            },
-            debugShowCheckedModeBanner: false,
           ),
         );
       },

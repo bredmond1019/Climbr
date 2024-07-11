@@ -1,10 +1,15 @@
+import 'package:client/providers/current_user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<CurrentUserProvider>(context);
+    final user = userProvider.user;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -23,6 +28,24 @@ class HomeScreen extends StatelessWidget {
               padding: EdgeInsets.all(16.0),
               child: Text('Welcome to Climbr!'),
             ),
+            Center(
+                child: user != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Welcome back, ${user.name}!'),
+                              const SizedBox(height: 10),
+                              Text('Name: ${user.name}'),
+                              Text('Email: ${user.email}'),
+                              Text('Password: ${user.password}'),
+                              Text('Skill Level: ${user.skillLevel}'),
+                              Text(
+                                  'Preferred Climbing Style: ${user.preferredClimmbingStyle}'),
+                              Text('Preferred Gym: ${user.preferredGym}'),
+                            ]))
+                    : const Text('Welcome!')),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
