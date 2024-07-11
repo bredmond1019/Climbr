@@ -43,7 +43,7 @@ class Variables$Mutation$Login {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Variables$Mutation$Login) ||
+    if (other is! Variables$Mutation$Login ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -87,6 +87,7 @@ class _CopyWithImpl$Variables$Mutation$Login<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({Object? params = _undefined}) => _then(Variables$Mutation$Login._({
         ..._instance._$data,
         if (params != _undefined && params != null)
@@ -98,8 +99,9 @@ class _CopyWithStubImpl$Variables$Mutation$Login<TRes>
     implements CopyWith$Variables$Mutation$Login<TRes> {
   _CopyWithStubImpl$Variables$Mutation$Login(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({Input$LoginInput? params}) => _res;
 }
 
@@ -123,12 +125,12 @@ class Mutation$Login {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$login = login;
-    _resultData['login'] = l$login.toJson();
+    resultData['login'] = l$login.toJson();
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -146,7 +148,7 @@ class Mutation$Login {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Mutation$Login) || runtimeType != other.runtimeType) {
+    if (other is! Mutation$Login || runtimeType != other.runtimeType) {
       return false;
     }
     final l$login = login;
@@ -200,6 +202,7 @@ class _CopyWithImpl$Mutation$Login<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? login = _undefined,
     Object? $__typename = _undefined,
@@ -213,6 +216,7 @@ class _CopyWithImpl$Mutation$Login<TRes>
             : ($__typename as String),
       ));
 
+  @override
   CopyWith$Mutation$Login$login<TRes> get login {
     final local$login = _instance.login;
     return CopyWith$Mutation$Login$login(local$login, (e) => call(login: e));
@@ -223,14 +227,16 @@ class _CopyWithStubImpl$Mutation$Login<TRes>
     implements CopyWith$Mutation$Login<TRes> {
   _CopyWithStubImpl$Mutation$Login(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     Mutation$Login$login? login,
     String? $__typename,
   }) =>
       _res;
 
+  @override
   CopyWith$Mutation$Login$login<TRes> get login =>
       CopyWith$Mutation$Login$login.stub(_res);
 }
@@ -355,34 +361,27 @@ typedef OnMutationCompleted$Mutation$Login = FutureOr<void> Function(
 
 class Options$Mutation$Login extends graphql.MutationOptions<Mutation$Login> {
   Options$Mutation$Login({
-    String? operationName,
+    super.operationName,
     required Variables$Mutation$Login variables,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$Login? typedOptimisticResult,
-    graphql.Context? context,
+    super.context,
     OnMutationCompleted$Mutation$Login? onCompleted,
-    graphql.OnMutationUpdate<Mutation$Login>? update,
-    graphql.OnError? onError,
+    super.update,
+    super.onError,
   })  : onCompletedWithParsed = onCompleted,
         super(
           variables: variables.toJson(),
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          context: context,
           onCompleted: onCompleted == null
               ? null
               : (data) => onCompleted(
                     data,
                     data == null ? null : _parserFn$Mutation$Login(data),
                   ),
-          update: update,
-          onError: onError,
           document: documentNodeMutationLogin,
           parserFn: _parserFn$Mutation$Login,
         );
@@ -401,31 +400,22 @@ class Options$Mutation$Login extends graphql.MutationOptions<Mutation$Login> {
 class WatchOptions$Mutation$Login
     extends graphql.WatchQueryOptions<Mutation$Login> {
   WatchOptions$Mutation$Login({
-    String? operationName,
+    super.operationName,
     required Variables$Mutation$Login variables,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$Login? typedOptimisticResult,
-    graphql.Context? context,
-    Duration? pollInterval,
-    bool? eagerlyFetchResults,
-    bool carryForwardDataOnException = true,
-    bool fetchResults = false,
+    super.context,
+    super.pollInterval,
+    super.eagerlyFetchResults,
+    super.carryForwardDataOnException,
+    super.fetchResults,
   }) : super(
           variables: variables.toJson(),
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          context: context,
           document: documentNodeMutationLogin,
-          pollInterval: pollInterval,
-          eagerlyFetchResults: eagerlyFetchResults,
-          carryForwardDataOnException: carryForwardDataOnException,
-          fetchResults: fetchResults,
           parserFn: _parserFn$Mutation$Login,
         );
 }
@@ -433,10 +423,10 @@ class WatchOptions$Mutation$Login
 extension ClientExtension$Mutation$Login on graphql.GraphQLClient {
   Future<graphql.QueryResult<Mutation$Login>> mutate$Login(
           Options$Mutation$Login options) async =>
-      await this.mutate(options);
+      await mutate(options);
   graphql.ObservableQuery<Mutation$Login> watchMutation$Login(
           WatchOptions$Mutation$Login options) =>
-      this.watchMutation(options);
+      watchMutation(options);
 }
 
 class Mutation$Login$HookResult {
@@ -471,32 +461,25 @@ graphql.ObservableQuery<Mutation$Login> useWatchMutation$Login(
 class WidgetOptions$Mutation$Login
     extends graphql.MutationOptions<Mutation$Login> {
   WidgetOptions$Mutation$Login({
-    String? operationName,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.operationName,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$Login? typedOptimisticResult,
-    graphql.Context? context,
+    super.context,
     OnMutationCompleted$Mutation$Login? onCompleted,
-    graphql.OnMutationUpdate<Mutation$Login>? update,
-    graphql.OnError? onError,
+    super.update,
+    super.onError,
   })  : onCompletedWithParsed = onCompleted,
         super(
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          context: context,
           onCompleted: onCompleted == null
               ? null
               : (data) => onCompleted(
                     data,
                     data == null ? null : _parserFn$Mutation$Login(data),
                   ),
-          update: update,
-          onError: onError,
           document: documentNodeMutationLogin,
           parserFn: _parserFn$Mutation$Login,
         );
@@ -525,11 +508,10 @@ typedef Builder$Mutation$Login = widgets.Widget Function(
 
 class Mutation$Login$Widget extends graphql_flutter.Mutation<Mutation$Login> {
   Mutation$Login$Widget({
-    widgets.Key? key,
+    super.key,
     WidgetOptions$Mutation$Login? options,
     required Builder$Mutation$Login builder,
   }) : super(
-          key: key,
           options: options ?? WidgetOptions$Mutation$Login(),
           builder: (
             run,
@@ -577,14 +559,14 @@ class Mutation$Login$login {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$user = user;
-    _resultData['user'] = l$user.toJson();
+    resultData['user'] = l$user.toJson();
     final l$token = token;
-    _resultData['token'] = l$token;
+    resultData['token'] = l$token;
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -604,7 +586,7 @@ class Mutation$Login$login {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Mutation$Login$login) || runtimeType != other.runtimeType) {
+    if (other is! Mutation$Login$login || runtimeType != other.runtimeType) {
       return false;
     }
     final l$user = user;
@@ -664,6 +646,7 @@ class _CopyWithImpl$Mutation$Login$login<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? user = _undefined,
     Object? token = _undefined,
@@ -681,6 +664,7 @@ class _CopyWithImpl$Mutation$Login$login<TRes>
             : ($__typename as String),
       ));
 
+  @override
   CopyWith$Mutation$Login$login$user<TRes> get user {
     final local$user = _instance.user;
     return CopyWith$Mutation$Login$login$user(local$user, (e) => call(user: e));
@@ -691,8 +675,9 @@ class _CopyWithStubImpl$Mutation$Login$login<TRes>
     implements CopyWith$Mutation$Login$login<TRes> {
   _CopyWithStubImpl$Mutation$Login$login(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     Mutation$Login$login$user? user,
     String? token,
@@ -700,6 +685,7 @@ class _CopyWithStubImpl$Mutation$Login$login<TRes>
   }) =>
       _res;
 
+  @override
   CopyWith$Mutation$Login$login$user<TRes> get user =>
       CopyWith$Mutation$Login$login$user.stub(_res);
 }
@@ -749,22 +735,22 @@ class Mutation$Login$login$user {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$id = id;
-    _resultData['id'] = l$id;
+    resultData['id'] = l$id;
     final l$name = name;
-    _resultData['name'] = l$name;
+    resultData['name'] = l$name;
     final l$email = email;
-    _resultData['email'] = l$email;
+    resultData['email'] = l$email;
     final l$skillLevel = skillLevel;
-    _resultData['skillLevel'] = l$skillLevel;
+    resultData['skillLevel'] = l$skillLevel;
     final l$preferredClimbingStyle = preferredClimbingStyle;
-    _resultData['preferredClimbingStyle'] = l$preferredClimbingStyle;
+    resultData['preferredClimbingStyle'] = l$preferredClimbingStyle;
     final l$preferredGym = preferredGym;
-    _resultData['preferredGym'] = l$preferredGym;
+    resultData['preferredGym'] = l$preferredGym;
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -792,7 +778,7 @@ class Mutation$Login$login$user {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Mutation$Login$login$user) ||
+    if (other is! Mutation$Login$login$user ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -877,6 +863,7 @@ class _CopyWithImpl$Mutation$Login$login$user<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? id = _undefined,
     Object? name = _undefined,
@@ -914,8 +901,9 @@ class _CopyWithStubImpl$Mutation$Login$login$user<TRes>
     implements CopyWith$Mutation$Login$login$user<TRes> {
   _CopyWithStubImpl$Mutation$Login$login$user(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     int? id,
     String? name,

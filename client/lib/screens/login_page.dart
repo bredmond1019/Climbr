@@ -34,15 +34,16 @@ class LoginPage extends HookWidget {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
         final String token = responseBody['token'];
-        final user = responseBody['user'];
+        final Map<String, dynamic> user = responseBody['user'];
 
         // Store token and user information using shared_preferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         await prefs.setString('user', jsonEncode(user));
 
-        Provider.of<CurrentUserProvider>(context, listen: false).setUser(user);
-        print(user);
+        Provider.of<CurrentUserProvider>(context, listen: false)
+            .setUser(CurrentUser.fromJson(user));
+        print(CurrentUser.fromJson(user));
 
         print('Login successful');
 
