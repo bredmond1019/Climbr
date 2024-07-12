@@ -16,6 +16,7 @@ mod graphql;
 mod models;
 mod routes;
 mod schema;
+mod ws;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

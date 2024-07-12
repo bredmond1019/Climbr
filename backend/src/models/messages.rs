@@ -26,11 +26,18 @@ pub struct Message {
 #[derive(Debug, Deserialize, Insertable)]
 #[diesel(table_name = messages)]
 pub struct NewMessage {
-    pub content: String,
+    content: String,
+    sender_id: i32,
+    receiver_id: Option<i32>,
+    channel_id: Option<i32>,
+    timestamp: NaiveDateTime,
+}
+
+#[derive(Deserialize)]
+pub struct ClientMessage {
     pub sender_id: i32,
-    pub receiver_id: Option<i32>,
-    pub channel_id: Option<i32>,
-    pub timestamp: NaiveDateTime,
+    pub receiver_id: i32,
+    pub content: String,
 }
 
 impl NewMessage {
