@@ -28,8 +28,11 @@ class LoginPage extends HookWidget {
   Widget build(BuildContext context) {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final isLoading = useState(false);
 
     Future<void> login() async {
+      isLoading.value = true;
+
       final String email = emailController.text;
       final String password = passwordController.text;
 
@@ -43,6 +46,8 @@ class LoginPage extends HookWidget {
           'password': password,
         }),
       );
+
+      isLoading.value = false;
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -70,27 +75,29 @@ class LoginPage extends HookWidget {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+      body: isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  TextFormField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: login,
+                    child: const Text('Login'),
+                  ),
+                ],
+              ),
             ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: login,
-              child: const Text('Login'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
