@@ -1,10 +1,11 @@
+use actix::Message;
 use chrono::NaiveDateTime;
 use diesel::{deserialize::Queryable, prelude::*, PgConnection, RunQueryDsl};
 
 use juniper::GraphQLObject;
 use serde::{Deserialize, Serialize};
 
-use crate::schema::messages;
+use crate::{chat::chat_server::ReceiverId, schema::messages};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum MessageTarget {
@@ -14,54 +15,51 @@ pub enum MessageTarget {
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Clone, GraphQLObject)]
 #[diesel(table_name = crate::schema::messages)]
-pub struct Message {
+pub struct ChatMessage {
     pub id: i32,
+    pub conversation_id: i32,
     pub sender_id: i32,
-    pub receiver_id: Option<i32>,
-    pub channel_id: Option<i32>,
     pub content: String,
-    pub timestamp: NaiveDateTime,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Debug, Deserialize, Insertable)]
 #[diesel(table_name = messages)]
 pub struct NewMessage {
-    content: String,
-    sender_id: i32,
-    receiver_id: Option<i32>,
-    channel_id: Option<i32>,
-    timestamp: NaiveDateTime,
+    pub conversation_id: i32,
+    pub sender_id: i32,
+    pub content: String,
+    created_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize, Message, Clone, Debug)]
+#[rtype(result = "()")]
 pub struct ClientMessage {
     pub sender_id: i32,
-    pub receiver_id: i32,
+    pub receiver_id: ReceiverId,
     pub content: String,
+    pub conversation_id: i32,
 }
 
 impl NewMessage {
-    pub fn new(content: String, sender_id: i32, target: MessageTarget) -> Self {
-        let (receiver_id, channel_id) = match target {
-            MessageTarget::User(id) => (Some(id), None),
-            MessageTarget::Channel(id) => (None, Some(id)),
-        };
-
+    pub fn new(content: String, sender_id: i32, conversation_id: i32) -> Self {
         NewMessage {
-            content,
+            conversation_id,
             sender_id,
-            receiver_id,
-            channel_id,
-            timestamp: chrono::Local::now().naive_local(),
+            content,
+            created_at: chrono::Utc::now().naive_utc(),
+            updated_at: chrono::Utc::now().naive_utc(),
         }
     }
 }
 
-impl Message {
+impl ChatMessage {
     pub fn create(
         new_message: NewMessage,
         conn: &mut PgConnection,
-    ) -> Result<Message, diesel::result::Error> {
+    ) -> Result<ChatMessage, diesel::result::Error> {
         let message = diesel::insert_into(messages::table)
             .values(&new_message)
             .get_result(conn);

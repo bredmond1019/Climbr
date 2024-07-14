@@ -1,17 +1,15 @@
+use actix::Addr;
 use actix_web::{web, HttpRequest, Responder};
 use actix_web_actors::ws;
-use uuid::Uuid;
 
-use crate::{db::DbPool, ws::WsChatSession};
+use crate::chat::{chat_server::ChatServer, chat_session::ChatSession};
 
-pub async fn ws_index(
+pub async fn chat_route(
     req: HttpRequest,
     stream: web::Payload,
-    db_pool: web::Data<DbPool>,
+    server: web::Data<Addr<ChatServer>>,
 ) -> impl Responder {
-    let session = WsChatSession {
-        id: Uuid::new_v4(),
-        db_pool,
-    };
+    let chat_server_address = server.get_ref().clone();
+    let session = ChatSession::new(chat_server_address);
     ws::start(session, &req, stream)
 }

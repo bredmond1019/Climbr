@@ -1,5 +1,5 @@
 use crate::db::DbPool;
-use crate::models::messages::{ClientMessage, MessageTarget, NewMessage};
+use crate::models::message::{ClientMessage, MessageTarget, NewMessage};
 use crate::schema::messages::dsl::*;
 use actix::prelude::*;
 use actix_web::web;
@@ -45,7 +45,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                     NewMessage::new(message.to_string(), s_id, MessageTarget::User(r_id));
 
                 let mut conn = self.db_pool.get().expect("Failed to get DB connection");
-                diesel::insert_into(messages)
+                diesel::insert_into(messages::table)
                     .values(&new_message)
                     .execute(&mut conn)
                     .expect("Failed to insert message");
