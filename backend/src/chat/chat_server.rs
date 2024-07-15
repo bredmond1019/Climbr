@@ -11,7 +11,7 @@ use super::chat_session::{ChatServerConnect, ChatServerDisconnect, ChatSession};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub struct ReceiverId(i32);
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct SessionId(pub Uuid);
 
 pub struct ChatServer {

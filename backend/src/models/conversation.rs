@@ -2,6 +2,7 @@ use diesel::{
     associations::Identifiable, deserialize::Queryable, dsl::count, prelude::Insertable,
     BelongingToDsl, ExpressionMethods, JoinOnDsl, PgConnection, QueryDsl, RunQueryDsl, Selectable,
 };
+use log::info;
 use serde::{Deserialize, Serialize};
 
 use crate::schema::{
@@ -59,15 +60,30 @@ impl Conversation {
             .inner_join(conversations::table.on(conversation_id.eq(conversation_id)))
             .filter(user_id.eq(user2_id))
             .select(conversation_id)
-            .first::<i32>(conn)?;
+            .first::<i32>(conn);
 
-        let conversation = conversations::table
-            .filter(conversations::columns::id.eq(existing_conversation_id))
-            .first::<Conversation>(conn);
+        match existing_conversation_id {
+            Ok(existing_conversation_id) => {
+                info!("Existing conversation id: {:?}", existing_conversation_id);
 
-        match conversation {
-            Ok(conversation) => Ok(Some(conversation)),
-            Err(e) => Err(e),
+                let conversation = conversations::table
+                    .filter(conversations::columns::id.eq(existing_conversation_id))
+                    .first::<Conversation>(conn);
+
+                info!("Existing conversation: {:?}", conversation);
+
+                match conversation {
+                    Ok(conversation) => Ok(Some(conversation)),
+                    Err(_) => {
+                        info!("No existing conversation found");
+                        Ok(None)
+                    }
+                }
+            }
+            Err(_) => {
+                info!("No existing conversation found");
+                Ok(None)
+            }
         }
     }
 
@@ -75,11 +91,13 @@ impl Conversation {
         conn: &mut PgConnection,
         user_ids: Vec<i32>,
     ) -> Result<Conversation, diesel::result::Error> {
+        info!("Finding or creating conversation");
         let user1_id = user_ids[0];
         let user2_id = user_ids[1];
         match Conversation::find_existing_conversation(conn, user1_id, user2_id) {
             Ok(Some(conversation)) => Ok(conversation),
             Ok(None) => {
+                info!("Creating new conversation");
                 let new_conversation = NewConversation::new(None);
                 let conversation = diesel::insert_into(conversations::table)
                     .values(&new_conversation)
@@ -89,7 +107,10 @@ impl Conversation {
 
                 Ok(conversation)
             }
-            Err(e) => Err(e),
+            Err(e) => {
+                info!("Error finding or creating conversation: {:?}", e);
+                Err(e)
+            }
         }
     }
 }

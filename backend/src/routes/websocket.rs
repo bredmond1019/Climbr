@@ -14,15 +14,18 @@ pub async fn chat_route(
     stream: web::Payload,
     server: web::Data<Addr<ChatServer>>,
     pool: web::Data<DbPool>,
+    // query: web::Query<InitialMessage>,
 ) -> impl Responder {
-    let query = req.query_string();
-    info!("Query: {}", query);
+    let query_string = req.query_string();
+    info!("Query: {}", query_string);
 
-    let initial_message: Result<InitialMessage, _> = serde_qs::from_str(query);
+    // let query_params: Vec<i32> = query.user_ids;
+    // info!("Query params: {:?}", &query.user_ids);
+
+    let initial_message: Result<InitialMessage, _> = serde_qs::from_str(query_string);
     match initial_message {
         Ok(initial_msg) => {
-            let user_ids = initial_msg.user_ids;
-            info!("User IDs: {:?}", user_ids);
+            let user_ids = vec![initial_msg.sender_id, initial_msg.receiver_id];
 
             let mut conn = pool.get().expect("Failed to get DB connection");
             let conversation = Conversation::find_or_create_conversation(&mut conn, user_ids)

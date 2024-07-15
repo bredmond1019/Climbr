@@ -36,7 +36,8 @@ pub struct ChatServerDisconnect {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct InitialMessage {
-    pub user_ids: Vec<i32>,
+    pub sender_id: i32,
+    pub receiver_id: i32,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -84,7 +85,12 @@ impl Actor for ChatSession {
             members: self.members.clone(),
         });
 
-        ctx.text("Initiated Chat Session");
+        let response = serde_json::json!({
+            "type": "chat_session_started",
+            "chat_session_id": self.id,
+        });
+
+        ctx.text(response.to_string());
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
