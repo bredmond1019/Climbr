@@ -1,9 +1,13 @@
-use crate::{
-    chat::chat_server::ChatServer,
-    models::{message::ClientMessage, user},
+use crate::models::{
+    conversation::Conversation, conversation_member::ConversationMember, message::ClientMessage,
 };
+use crate::ChatServer;
 use actix::prelude::*;
 use actix_web_actors::ws;
+use diesel::{
+    r2d2::{ConnectionManager, PooledConnection},
+    PgConnection,
+};
 use serde::Deserialize;
 use uuid::Uuid;
 
@@ -12,8 +16,8 @@ use super::chat_server::SessionId;
 pub struct ChatSession {
     pub id: SessionId,
     pub addr: Addr<ChatServer>,
-    pub members: Option<[ChatSessionMember; 2]>,
-    pub conversation_id: Option<i32>,
+    pub members: Vec<ChatSessionMember>,
+    pub conversation_id: i32,
 }
 
 #[derive(Message)]
@@ -21,7 +25,7 @@ pub struct ChatSession {
 pub struct ChatServerConnect {
     pub chat_session_id: SessionId,
     pub addr: Addr<ChatSession>,
-    pub members: [ChatSessionMember; 2], // Array of two members
+    pub members: Vec<ChatSessionMember>,
 }
 
 #[derive(Message)]
@@ -32,23 +36,36 @@ pub struct ChatServerDisconnect {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct InitialMessage {
-    pub user_id1: i32,
-    pub user_id2: i32,
+    pub user_ids: [i32; 2],
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ChatSessionMember {
-    pub user_id: i32,
-    pub user_addr: Addr<ChatSession>,
+    pub conversation_member: ConversationMember,
+    pub user_addr: Option<Addr<ChatSession>>,
 }
 
 impl ChatSession {
-    pub fn new(addr: Addr<ChatServer>) -> Self {
+    pub fn new(
+        addr: Addr<ChatServer>,
+        conversation: Conversation,
+        connection: &mut PooledConnection<ConnectionManager<PgConnection>>,
+    ) -> Self {
+        let members = conversation
+            .members(connection)
+            .expect("Failed to get conversation members")
+            .iter()
+            .map(|member| ChatSessionMember {
+                conversation_member: member.clone(),
+                user_addr: None,
+            })
+            .collect::<Vec<ChatSessionMember>>();
+
         ChatSession {
             id: SessionId(Uuid::new_v4()),
             addr,
-            members: None,
-            conversation_id: None,
+            members,
+            conversation_id: conversation.id,
         }
     }
 }
@@ -57,11 +74,20 @@ impl Actor for ChatSession {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        // TODO: Display what the Message Data should look like
+        self.members.iter_mut().for_each(|member| {
+            member.user_addr = Some(ctx.address().clone());
+        });
+
+        self.addr.do_send(ChatServerConnect {
+            chat_session_id: self.id,
+            addr: ctx.address().clone(),
+            members: self.members.clone(),
+        });
+
         ctx.text("Initiated Chat Session");
     }
 
-    fn stopping(&mut self, _: &mut Self::Context) -> Running {
+    fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         self.addr.do_send(ChatServerDisconnect {
             chat_session_id: self.id,
         });
@@ -73,43 +99,17 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(ws::Message::Text(text)) => {
-                if self.members.is_none() {
-                    match serde_json::from_str::<InitialMessage>(&text) {
-                        Ok(initial_msg) => {
-                            let user1_id = initial_msg.user_id1;
-                            let user2_id = initial_msg.user_id2;
-                            let session_address = ctx.address();
-
-                            let member1 = ChatSessionMember {
-                                user_id: user1_id,
-                                user_addr: session_address.clone(),
-                            };
-                            let member2 = ChatSessionMember {
-                                user_id: user2_id,
-                                user_addr: session_address.clone(),
-                            };
-
-                            self.members = Some([member1, member2]);
-
-                            let name =
-                                format!("Conversation between {:?} and {:?}", user1_id, user2_id);
-
-                            self.addr.do_send(ChatServerConnect {
-                                chat_session_id: self.id,
-                                addr: session_address.clone(),
-                                members: self.members.clone().expect("Members not set"),
-                            });
-                        }
-                        Err(err) => {
-                            // Error if InitialMessage doesn't include user_id1 and user_id2
-                            eprintln!("Error deserializing InitialMessage: {:?}", err);
-                        }
+                let message: ClientMessage = match serde_json::from_str(&text) {
+                    Ok(msg) => msg,
+                    Err(err) => {
+                        // Error if failed to deserialize ClientMessage
+                        let error_message = format!("Error deserializing ClientMessage: {:?}", err);
+                        ctx.text(error_message);
+                        return;
                     }
-                } else {
-                    let mut message: ClientMessage = serde_json::from_str(&text).unwrap();
-                    message.conversation_id = self.conversation_id.unwrap();
-                    self.addr.do_send(message);
-                }
+                };
+
+                self.addr.do_send(message);
             }
             _ => (),
         }

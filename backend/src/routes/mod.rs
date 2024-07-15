@@ -11,5 +11,5 @@ pub fn init_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(user::create_user);
     cfg.service(user::get_user);
     cfg.service(Log::login);
-    cfg.route("/ws/", web::get().to(websocket::ws_index));
+    cfg.route("/ws/", web::get().to(websocket::chat_route));
 }

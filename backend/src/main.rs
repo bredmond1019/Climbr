@@ -19,7 +19,7 @@ mod graphql;
 mod models;
 mod routes;
 mod schema;
-mod websocket;
+// mod websocket;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
