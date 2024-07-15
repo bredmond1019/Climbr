@@ -36,7 +36,7 @@ pub struct ChatServerDisconnect {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct InitialMessage {
-    pub user_ids: [i32; 2],
+    pub user_ids: Vec<i32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -91,6 +91,7 @@ impl Actor for ChatSession {
         self.addr.do_send(ChatServerDisconnect {
             chat_session_id: self.id,
         });
+        ctx.text("Chat Session Stopped");
         Running::Stop
     }
 }
@@ -121,7 +122,7 @@ impl Handler<ClientMessage> for ChatSession {
 
     fn handle(&mut self, msg: ClientMessage, ctx: &mut Self::Context) {
         // Serialize the message to JSON
-        let response = serde_json::to_string(&msg).unwrap();
+        let response = serde_json::to_string(&msg).expect("Failed to serialize ClientMessage");
         // Send the JSON message to the WebSocket client
         ctx.text(response);
     }

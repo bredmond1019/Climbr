@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 use crate::db::DbPool;
 use crate::models::message::ClientMessage;
-use crate::models::message::NewMessage;
 use actix::{Actor, Addr, Context, Handler};
 use log::info;
 use serde::{Deserialize, Serialize};

@@ -24,9 +24,9 @@ pub async fn chat_route(
             let user_ids = initial_msg.user_ids;
             info!("User IDs: {:?}", user_ids);
 
-            let mut conn = pool.get().unwrap();
-            let conversation =
-                Conversation::find_or_create_conversation(&mut conn, user_ids).unwrap();
+            let mut conn = pool.get().expect("Failed to get DB connection");
+            let conversation = Conversation::find_or_create_conversation(&mut conn, user_ids)
+                .expect("Failed to find or create conversation");
 
             let chat_server_address = server.get_ref().clone();
             let session = ChatSession::new(chat_server_address, conversation, &mut conn);

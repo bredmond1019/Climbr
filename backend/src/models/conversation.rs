@@ -73,7 +73,7 @@ impl Conversation {
 
     pub fn find_or_create_conversation(
         conn: &mut PgConnection,
-        user_ids: [i32; 2],
+        user_ids: Vec<i32>,
     ) -> Result<Conversation, diesel::result::Error> {
         let user1_id = user_ids[0];
         let user2_id = user_ids[1];
