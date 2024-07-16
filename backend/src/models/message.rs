@@ -1,14 +1,11 @@
 use actix::Message;
 use chrono::NaiveDateTime;
-use diesel::{deserialize::Queryable, prelude::*, sql_types::Uuid, PgConnection, RunQueryDsl};
+use diesel::{deserialize::Queryable, prelude::*, PgConnection, RunQueryDsl};
 
 use juniper::GraphQLObject;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    chat::chat_server::{ReceiverId, SessionId},
-    schema::messages,
-};
+use crate::{chat::chat_server::ConversationId, schema::messages};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum MessageTarget {
@@ -41,9 +38,9 @@ pub struct NewMessage {
 #[rtype(result = "()")]
 pub struct ClientMessage {
     pub sender_id: i32,
-    pub receiver_id: ReceiverId,
+    pub receiver_id: i32,
     pub content: String,
-    pub session_id: SessionId,
+    pub conversation_id: ConversationId,
 }
 
 impl NewMessage {

@@ -4,19 +4,15 @@ use crate::models::{
 use crate::ChatServer;
 use actix::prelude::*;
 use actix_web_actors::ws;
-use diesel::{
-    r2d2::{ConnectionManager, PooledConnection},
-    PgConnection,
-};
 use serde::Deserialize;
 use uuid::Uuid;
 
-use super::chat_server::SessionId;
+use super::chat_server::{ConversationId, SessionId};
 
 pub struct ChatSession {
     pub id: SessionId,
     pub addr: Addr<ChatServer>,
-    pub members: Vec<ChatSessionMember>,
+    pub member: ConversationMember,
     pub conversation_id: i32,
 }
 
@@ -25,7 +21,7 @@ pub struct ChatSession {
 pub struct ChatServerConnect {
     pub chat_session_id: SessionId,
     pub addr: Addr<ChatSession>,
-    pub members: Vec<ChatSessionMember>,
+    pub conversation_id: ConversationId,
 }
 
 #[derive(Message)]
@@ -40,32 +36,23 @@ pub struct InitialMessage {
     pub receiver_id: i32,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-pub struct ChatSessionMember {
-    pub conversation_member: ConversationMember,
-    pub user_addr: Option<Addr<ChatSession>>,
+#[derive(Debug, Clone, Deserialize)]
+pub struct InitiateChatMessage {
+    pub user_id: i32,
+    pub receiver_id: i32,
+    pub conversation_id: Option<i32>,
 }
 
 impl ChatSession {
     pub fn new(
         addr: Addr<ChatServer>,
         conversation: Conversation,
-        connection: &mut PooledConnection<ConnectionManager<PgConnection>>,
+        member: ConversationMember,
     ) -> Self {
-        let members = conversation
-            .members(connection)
-            .expect("Failed to get conversation members")
-            .iter()
-            .map(|member| ChatSessionMember {
-                conversation_member: member.clone(),
-                user_addr: None,
-            })
-            .collect::<Vec<ChatSessionMember>>();
-
         ChatSession {
             id: SessionId(Uuid::new_v4()),
             addr,
-            members,
+            member,
             conversation_id: conversation.id,
         }
     }
@@ -75,19 +62,15 @@ impl Actor for ChatSession {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        self.members.iter_mut().for_each(|member| {
-            member.user_addr = Some(ctx.address().clone());
-        });
-
         self.addr.do_send(ChatServerConnect {
             chat_session_id: self.id,
             addr: ctx.address().clone(),
-            members: self.members.clone(),
+            conversation_id: ConversationId(self.conversation_id),
         });
 
         let response = serde_json::json!({
             "type": "chat_session_started",
-            "chat_session_id": self.id,
+            "conversation_id": self.conversation_id,
         });
 
         ctx.text(response.to_string());

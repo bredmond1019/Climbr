@@ -1,15 +1,11 @@
 use diesel::{
-    associations::Identifiable, deserialize::Queryable, dsl::count, prelude::Insertable,
-    BelongingToDsl, ExpressionMethods, JoinOnDsl, PgConnection, QueryDsl, RunQueryDsl, Selectable,
+    associations::Identifiable, deserialize::Queryable, prelude::Insertable, BelongingToDsl,
+    ExpressionMethods, JoinOnDsl, PgConnection, QueryDsl, RunQueryDsl, Selectable,
 };
 use log::info;
 use serde::{Deserialize, Serialize};
 
-use crate::schema::{
-    conversation_members,
-    conversation_members::columns::{conversation_id, id, user_id},
-    conversations,
-};
+use crate::schema::{conversation_members, conversation_members::columns, conversations};
 
 use super::conversation_member::ConversationMember;
 
@@ -50,16 +46,44 @@ impl Conversation {
         Ok(members)
     }
 
+    pub fn create(
+        new_conversation: NewConversation,
+        user_ids: Vec<i32>,
+        conn: &mut PgConnection,
+    ) -> Result<Conversation, diesel::result::Error> {
+        let conversation = diesel::insert_into(conversations::table)
+            .values(&new_conversation)
+            .get_result(conn)
+            .expect("Failed to create conversation");
+
+        ConversationMember::create(user_ids, &conversation, conn)?;
+
+        Ok(conversation)
+    }
+
+    pub fn find_by_id(
+        conversation_id: i32,
+        conn: &mut PgConnection,
+    ) -> Result<Conversation, diesel::result::Error> {
+        let conversation = conversations::table
+            .filter(conversations::id.eq(conversation_id))
+            .first::<Conversation>(conn)?;
+
+        Ok(conversation)
+    }
+
     pub fn find_existing_conversation(
         conn: &mut PgConnection,
         user1_id: i32,
         user2_id: i32,
     ) -> Result<Option<Conversation>, diesel::result::Error> {
         let existing_conversation_id = conversation_members::table
-            .filter(user_id.eq(user1_id))
-            .inner_join(conversations::table.on(conversation_id.eq(conversation_id)))
-            .filter(user_id.eq(user2_id))
-            .select(conversation_id)
+            .filter(columns::user_id.eq(user1_id))
+            .inner_join(
+                conversations::table.on(columns::conversation_id.eq(columns::conversation_id)),
+            )
+            .filter(columns::user_id.eq(user2_id))
+            .select(columns::conversation_id)
             .first::<i32>(conn);
 
         match existing_conversation_id {
