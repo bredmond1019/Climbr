@@ -23,6 +23,20 @@ impl ChatServer {
         }
     }
 
+    fn connect_session(&mut self, connection_data: ChatServerConnect) {
+        // Insert the chat session into the sessions HashMap
+        self.sessions.insert(
+            connection_data.chat_session_id,
+            connection_data.addr.clone(),
+        );
+
+        // Insert the chat session into the conversation_sessions HashMap
+        self.conversation_sessions
+            .entry(connection_data.conversation_id)
+            .or_insert_with(Vec::new)
+            .push(connection_data.addr);
+    }
+
     fn send_message_to_sessions(&self, message: ClientMessage) {
         let conversation_sessions = self
             .conversation_sessions
@@ -44,14 +58,8 @@ impl Handler<ChatServerConnect> for ChatServer {
 
     fn handle(&mut self, msg: ChatServerConnect, _: &mut Self::Context) {
         info!("Adding chat session: {:?}", msg.chat_session_id);
-        // Insert the chat session into the sessions HashMap
-        self.sessions.insert(msg.chat_session_id, msg.addr.clone());
 
-        // Insert the chat session into the conversation_sessions HashMap
-        self.conversation_sessions
-            .entry(msg.conversation_id)
-            .or_insert_with(Vec::new)
-            .push(msg.addr);
+        self.connect_session(msg);
     }
 }
 
