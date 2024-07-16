@@ -1,5 +1,6 @@
 use crate::models::{
-    conversation::Conversation, conversation_member::ConversationMember, message::ClientMessage,
+    conversation::Conversation, conversation_membership::ConversationMembership,
+    message::ClientMessage,
 };
 use crate::ChatServer;
 use actix::prelude::*;
@@ -12,7 +13,7 @@ use super::chat_server::{ConversationId, SessionId};
 pub struct ChatSession {
     pub id: SessionId,
     pub addr: Addr<ChatServer>,
-    pub member: ConversationMember,
+    pub member: ConversationMembership,
     pub conversation_id: i32,
 }
 
@@ -47,7 +48,7 @@ impl ChatSession {
     pub fn new(
         addr: Addr<ChatServer>,
         conversation: Conversation,
-        member: ConversationMember,
+        member: ConversationMembership,
     ) -> Self {
         ChatSession {
             id: SessionId(Uuid::new_v4()),

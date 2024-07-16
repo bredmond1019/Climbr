@@ -8,12 +8,14 @@ use diesel::{
 };
 
 use super::conversation::Conversation;
-use crate::schema::{conversation_members, conversations};
+use super::user::User;
+use crate::schema::{conversation_memberships, conversations};
 
 #[derive(Queryable, Associations, Identifiable, Debug, Clone, PartialEq, Eq, Hash)]
-#[diesel(table_name = conversation_members)]
+#[diesel(table_name = conversation_memberships)]
 #[diesel(belongs_to(Conversation))]
-pub struct ConversationMember {
+#[diesel(belongs_to(User))]
+pub struct ConversationMembership {
     pub id: i32,
     pub conversation_id: i32,
     pub user_id: i32,
@@ -21,17 +23,17 @@ pub struct ConversationMember {
     pub updated_at: chrono::NaiveDateTime,
 }
 #[derive(Insertable)]
-#[diesel(table_name = conversation_members)]
-pub struct NewConversationMember {
+#[diesel(table_name = conversation_memberships)]
+pub struct NewConversationMembership {
     pub conversation_id: i32,
     pub user_id: i32,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
 
-impl NewConversationMember {
+impl NewConversationMembership {
     pub fn new(conversation_id: i32, user_id: i32) -> Self {
-        NewConversationMember {
+        NewConversationMembership {
             conversation_id,
             user_id,
             created_at: Utc::now().naive_utc(),
@@ -40,7 +42,7 @@ impl NewConversationMember {
     }
 }
 
-impl ConversationMember {
+impl ConversationMembership {
     pub fn conversation(
         &self,
         conn: &mut PgConnection,
@@ -56,14 +58,14 @@ impl ConversationMember {
         user_ids: Vec<i32>,
         conversaton: &Conversation,
         conn: &mut PgConnection,
-    ) -> Result<ConversationMember, diesel::result::Error> {
-        let new_conversation_members = user_ids
+    ) -> Result<ConversationMembership, diesel::result::Error> {
+        let new_conversation_memberships = user_ids
             .into_iter()
-            .map(|user_id| NewConversationMember::new(conversaton.id, user_id))
+            .map(|user_id| NewConversationMembership::new(conversaton.id, user_id))
             .collect::<Vec<_>>();
 
-        diesel::insert_into(crate::schema::conversation_members::table)
-            .values(new_conversation_members)
+        diesel::insert_into(crate::schema::conversation_memberships::table)
+            .values(new_conversation_memberships)
             .get_result(conn)
     }
 }
