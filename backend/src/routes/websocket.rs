@@ -2,12 +2,20 @@ use actix::Addr;
 use actix_web::{web, HttpRequest, HttpResponse, Responder};
 use actix_web_actors::ws;
 use log::info;
+use serde::Deserialize;
 
-use crate::chat::chat_session::{ChatSession, InitiateChatMessage};
+use crate::chat::chat_session::ChatSession;
 use crate::db::DbPool;
 use crate::models::conversation::Conversation;
 
 use crate::ChatServer;
+
+#[derive(Debug, Clone, Deserialize)]
+struct InitiateChatMessage {
+    pub user_id: i32,
+    pub receiver_id: i32,
+    pub conversation_id: Option<i32>,
+}
 
 pub async fn chat_route(
     req: HttpRequest,
@@ -30,15 +38,9 @@ pub async fn chat_route(
 
             let conversation_id = initial_msg.conversation_id;
             let conversation = Conversation::find_or_create(&mut conn, conversation_id, user_ids);
+            let session_member = conversation.find_membership_by_user_id(user_id, &mut conn);
 
-            let conversation_members = conversation.members(&mut conn);
-            let session_member = conversation_members
-                .iter()
-                .find(|member| member.user_id == user_id)
-                .expect("Failed to find conversation member");
-
-            let session =
-                ChatSession::new(chat_server_address, conversation, session_member.clone());
+            let session = ChatSession::new(chat_server_address, conversation, session_member);
             ws::start(session, &req, stream)
         }
 

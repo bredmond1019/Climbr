@@ -5,9 +5,12 @@ use diesel::{
 use log::info;
 use serde::{Deserialize, Serialize};
 
+use super::conversation_membership::ConversationMembership;
+use crate::schema::conversation_memberships;
 use crate::schema::conversations;
 
-use super::conversation_membership::ConversationMembership;
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
+pub struct ConversationId(pub i32);
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable, Identifiable, Selectable)]
 #[diesel(table_name = crate::schema::conversations)]
@@ -42,6 +45,19 @@ impl Conversation {
             ConversationMembership::belonging_to(self).load::<ConversationMembership>(conn);
 
         members.expect("Failed to load conversation members")
+    }
+
+    pub fn find_membership_by_user_id(
+        &self,
+        user_id: i32,
+        conn: &mut PgConnection,
+    ) -> ConversationMembership {
+        let membership = ConversationMembership::belonging_to(self)
+            .filter(conversation_memberships::user_id.eq(user_id))
+            .first::<ConversationMembership>(conn)
+            .expect("Failed to find conversation membership");
+
+        membership
     }
 
     pub fn create(

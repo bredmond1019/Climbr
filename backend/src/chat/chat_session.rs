@@ -1,14 +1,16 @@
+use crate::models::conversation::ConversationId;
 use crate::models::{
-    conversation::Conversation, conversation_membership::ConversationMembership,
-    message::ClientMessage,
+    chat_message::ClientMessage, conversation::Conversation,
+    conversation_membership::ConversationMembership,
 };
 use crate::ChatServer;
 use actix::prelude::*;
 use actix_web_actors::ws;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use super::chat_server::{ConversationId, SessionId};
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct SessionId(pub Uuid);
 
 pub struct ChatSession {
     pub id: SessionId,
@@ -29,19 +31,6 @@ pub struct ChatServerConnect {
 #[rtype(result = "()")]
 pub struct ChatServerDisconnect {
     pub chat_session_id: SessionId,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct InitialMessage {
-    pub sender_id: i32,
-    pub receiver_id: i32,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct InitiateChatMessage {
-    pub user_id: i32,
-    pub receiver_id: i32,
-    pub conversation_id: Option<i32>,
 }
 
 impl ChatSession {
@@ -65,7 +54,7 @@ impl Actor for ChatSession {
     fn started(&mut self, ctx: &mut Self::Context) {
         self.addr.do_send(ChatServerConnect {
             chat_session_id: self.id,
-            addr: ctx.address().clone(),
+            addr: ctx.address(),
             conversation_id: ConversationId(self.conversation_id),
         });
 
@@ -113,6 +102,7 @@ impl Handler<ClientMessage> for ChatSession {
     fn handle(&mut self, msg: ClientMessage, ctx: &mut Self::Context) {
         // Serialize the message to JSON
         let response = serde_json::to_string(&msg).expect("Failed to serialize ClientMessage");
+
         // Send the JSON message to the WebSocket client
         ctx.text(response);
     }

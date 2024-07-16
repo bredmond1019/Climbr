@@ -1,18 +1,12 @@
 use std::collections::HashMap;
 
-use crate::db::DbPool;
-use crate::models::message::ClientMessage;
+use crate::models::chat_message::ClientMessage;
+use crate::models::conversation::ConversationId;
+use crate::{db::DbPool, models::chat_message::ChatMessage};
 use actix::{Actor, Addr, Context, Handler};
 use log::info;
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
-use super::chat_session::{ChatServerConnect, ChatServerDisconnect, ChatSession};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
-pub struct ConversationId(pub i32);
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct SessionId(pub Uuid);
+use super::chat_session::{ChatServerConnect, ChatServerDisconnect, ChatSession, SessionId};
 
 pub struct ChatServer {
     sessions: HashMap<SessionId, Addr<ChatSession>>,
@@ -28,6 +22,17 @@ impl ChatServer {
             db_pool,
         }
     }
+
+    fn send_message_to_sessions(&self, message: ClientMessage) {
+        let conversation_sessions = self
+            .conversation_sessions
+            .get(&message.conversation_id)
+            .expect("No sessions found for conversation");
+
+        for session in conversation_sessions {
+            session.do_send(message.clone());
+        }
+    }
 }
 
 impl Actor for ChatServer {
@@ -41,6 +46,8 @@ impl Handler<ChatServerConnect> for ChatServer {
         info!("Adding chat session: {:?}", msg.chat_session_id);
         // Insert the chat session into the sessions HashMap
         self.sessions.insert(msg.chat_session_id, msg.addr.clone());
+
+        // Insert the chat session into the conversation_sessions HashMap
         self.conversation_sessions
             .entry(msg.conversation_id)
             .or_insert_with(Vec::new)
@@ -52,11 +59,10 @@ impl Handler<ClientMessage> for ChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: ClientMessage, _: &mut Self::Context) {
-        if let Some(sessions) = self.conversation_sessions.get(&msg.conversation_id) {
-            for session in sessions {
-                session.do_send(msg.clone());
-            }
-        }
+        let mut conn = self.db_pool.get().expect("Failed to get DB connection");
+        ChatMessage::create(&msg, &mut conn);
+
+        self.send_message_to_sessions(msg);
     }
 }
 
