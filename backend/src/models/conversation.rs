@@ -48,26 +48,24 @@ impl Conversation {
         new_conversation: NewConversation,
         user_ids: Vec<i32>,
         conn: &mut PgConnection,
-    ) -> Result<Conversation, diesel::result::Error> {
+    ) -> Conversation {
         let conversation = diesel::insert_into(conversations::table)
             .values(&new_conversation)
             .get_result(conn)
             .expect("Failed to create conversation");
 
-        ConversationMembership::create(user_ids, &conversation, conn)?;
+        ConversationMembership::create(user_ids, &conversation, conn);
 
-        Ok(conversation)
+        conversation
     }
 
-    pub fn find_by_id(
-        conversation_id: i32,
-        conn: &mut PgConnection,
-    ) -> Result<Conversation, diesel::result::Error> {
+    pub fn find_by_id(conversation_id: i32, conn: &mut PgConnection) -> Conversation {
         let conversation = conversations::table
             .filter(conversations::id.eq(conversation_id))
-            .first::<Conversation>(conn)?;
+            .first::<Conversation>(conn)
+            .expect("Failed to find conversation");
 
-        Ok(conversation)
+        conversation
     }
 
     pub fn find_or_create(
@@ -78,10 +76,8 @@ impl Conversation {
         info!("Finding or creating conversation");
         let conversation = if conversation_id.is_some() {
             Conversation::find_by_id(conversation_id.unwrap(), conn)
-                .expect("Failed to find conversation")
         } else {
             Conversation::create(NewConversation::new(None), user_ids, conn)
-                .expect("Failed to create conversation")
         };
         conversation
     }

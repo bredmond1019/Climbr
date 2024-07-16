@@ -58,7 +58,7 @@ impl ConversationMembership {
         user_ids: Vec<i32>,
         conversaton: &Conversation,
         conn: &mut PgConnection,
-    ) -> Result<ConversationMembership, diesel::result::Error> {
+    ) -> ConversationMembership {
         let new_conversation_memberships = user_ids
             .into_iter()
             .map(|user_id| NewConversationMembership::new(conversaton.id, user_id))
@@ -67,5 +67,6 @@ impl ConversationMembership {
         diesel::insert_into(crate::schema::conversation_memberships::table)
             .values(new_conversation_memberships)
             .get_result(conn)
+            .expect("Failed to create conversation memberships")
     }
 }
