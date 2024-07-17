@@ -1,7 +1,6 @@
 use std::env;
 use std::sync::Arc;
 
-use actix::Actor;
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, web::Data, App, HttpServer};
 use diesel::r2d2::{ConnectionManager, Pool};
@@ -10,11 +9,10 @@ use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::create_schema;
 
-use shared::{db, models};
+use shared::{config, db, models, schema};
 mod auth;
 mod graphql;
 mod routes;
-mod schema;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

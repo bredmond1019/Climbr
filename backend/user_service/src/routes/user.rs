@@ -4,6 +4,7 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use diesel::PgConnection;
 use log::{error, info};
+use shared::models::user::UserData;
 
 #[get("/users")]
 async fn get_user(pool: web::Data<DbPool>) -> impl Responder {
@@ -21,28 +22,17 @@ async fn get_user(pool: web::Data<DbPool>) -> impl Responder {
 }
 
 #[post("/users")]
-async fn create_user(pool: web::Data<DbPool>, item: web::Json<NewUser>) -> impl Responder {
-    let mut new_user: NewUser = item.into_inner();
-    if let Err(e) = new_user.hash_password() {
-        error!("Failed to hash password: {}", e);
-        return HttpResponse::InternalServerError().body("Failed to create user");
-    }
+async fn create_user(pool: web::Data<DbPool>, item: web::Json<UserData>) -> impl Responder {
+    let mut new_user: NewUser = NewUser::new(item.into_inner());
+    new_user.hash_password().expect("Error hashing password");
 
-    let mut conn: PooledConnection<ConnectionManager<PgConnection>> = pool.get().unwrap();
+    let mut conn: PooledConnection<ConnectionManager<PgConnection>> =
+        pool.get().expect("Couldn't get connection from pool");
 
-    let created_user: Result<User, diesel::result::Error> =
-        web::block(move || User::create(new_user, &mut conn))
-            .await
-            .unwrap();
+    let created_user: User = web::block(move || User::create(new_user, &mut conn))
+        .await
+        .expect("Error creating user in blocking thread");
 
-    match created_user {
-        Ok(user) => {
-            info!("Created user: {:?}", user);
-            HttpResponse::Ok().json(user)
-        }
-        Err(e) => {
-            error!("Failed to create user: {}", e);
-            HttpResponse::InternalServerError().finish()
-        }
-    }
+    info!("Created user: {:?}", created_user);
+    HttpResponse::Ok().json(created_user)
 }

@@ -31,7 +31,23 @@ pub struct NewUser {
     pub updated_at: chrono::NaiveDateTime,
 }
 
+#[derive(Deserialize)]
+pub struct UserData {
+    pub name: String,
+    pub email: String,
+    pub password: String,
+}
+
 impl NewUser {
+    pub fn new(user: UserData) -> NewUser {
+        NewUser {
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            created_at: chrono::Local::now().naive_local(),
+            updated_at: chrono::Local::now().naive_local(),
+        }
+    }
     pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {
         let hashed = hash(self.password.clone(), DEFAULT_COST)?;
         self.password = hashed;
@@ -48,13 +64,11 @@ impl User {
         all_users
     }
 
-    pub fn create(
-        new_user: NewUser,
-        conn: &mut PgConnection,
-    ) -> Result<User, diesel::result::Error> {
-        let user: Result<User, diesel::result::Error> = diesel::insert_into(users::table)
+    pub fn create(new_user: NewUser, conn: &mut PgConnection) -> User {
+        let user: User = diesel::insert_into(users::table)
             .values(&new_user)
-            .get_result(conn);
+            .get_result(conn)
+            .expect("Error creating user");
         user
     }
 

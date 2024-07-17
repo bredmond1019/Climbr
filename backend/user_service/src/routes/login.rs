@@ -3,9 +3,10 @@ use diesel::deserialize::Queryable;
 use diesel::RunQueryDsl;
 use diesel::{query_dsl::methods::FilterDsl, ExpressionMethods};
 use serde::{Deserialize, Serialize};
+use shared::schema::users;
 
 use crate::auth::create_jwt;
-use crate::{db::DbPool, models::user::User, schema::users::dsl::*};
+use crate::{db::DbPool, models::user::User};
 
 #[derive(Deserialize)]
 struct LoginInfo {
@@ -43,8 +44,8 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<LoginInfo>) -> impl Resp
     let pass = &info.password;
 
     let user = web::block(move || {
-        users
-            .filter(email.eq(&email_address))
+        users::table
+            .filter(users::columns::email.eq(&email_address))
             .first::<User>(&mut conn)
     })
     .await
@@ -68,5 +69,3 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<LoginInfo>) -> impl Resp
         }
     }
 }
-
-// Handle authentication logic here

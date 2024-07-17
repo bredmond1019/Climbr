@@ -41,12 +41,14 @@ impl Mutation {
             name: params.name,
             email: params.email,
             password: params.password,
+            created_at: chrono::Local::now().naive_local(),
+            updated_at: chrono::Local::now().naive_local(),
         };
 
         new_user.hash_password()?;
 
         let mut conn = context.pool.get()?;
-        let user = User::create(new_user, &mut conn)?;
+        let user = User::create(new_user, &mut conn);
         Ok(user)
     }
     fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
