@@ -24,9 +24,6 @@ struct UserResponse {
     id: i32,
     name: String,
     email: String,
-    skill_level: i32,
-    preferred_climbing_style: Option<String>,
-    preferred_gym: Option<String>,
 }
 
 impl From<User> for UserResponse {
@@ -35,9 +32,6 @@ impl From<User> for UserResponse {
             id: user.id,
             email: user.email,
             name: user.name,
-            skill_level: user.skill_level,
-            preferred_climbing_style: user.preferred_climbing_style,
-            preferred_gym: user.preferred_gym,
         }
     }
 }

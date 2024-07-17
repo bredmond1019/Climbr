@@ -17,9 +17,6 @@ pub struct User {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub skill_level: i32,
-    pub preferred_climbing_style: Option<String>,
-    pub preferred_gym: Option<String>,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -28,9 +25,6 @@ pub struct NewUser {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub skill_level: i32,
-    pub preferred_climbing_style: Option<String>,
-    pub preferred_gym: Option<String>,
 }
 
 impl NewUser {

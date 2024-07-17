@@ -36,14 +36,10 @@ diesel::table! {
         name -> Varchar,
         email -> Varchar,
         password -> Varchar,
-        skill_level -> Int4,
-        preferred_climbing_style -> Nullable<Varchar>,
-        preferred_gym -> Nullable<Varchar>,
     }
 }
 
 diesel::joinable!(chat_messages -> users (user_id));
-diesel::joinable!(chat_messages -> conversations (conversation_id));
 diesel::joinable!(conversation_memberships -> conversations (conversation_id));
 diesel::joinable!(conversation_memberships -> users (user_id));
 

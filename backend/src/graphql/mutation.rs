@@ -41,9 +41,6 @@ impl Mutation {
             name: params.name,
             email: params.email,
             password: params.password,
-            skill_level: params.skill_level,
-            preferred_climbing_style: params.preferred_climbing_style,
-            preferred_gym: params.preferred_gym,
         };
 
         new_user.hash_password()?;
