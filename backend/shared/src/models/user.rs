@@ -17,6 +17,8 @@ pub struct User {
     pub name: String,
     pub email: String,
     pub password: String,
+    pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -25,6 +27,8 @@ pub struct NewUser {
     pub name: String,
     pub email: String,
     pub password: String,
+    pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
 }
 
 impl NewUser {

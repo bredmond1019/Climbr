@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use crate::schema::chat_messages;
 
 use super::conversation::{Conversation, ConversationId};
-use super::user::User;
+use shared::models::user::User;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Clone, GraphQLObject, Associations)]
 #[diesel(table_name = crate::schema::chat_messages)]

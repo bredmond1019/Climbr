@@ -3,11 +3,15 @@ use actix_web::{web, HttpRequest, Responder};
 use actix_web_actors::ws;
 use log::info;
 
-use crate::chat::chat_session::ChatSession;
 use crate::db::DbPool;
 use crate::models::conversation::Conversation;
 
+use crate::services::chat_session::ChatSession;
 use crate::ChatServer;
+
+pub fn init_routes(cfg: &mut web::ServiceConfig) {
+    cfg.route("/ws/", web::get().to(chat_route));
+}
 
 pub async fn chat_route(
     req: HttpRequest,
@@ -49,10 +53,14 @@ fn get_session_data(params: Vec<(String, String)>) -> (i32, Vec<i32>, Option<i32
             conversation_id = Some(value.parse().unwrap());
         }
     }
+    info!(
+        "Sender ID: {}, Conversation Member IDs: {:?}, Conversation ID: {:?}",
+        sender_id, conversation_member_ids, conversation_id
+    );
 
     if sender_id == 0 {
         panic!("Invalid user IDs in query string");
-    } else if conversation_member_ids.len() < 2 || conversation_id.is_none() {
+    } else if conversation_member_ids.len() < 2 && conversation_id.is_none() {
         panic!("Invalid user IDs or conversation ID in query string");
     }
 

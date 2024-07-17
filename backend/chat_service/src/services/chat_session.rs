@@ -6,6 +6,7 @@ use crate::models::{
 use crate::ChatServer;
 use actix::prelude::*;
 use actix_web_actors::ws;
+use log::info;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -62,6 +63,10 @@ impl Actor for ChatSession {
             "type": "chat_session_started",
             "conversation_id": self.conversation_id,
         });
+
+        info!("Chat Session Started: {:?}", self.id);
+        info!("Conversation Member: {:?}", self.member);
+        info!("Conversation ID: {:?}", self.conversation_id);
 
         ctx.text(response.to_string());
     }

@@ -8,8 +8,8 @@ use diesel::{
 };
 
 use super::conversation::Conversation;
-use super::user::User;
 use crate::schema::{conversation_memberships, conversations};
+use shared::models::user::User;
 
 #[derive(Queryable, Associations, Identifiable, Debug, Clone, PartialEq, Eq, Hash)]
 #[diesel(table_name = conversation_memberships)]

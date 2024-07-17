@@ -1,9 +1,11 @@
+# [PROJECT_DIR]/user_service/Cargo.toml
 [package]
-name = "backend"
+name = "user_service"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+shared = { path = "../shared"}
 actix-web = "4.0"
 actix = "0.13.5"
 actix-cors = "0.6"
@@ -30,4 +32,3 @@ chrono = { version = "0.4", features = ["serde"] }
 futures-util = "0.3.30"
 serde_qs = "0.13.0"
 serde_urlencoded = "0.7.1"
-

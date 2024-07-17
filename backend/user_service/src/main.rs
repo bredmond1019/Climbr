@@ -4,22 +4,17 @@ use std::sync::Arc;
 use actix::Actor;
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, web::Data, App, HttpServer};
-use chat::chat_server::ChatServer;
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::create_schema;
 
+use shared::{db, models};
 mod auth;
-mod chat;
-mod config;
-mod db;
 mod graphql;
-mod models;
 mod routes;
 mod schema;
-// mod websocket;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -30,13 +25,11 @@ async fn main() -> std::io::Result<()> {
 
     let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
     let schema = Arc::new(create_schema());
-    let chat_server = ChatServer::new(pool.clone()).start();
 
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(pool.clone()))
             .app_data(Data::new(schema.clone()))
-            .app_data(Data::new(chat_server.clone()))
             .wrap(Logger::default())
             .wrap(Cors::permissive())
             .service(
