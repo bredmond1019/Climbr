@@ -383,6 +383,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_qs",
+ "serde_urlencoded",
  "tokio",
  "uuid 1.10.0",
 ]

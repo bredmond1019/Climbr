@@ -23,18 +23,16 @@ impl ChatServer {
         }
     }
 
-    fn connect_session(&mut self, connection_data: ChatServerConnect) {
+    fn connect_session(&mut self, session_data: ChatServerConnect) {
         // Insert the chat session into the sessions HashMap
-        self.sessions.insert(
-            connection_data.chat_session_id,
-            connection_data.addr.clone(),
-        );
+        self.sessions
+            .insert(session_data.chat_session_id, session_data.addr.clone());
 
         // Insert the chat session into the conversation_sessions HashMap
         self.conversation_sessions
-            .entry(connection_data.conversation_id)
+            .entry(session_data.conversation_id)
             .or_insert_with(Vec::new)
-            .push(connection_data.addr);
+            .push(session_data.addr);
     }
 
     fn send_message_to_sessions(&self, message: ClientMessage) {
