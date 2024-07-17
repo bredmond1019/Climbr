@@ -1,8 +1,8 @@
-.env
-diesel.toml
-.DS_Store
-backend/target/
-
+**/.env
+**/diesel.toml
+**/.DS_Store
+**/target/
+backend/user_service/target/
 
 # Flutter/Dart specific
 **/.flutter-plugins
