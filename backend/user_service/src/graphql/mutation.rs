@@ -3,11 +3,13 @@ use diesel::ExpressionMethods;
 use diesel::RunQueryDsl;
 use juniper::graphql_value;
 use juniper::FieldError;
+use juniper::GraphQLObject;
 use juniper::{graphql_object, FieldResult};
+use shared::models::user::NewUser;
+use shared::models::user::User;
 
 use crate::auth::create_jwt;
 use crate::graphql::schema::Context;
-use crate::models::user::{NewUser, User};
 
 pub struct Mutation;
 
@@ -28,7 +30,7 @@ struct LoginInput {
     password: String,
 }
 
-#[derive(juniper::GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 struct LoginResponse {
     user: User,
     token: String,

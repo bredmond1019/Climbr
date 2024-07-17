@@ -1705,6 +1705,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3cb5ba0dc43242ce17de99c180e96db90b235b8a9fdc9543c96d2209116bd9f"
 
 [[package]]
+name = "schedule_service"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "actix-cors",
+ "actix-web",
+ "actix-web-actors",
+ "bcrypt",
+ "chrono",
+ "diesel",
+ "dotenv",
+ "env_logger",
+ "futures-util",
+ "jsonwebtoken",
+ "juniper 0.15.12",
+ "juniper_actix",
+ "lazy_static",
+ "log",
+ "serde",
+ "serde_json",
+ "serde_qs",
+ "serde_urlencoded",
+ "shared",
+ "tokio",
+ "uuid 1.10.0",
+]
+
+[[package]]
 name = "scheduled-thread-pool"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

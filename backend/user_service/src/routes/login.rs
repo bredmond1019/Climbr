@@ -3,10 +3,11 @@ use diesel::deserialize::Queryable;
 use diesel::RunQueryDsl;
 use diesel::{query_dsl::methods::FilterDsl, ExpressionMethods};
 use serde::{Deserialize, Serialize};
+use shared::models::user::User;
 use shared::schema::users;
 
 use crate::auth::create_jwt;
-use crate::{db::DbPool, models::user::User};
+use crate::db::DbPool;
 
 #[derive(Deserialize)]
 struct LoginInfo {

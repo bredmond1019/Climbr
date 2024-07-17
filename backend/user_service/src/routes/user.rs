@@ -1,10 +1,9 @@
-use crate::models::user::User;
-use crate::{db::DbPool, models::user::NewUser};
+use crate::db::DbPool;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use diesel::PgConnection;
 use log::{error, info};
-use shared::models::user::UserData;
+use shared::models::user::{NewUser, User, UserData};
 
 #[get("/users")]
 async fn get_user(pool: web::Data<DbPool>) -> impl Responder {

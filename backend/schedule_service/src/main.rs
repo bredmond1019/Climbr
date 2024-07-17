@@ -9,11 +9,9 @@ use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::create_schema;
 
-use shared::{config, db, models as shared_models, schema as shared_schema};
-mod auth;
+use shared::{db, models as shared_models};
 mod graphql;
 mod models;
-mod routes;
 mod schema;
 
 #[actix_web::main]
@@ -39,9 +37,8 @@ async fn main() -> std::io::Result<()> {
             )
             .service(web::resource("/playground").route(web::get().to(graphql_playground)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
-            .configure(routes::init_routes)
     })
-    .bind("0.0.0.0:3001")?
+    .bind("0.0.0.0:3002")?
     .run()
     .await
 }
