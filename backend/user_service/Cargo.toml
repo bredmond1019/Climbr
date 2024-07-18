@@ -32,3 +32,4 @@ chrono = { version = "0.4", features = ["serde"] }
 futures-util = "0.3.30"
 serde_qs = "0.13.0"
 serde_urlencoded = "0.7.1"
+actix-web-httpauth = "0.8.2"

@@ -53,29 +53,29 @@ impl Mutation {
         let user = User::create(new_user, &mut conn);
         Ok(user)
     }
-    fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
-        use crate::schema::users::dsl::*;
-        let mut connection = context.pool.get()?;
-        let user = users
-            .filter(email.eq(&params.email))
-            .first::<User>(&mut connection);
+    // fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
+    //     use crate::schema::users::dsl::*;
+    //     let mut connection = context.pool.get()?;
+    //     let user = users
+    //         .filter(email.eq(&params.email))
+    //         .first::<User>(&mut connection);
 
-        match user {
-            Ok(user) => {
-                if user.verify_password(&params.password)? {
-                    let token = create_jwt(&user.email)?;
-                    Ok(LoginResponse { user, token })
-                } else {
-                    Err(FieldError::new(
-                        "Invalid password",
-                        graphql_value!({ "field": "password" }),
-                    ))
-                }
-            }
-            Err(_) => Err(FieldError::new(
-                "User not found",
-                graphql_value!({ "field": "email" }),
-            )),
-        }
-    }
+    //     match user {
+    //         Ok(user) => {
+    //             if user.verify_password(&params.password)? {
+    //                 let token = create_jwt(&user.email)?;
+    //                 Ok(LoginResponse { user, token })
+    //             } else {
+    //                 Err(FieldError::new(
+    //                     "Invalid password",
+    //                     graphql_value!({ "field": "password" }),
+    //                 ))
+    //             }
+    //         }
+    //         Err(_) => Err(FieldError::new(
+    //             "User not found",
+    //             graphql_value!({ "field": "email" }),
+    //         )),
+    //     }
+    // }
 }

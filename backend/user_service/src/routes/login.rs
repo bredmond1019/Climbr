@@ -1,31 +1,24 @@
+use std::sync::Arc;
+
+use actix_web::web::Data;
 use actix_web::{post, web, HttpResponse, Responder};
 use diesel::deserialize::Queryable;
 use diesel::RunQueryDsl;
 use diesel::{query_dsl::methods::FilterDsl, ExpressionMethods};
+use log::info;
 use serde::{Deserialize, Serialize};
+use serde_json::value;
 use shared::models::user::User;
 use shared::schema::users;
+use tokio::sync::Mutex;
 
-use crate::auth::create_jwt;
-use crate::db::DbPool;
-
-#[derive(Deserialize)]
-struct LoginInfo {
-    email: String,
-    password: String,
-}
+use crate::auth::{create_jwt, UserResponse};
+use crate::graphql::schema::Context;
 
 #[derive(Queryable, Serialize, Debug, Clone)]
 struct LoginResponse {
     user: UserResponse,
     token: String,
-}
-
-#[derive(Serialize, Debug, Clone)]
-struct UserResponse {
-    id: i32,
-    name: String,
-    email: String,
 }
 
 impl From<User> for UserResponse {
@@ -38,9 +31,17 @@ impl From<User> for UserResponse {
     }
 }
 
+#[derive(Deserialize, Debug)]
+struct LoginInfo {
+    email: String,
+    password: String,
+}
+
 #[post("/login")]
-async fn login(pool: web::Data<DbPool>, info: web::Json<LoginInfo>) -> impl Responder {
-    let mut conn = pool.get().unwrap();
+pub async fn login(info: web::Json<LoginInfo>, ctx: Data<Arc<Mutex<Context>>>) -> impl Responder {
+    info!("Login request: {:?}", info);
+    info!("Context: {:?}", ctx.as_ref());
+    let mut conn = ctx.lock().await.pool.get().unwrap();
     let email_address = info.email.clone();
     let pass = &info.password;
 
@@ -50,13 +51,17 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<LoginInfo>) -> impl Resp
             .first::<User>(&mut conn)
     })
     .await
-    .unwrap();
+    .expect("Error loading user");
+
+    info!("User: {:?}", user);
 
     match user {
         Ok(user) => {
             if user.verify_password(&pass).unwrap() {
-                let token = create_jwt(&user.email).unwrap();
                 let user_response = UserResponse::from(user);
+                let token = create_jwt(&user_response).expect("Failed to create JWT");
+                // let token = create_jwt(&user.email).expect("Failed to create JWT");
+
                 return HttpResponse::Ok().json(LoginResponse {
                     user: user_response,
                     token: token,
@@ -66,7 +71,8 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<LoginInfo>) -> impl Resp
             }
         }
         Err(_) => {
-            return HttpResponse::Unauthorized().finish();
+            // return HttpResponse::Unauthorized().finish();
+            return HttpResponse::Ok().body("User not found");
         }
     }
 }
