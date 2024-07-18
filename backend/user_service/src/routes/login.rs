@@ -7,7 +7,6 @@ use diesel::RunQueryDsl;
 use diesel::{query_dsl::methods::FilterDsl, ExpressionMethods};
 use log::info;
 use serde::{Deserialize, Serialize};
-use serde_json::value;
 use shared::models::user::User;
 use shared::schema::users;
 use tokio::sync::Mutex;
@@ -25,8 +24,8 @@ impl From<User> for UserResponse {
     fn from(user: User) -> Self {
         UserResponse {
             id: user.id,
-            email: user.email,
-            name: user.name,
+            email: user.email.to_string(),
+            name: user.name.to_string(),
         }
     }
 }
@@ -59,8 +58,8 @@ pub async fn login(info: web::Json<LoginInfo>, ctx: Data<Arc<Mutex<Context>>>) -
         Ok(user) => {
             if user.verify_password(&pass).unwrap() {
                 let user_response = UserResponse::from(user);
-                let token = create_jwt(&user_response).expect("Failed to create JWT");
-                // let token = create_jwt(&user.email).expect("Failed to create JWT");
+                let token = create_jwt(&user_response.email).expect("Failed to create JWT");
+                info!("Token: {:?}", token);
 
                 return HttpResponse::Ok().json(LoginResponse {
                     user: user_response,
@@ -71,8 +70,7 @@ pub async fn login(info: web::Json<LoginInfo>, ctx: Data<Arc<Mutex<Context>>>) -
             }
         }
         Err(_) => {
-            // return HttpResponse::Unauthorized().finish();
-            return HttpResponse::Ok().body("User not found");
+            return HttpResponse::Unauthorized().finish();
         }
     }
 }

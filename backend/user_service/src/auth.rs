@@ -1,25 +1,17 @@
-use actix_web::{
-    dev::ServiceRequest,
-    web::{self, Data},
-    Error, HttpMessage, HttpRequest,
-};
+use actix_web::{dev::ServiceRequest, Error, HttpMessage};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use lazy_static::lazy_static;
-use log::{debug, info};
+use log::info;
 use serde::{Deserialize, Serialize};
-use std::{
-    sync::Arc,
-    time::{SystemTime, UNIX_EPOCH},
-};
-use tokio::sync::Mutex;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::{config::get_secret_key, graphql::schema::Context};
+use crate::config::get_secret_key;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    pub sub: UserResponse,
-    exp: usize,
+    pub sub: String,
+    pub exp: usize,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -33,7 +25,7 @@ lazy_static! {
     static ref SECRET_KEY: Vec<u8> = get_secret_key();
 }
 
-pub fn create_jwt(user_response: &UserResponse) -> Result<String, jsonwebtoken::errors::Error> {
+pub fn create_jwt(user_email: &str) -> Result<String, jsonwebtoken::errors::Error> {
     let expiration = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards")
@@ -41,7 +33,7 @@ pub fn create_jwt(user_response: &UserResponse) -> Result<String, jsonwebtoken::
         + 60 * 60; // 1 hour expiration
 
     let claims = Claims {
-        sub: user_response.to_owned(),
+        sub: user_email.to_string(),
         exp: expiration,
     };
 
@@ -53,6 +45,8 @@ pub fn create_jwt(user_response: &UserResponse) -> Result<String, jsonwebtoken::
 }
 
 pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
+    info!("Validating token {:?}", token);
+
     decode::<Claims>(
         token,
         &DecodingKey::from_secret(&SECRET_KEY),
@@ -65,19 +59,24 @@ pub async fn authenticator(
     req: ServiceRequest,
     credentials: BearerAuth,
 ) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    debug!("Authenticating request");
     info!("Authenticating request");
-    // let auth_token = credentials.token();
-    info!("Token: {:?}", credentials);
-    Ok(req)
-    // if let Ok(claims) = validate_jwt(auth_token) {
-    //     info!("Valid token for user: {:?}", claims.sub);
-    //     // req.app_data::<Context>().unwrap().user = Some(claims.sub);
-    //     req.extensions_mut().insert(claims);
+    let auth_token = credentials.token();
 
-    //     Ok(req)
-    // } else {
-    //     info!("Invalid token");
-    //     Err((actix_web::error::ErrorUnauthorized("Invalid token"), req))
-    // }
+    info!("Auth token: {:?}", auth_token);
+
+    let validated = validate_jwt(auth_token);
+    info!("Validated: {:?}", validated);
+
+    match validate_jwt(auth_token) {
+        Ok(claims) => {
+            info!("Valid token for user: {:?}", claims.sub);
+            req.extensions_mut().insert(claims);
+
+            Ok(req)
+        }
+        Err(e) => {
+            info!("Invalid token");
+            Err((actix_web::error::ErrorUnauthorized(e), req))
+        }
+    }
 }

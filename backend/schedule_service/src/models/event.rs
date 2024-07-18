@@ -5,8 +5,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::schema::events;
 
-use super::event_member::NewEventMember;
-
 #[derive(Queryable, Serialize, Deserialize, GraphQLObject, Selectable)]
 #[diesel(table_name = crate::schema::events)]
 pub struct Event {

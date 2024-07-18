@@ -2,7 +2,7 @@ use crate::db::DbPool;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use diesel::PgConnection;
-use log::{error, info};
+use log::info;
 use shared::models::user::{NewUser, User, UserData};
 
 #[get("/users")]

@@ -2,7 +2,6 @@ use std::env;
 use std::sync::Arc;
 
 use actix_cors::Cors;
-use actix_web::middleware::Condition;
 use actix_web::{middleware::Logger, web, web::Data, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use auth::authenticator;
@@ -12,7 +11,6 @@ use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::{create_context, create_schema};
 
-use log::debug;
 use shared::{config, db};
 use tokio::sync::Mutex;
 mod auth;
@@ -45,7 +43,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/playground").route(web::get().to(graphql_playground)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
             .service(
-                web::scope("/api") // Scope for authenticated routes
+                web::scope("/api")
                     .wrap(auth_middleware)
                     .configure(routes::init_routes)
                     .service(

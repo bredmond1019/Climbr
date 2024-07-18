@@ -1,14 +1,8 @@
-use diesel::query_dsl::methods::FilterDsl;
-use diesel::ExpressionMethods;
-use diesel::RunQueryDsl;
-use juniper::graphql_value;
-use juniper::FieldError;
 use juniper::GraphQLObject;
 use juniper::{graphql_object, FieldResult};
 use shared::models::user::NewUser;
 use shared::models::user::User;
 
-use crate::auth::create_jwt;
 use crate::graphql::schema::Context;
 
 pub struct Mutation;
@@ -53,29 +47,4 @@ impl Mutation {
         let user = User::create(new_user, &mut conn);
         Ok(user)
     }
-    // fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
-    //     use crate::schema::users::dsl::*;
-    //     let mut connection = context.pool.get()?;
-    //     let user = users
-    //         .filter(email.eq(&params.email))
-    //         .first::<User>(&mut connection);
-
-    //     match user {
-    //         Ok(user) => {
-    //             if user.verify_password(&params.password)? {
-    //                 let token = create_jwt(&user.email)?;
-    //                 Ok(LoginResponse { user, token })
-    //             } else {
-    //                 Err(FieldError::new(
-    //                     "Invalid password",
-    //                     graphql_value!({ "field": "password" }),
-    //                 ))
-    //             }
-    //         }
-    //         Err(_) => Err(FieldError::new(
-    //             "User not found",
-    //             graphql_value!({ "field": "email" }),
-    //         )),
-    //     }
-    // }
 }

@@ -9,7 +9,7 @@ use dotenv::dotenv;
 use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::create_schema;
 
-use shared::{db, models as shared_models};
+use shared::db;
 mod graphql;
 mod models;
 mod schema;
