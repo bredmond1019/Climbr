@@ -44,7 +44,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
             .service(
                 web::scope("/api")
-                    .wrap(auth_middleware)
+                    // .wrap(auth_middleware)
                     .configure(routes::init_routes)
                     .service(
                         web::resource("/graphql")

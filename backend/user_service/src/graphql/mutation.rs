@@ -30,18 +30,28 @@ struct LoginResponse {
 #[graphql_object(context = Context)]
 impl Mutation {
     fn create_user(context: &Context, params: NewUserInput) -> FieldResult<User> {
-        let mut new_user = NewUser {
+        // let mut new_user = NewUser {
+        //     name: params.name,
+        //     email: params.email,
+        //     password: params.password,
+        //     created_at: chrono::Local::now().naive_local(),
+        //     updated_at: chrono::Local::now().naive_local(),
+        // };
+
+        // new_user.hash_password()?;
+
+        // let mut conn = context.pool.get()?;
+        // let user = User::create(new_user, &mut conn);
+        // Ok(user)
+
+        let user = User {
+            id: 6,
             name: params.name,
             email: params.email,
             password: params.password,
             created_at: chrono::Local::now().naive_local(),
             updated_at: chrono::Local::now().naive_local(),
         };
-
-        new_user.hash_password()?;
-
-        let mut conn = context.pool.get()?;
-        let user = User::create(new_user, &mut conn);
         Ok(user)
     }
 }

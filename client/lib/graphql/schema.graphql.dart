@@ -53,7 +53,7 @@ class Input$NewUserInput {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Input$NewUserInput) || runtimeType != other.runtimeType) {
+    if (other is! Input$NewUserInput || runtimeType != other.runtimeType) {
       return false;
     }
     final l$name = name;
@@ -116,6 +116,7 @@ class _CopyWithImpl$Input$NewUserInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? name = _undefined,
     Object? email = _undefined,
@@ -134,8 +135,9 @@ class _CopyWithStubImpl$Input$NewUserInput<TRes>
     implements CopyWith$Input$NewUserInput<TRes> {
   _CopyWithStubImpl$Input$NewUserInput(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     String? name,
     String? email,
@@ -191,7 +193,7 @@ class Input$LoginInput {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Input$LoginInput) || runtimeType != other.runtimeType) {
+    if (other is! Input$LoginInput || runtimeType != other.runtimeType) {
       return false;
     }
     final l$email = email;
@@ -246,6 +248,7 @@ class _CopyWithImpl$Input$LoginInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? email = _undefined,
     Object? password = _undefined,
@@ -262,8 +265,9 @@ class _CopyWithStubImpl$Input$LoginInput<TRes>
     implements CopyWith$Input$LoginInput<TRes> {
   _CopyWithStubImpl$Input$LoginInput(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     String? email,
     String? password,

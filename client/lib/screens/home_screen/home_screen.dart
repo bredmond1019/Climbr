@@ -1,14 +1,16 @@
-import 'package:client/providers/current_user_provider.dart';
+import 'package:client/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<CurrentUserProvider>(context);
-    final user = userProvider.user;
+    // final userProvider = Provider.of<CurrentUserProvider>(context);
+    // final user = userProvider.user;
+
+    final CurrentUser user =
+        CurrentUser(id: 1, name: 'John Doe', email: 'test@gmail.com');
 
     return Scaffold(
         appBar: AppBar(
