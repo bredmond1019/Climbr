@@ -3,17 +3,11 @@ class Input$NewUserInput {
     required String name,
     required String email,
     required String password,
-    required int skillLevel,
-    required String preferredClimbingStyle,
-    required String preferredGym,
   }) =>
       Input$NewUserInput._({
         r'name': name,
         r'email': email,
         r'password': password,
-        r'skillLevel': skillLevel,
-        r'preferredClimbingStyle': preferredClimbingStyle,
-        r'preferredGym': preferredGym,
       });
 
   Input$NewUserInput._(this._$data);
@@ -26,13 +20,6 @@ class Input$NewUserInput {
     result$data['email'] = (l$email as String);
     final l$password = data['password'];
     result$data['password'] = (l$password as String);
-    final l$skillLevel = data['skillLevel'];
-    result$data['skillLevel'] = (l$skillLevel as int);
-    final l$preferredClimbingStyle = data['preferredClimbingStyle'];
-    result$data['preferredClimbingStyle'] =
-        (l$preferredClimbingStyle as String);
-    final l$preferredGym = data['preferredGym'];
-    result$data['preferredGym'] = (l$preferredGym as String);
     return Input$NewUserInput._(result$data);
   }
 
@@ -44,13 +31,6 @@ class Input$NewUserInput {
 
   String get password => (_$data['password'] as String);
 
-  int get skillLevel => (_$data['skillLevel'] as int);
-
-  String get preferredClimbingStyle =>
-      (_$data['preferredClimbingStyle'] as String);
-
-  String get preferredGym => (_$data['preferredGym'] as String);
-
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$name = name;
@@ -59,12 +39,6 @@ class Input$NewUserInput {
     result$data['email'] = l$email;
     final l$password = password;
     result$data['password'] = l$password;
-    final l$skillLevel = skillLevel;
-    result$data['skillLevel'] = l$skillLevel;
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    result$data['preferredClimbingStyle'] = l$preferredClimbingStyle;
-    final l$preferredGym = preferredGym;
-    result$data['preferredGym'] = l$preferredGym;
     return result$data;
   }
 
@@ -79,7 +53,7 @@ class Input$NewUserInput {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Input$NewUserInput || runtimeType != other.runtimeType) {
+    if (!(other is Input$NewUserInput) || runtimeType != other.runtimeType) {
       return false;
     }
     final l$name = name;
@@ -97,21 +71,6 @@ class Input$NewUserInput {
     if (l$password != lOther$password) {
       return false;
     }
-    final l$skillLevel = skillLevel;
-    final lOther$skillLevel = other.skillLevel;
-    if (l$skillLevel != lOther$skillLevel) {
-      return false;
-    }
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    final lOther$preferredClimbingStyle = other.preferredClimbingStyle;
-    if (l$preferredClimbingStyle != lOther$preferredClimbingStyle) {
-      return false;
-    }
-    final l$preferredGym = preferredGym;
-    final lOther$preferredGym = other.preferredGym;
-    if (l$preferredGym != lOther$preferredGym) {
-      return false;
-    }
     return true;
   }
 
@@ -120,16 +79,10 @@ class Input$NewUserInput {
     final l$name = name;
     final l$email = email;
     final l$password = password;
-    final l$skillLevel = skillLevel;
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    final l$preferredGym = preferredGym;
     return Object.hashAll([
       l$name,
       l$email,
       l$password,
-      l$skillLevel,
-      l$preferredClimbingStyle,
-      l$preferredGym,
     ]);
   }
 }
@@ -147,9 +100,6 @@ abstract class CopyWith$Input$NewUserInput<TRes> {
     String? name,
     String? email,
     String? password,
-    int? skillLevel,
-    String? preferredClimbingStyle,
-    String? preferredGym,
   });
 }
 
@@ -166,14 +116,10 @@ class _CopyWithImpl$Input$NewUserInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? name = _undefined,
     Object? email = _undefined,
     Object? password = _undefined,
-    Object? skillLevel = _undefined,
-    Object? preferredClimbingStyle = _undefined,
-    Object? preferredGym = _undefined,
   }) =>
       _then(Input$NewUserInput._({
         ..._instance._$data,
@@ -181,13 +127,6 @@ class _CopyWithImpl$Input$NewUserInput<TRes>
         if (email != _undefined && email != null) 'email': (email as String),
         if (password != _undefined && password != null)
           'password': (password as String),
-        if (skillLevel != _undefined && skillLevel != null)
-          'skillLevel': (skillLevel as int),
-        if (preferredClimbingStyle != _undefined &&
-            preferredClimbingStyle != null)
-          'preferredClimbingStyle': (preferredClimbingStyle as String),
-        if (preferredGym != _undefined && preferredGym != null)
-          'preferredGym': (preferredGym as String),
       }));
 }
 
@@ -195,16 +134,12 @@ class _CopyWithStubImpl$Input$NewUserInput<TRes>
     implements CopyWith$Input$NewUserInput<TRes> {
   _CopyWithStubImpl$Input$NewUserInput(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? name,
     String? email,
     String? password,
-    int? skillLevel,
-    String? preferredClimbingStyle,
-    String? preferredGym,
   }) =>
       _res;
 }
@@ -256,7 +191,7 @@ class Input$LoginInput {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Input$LoginInput || runtimeType != other.runtimeType) {
+    if (!(other is Input$LoginInput) || runtimeType != other.runtimeType) {
       return false;
     }
     final l$email = email;
@@ -311,7 +246,6 @@ class _CopyWithImpl$Input$LoginInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? email = _undefined,
     Object? password = _undefined,
@@ -328,9 +262,8 @@ class _CopyWithStubImpl$Input$LoginInput<TRes>
     implements CopyWith$Input$LoginInput<TRes> {
   _CopyWithStubImpl$Input$LoginInput(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? email,
     String? password,

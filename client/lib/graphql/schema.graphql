@@ -3,18 +3,12 @@ type User {
   name: String!
   email: String!
   password: String!
-  skillLevel: Int!
-  preferredClimbingStyle: String!
-  preferredGym: String!
 }
 
 input NewUserInput {
   name: String!
   email: String!
   password: String!
-  skillLevel: Int!
-  preferredClimbingStyle: String!
-  preferredGym: String!
 }
 
 input LoginInput {

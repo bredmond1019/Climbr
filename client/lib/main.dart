@@ -1,7 +1,7 @@
 import 'package:client/providers/current_user_provider.dart';
 import 'package:client/screens/add_user_screen/add_user_screen.dart';
 import 'package:client/screens/home_screen/home_screen.dart';
-import 'package:client/screens/login_page.dart';
+import 'package:client/screens/login_screen/login_page.dart';
 import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

@@ -3,8 +3,5 @@ mutation CreateUser($params: NewUserInput!) {
     id
     email
     name
-    preferredClimbingStyle
-    preferredGym
-    skillLevel
   }
 }

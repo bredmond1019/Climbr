@@ -39,10 +39,6 @@ class HomeScreen extends StatelessWidget {
                               const SizedBox(height: 10),
                               Text('Name: ${user.name}'),
                               Text('Email: ${user.email}'),
-                              Text('Skill Level: ${user.skillLevel}'),
-                              Text(
-                                  'Preferred Climbing Style: ${user.preferredClimbingStyle}'),
-                              Text('Preferred Gym: ${user.preferredGym}'),
                             ]))
                     : const Text('Welcome!')),
             Padding(

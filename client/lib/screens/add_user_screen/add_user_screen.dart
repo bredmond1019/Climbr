@@ -14,9 +14,6 @@ class AddUserScreen extends HookWidget {
     final emailController = useTextEditingController();
     final nameController = useTextEditingController();
     final passwordController = useTextEditingController();
-    final preferredClimbingStyleController = useTextEditingController();
-    final preferredGymController = useTextEditingController();
-    final skillLevelController = useTextEditingController();
 
     final mutation = useMutation$CreateUser();
 
@@ -28,9 +25,6 @@ class AddUserScreen extends HookWidget {
           email: emailController.text,
           name: nameController.text,
           password: passwordController.text,
-          preferredClimbingStyle: preferredClimbingStyleController.text,
-          preferredGym: preferredGymController.text,
-          skillLevel: int.tryParse(skillLevelController.text) ?? 0,
         )));
       }
     }
@@ -71,37 +65,6 @@ class AddUserScreen extends HookWidget {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a password';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: skillLevelController,
-                decoration: const InputDecoration(labelText: 'Skill Level'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a Skill Level (beginner, intermediate, advanced)';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: preferredClimbingStyleController,
-                decoration: const InputDecoration(
-                    labelText: 'Preferred Style of Climbing'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a preferred style of climbing';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: preferredGymController,
-                decoration: const InputDecoration(labelText: 'Preferred Gym'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a preferred gym';
                   }
                   return null;
                 },

@@ -3,8 +3,5 @@ query FetchUsers {
     id
     name
     email
-    skillLevel
-    preferredClimbingStyle
-    preferredGym
   }
 }

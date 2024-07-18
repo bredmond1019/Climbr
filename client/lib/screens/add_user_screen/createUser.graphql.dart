@@ -43,7 +43,7 @@ class Variables$Mutation$CreateUser {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Variables$Mutation$CreateUser ||
+    if (!(other is Variables$Mutation$CreateUser) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -87,7 +87,6 @@ class _CopyWithImpl$Variables$Mutation$CreateUser<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({Object? params = _undefined}) =>
       _then(Variables$Mutation$CreateUser._({
         ..._instance._$data,
@@ -100,9 +99,8 @@ class _CopyWithStubImpl$Variables$Mutation$CreateUser<TRes>
     implements CopyWith$Variables$Mutation$CreateUser<TRes> {
   _CopyWithStubImpl$Variables$Mutation$CreateUser(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({Input$NewUserInput? params}) => _res;
 }
 
@@ -127,12 +125,12 @@ class Mutation$CreateUser {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$createUser = createUser;
-    resultData['createUser'] = l$createUser.toJson();
+    _resultData['createUser'] = l$createUser.toJson();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -150,7 +148,7 @@ class Mutation$CreateUser {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Mutation$CreateUser || runtimeType != other.runtimeType) {
+    if (!(other is Mutation$CreateUser) || runtimeType != other.runtimeType) {
       return false;
     }
     final l$createUser = createUser;
@@ -204,7 +202,6 @@ class _CopyWithImpl$Mutation$CreateUser<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? createUser = _undefined,
     Object? $__typename = _undefined,
@@ -218,7 +215,6 @@ class _CopyWithImpl$Mutation$CreateUser<TRes>
             : ($__typename as String),
       ));
 
-  @override
   CopyWith$Mutation$CreateUser$createUser<TRes> get createUser {
     final local$createUser = _instance.createUser;
     return CopyWith$Mutation$CreateUser$createUser(
@@ -230,16 +226,14 @@ class _CopyWithStubImpl$Mutation$CreateUser<TRes>
     implements CopyWith$Mutation$CreateUser<TRes> {
   _CopyWithStubImpl$Mutation$CreateUser(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     Mutation$CreateUser$createUser? createUser,
     String? $__typename,
   }) =>
       _res;
 
-  @override
   CopyWith$Mutation$CreateUser$createUser<TRes> get createUser =>
       CopyWith$Mutation$CreateUser$createUser.stub(_res);
 }
@@ -294,27 +288,6 @@ const documentNodeMutationCreateUser = DocumentNode(definitions: [
             selectionSet: null,
           ),
           FieldNode(
-            name: NameNode(value: 'preferredClimbingStyle'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: 'preferredGym'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: 'skillLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
             name: NameNode(value: '__typename'),
             alias: null,
             arguments: [],
@@ -343,27 +316,34 @@ typedef OnMutationCompleted$Mutation$CreateUser = FutureOr<void> Function(
 class Options$Mutation$CreateUser
     extends graphql.MutationOptions<Mutation$CreateUser> {
   Options$Mutation$CreateUser({
-    super.operationName,
+    String? operationName,
     required Variables$Mutation$CreateUser variables,
-    super.fetchPolicy,
-    super.errorPolicy,
-    super.cacheRereadPolicy,
+    graphql.FetchPolicy? fetchPolicy,
+    graphql.ErrorPolicy? errorPolicy,
+    graphql.CacheRereadPolicy? cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$CreateUser? typedOptimisticResult,
-    super.context,
+    graphql.Context? context,
     OnMutationCompleted$Mutation$CreateUser? onCompleted,
-    super.update,
-    super.onError,
+    graphql.OnMutationUpdate<Mutation$CreateUser>? update,
+    graphql.OnError? onError,
   })  : onCompletedWithParsed = onCompleted,
         super(
           variables: variables.toJson(),
+          operationName: operationName,
+          fetchPolicy: fetchPolicy,
+          errorPolicy: errorPolicy,
+          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
+          context: context,
           onCompleted: onCompleted == null
               ? null
               : (data) => onCompleted(
                     data,
                     data == null ? null : _parserFn$Mutation$CreateUser(data),
                   ),
+          update: update,
+          onError: onError,
           document: documentNodeMutationCreateUser,
           parserFn: _parserFn$Mutation$CreateUser,
         );
@@ -382,22 +362,31 @@ class Options$Mutation$CreateUser
 class WatchOptions$Mutation$CreateUser
     extends graphql.WatchQueryOptions<Mutation$CreateUser> {
   WatchOptions$Mutation$CreateUser({
-    super.operationName,
+    String? operationName,
     required Variables$Mutation$CreateUser variables,
-    super.fetchPolicy,
-    super.errorPolicy,
-    super.cacheRereadPolicy,
+    graphql.FetchPolicy? fetchPolicy,
+    graphql.ErrorPolicy? errorPolicy,
+    graphql.CacheRereadPolicy? cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$CreateUser? typedOptimisticResult,
-    super.context,
-    super.pollInterval,
-    super.eagerlyFetchResults,
-    super.carryForwardDataOnException,
-    super.fetchResults,
+    graphql.Context? context,
+    Duration? pollInterval,
+    bool? eagerlyFetchResults,
+    bool carryForwardDataOnException = true,
+    bool fetchResults = false,
   }) : super(
           variables: variables.toJson(),
+          operationName: operationName,
+          fetchPolicy: fetchPolicy,
+          errorPolicy: errorPolicy,
+          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
+          context: context,
           document: documentNodeMutationCreateUser,
+          pollInterval: pollInterval,
+          eagerlyFetchResults: eagerlyFetchResults,
+          carryForwardDataOnException: carryForwardDataOnException,
+          fetchResults: fetchResults,
           parserFn: _parserFn$Mutation$CreateUser,
         );
 }
@@ -405,10 +394,10 @@ class WatchOptions$Mutation$CreateUser
 extension ClientExtension$Mutation$CreateUser on graphql.GraphQLClient {
   Future<graphql.QueryResult<Mutation$CreateUser>> mutate$CreateUser(
           Options$Mutation$CreateUser options) async =>
-      await mutate(options);
+      await this.mutate(options);
   graphql.ObservableQuery<Mutation$CreateUser> watchMutation$CreateUser(
           WatchOptions$Mutation$CreateUser options) =>
-      watchMutation(options);
+      this.watchMutation(options);
 }
 
 class Mutation$CreateUser$HookResult {
@@ -443,25 +432,32 @@ graphql.ObservableQuery<Mutation$CreateUser> useWatchMutation$CreateUser(
 class WidgetOptions$Mutation$CreateUser
     extends graphql.MutationOptions<Mutation$CreateUser> {
   WidgetOptions$Mutation$CreateUser({
-    super.operationName,
-    super.fetchPolicy,
-    super.errorPolicy,
-    super.cacheRereadPolicy,
+    String? operationName,
+    graphql.FetchPolicy? fetchPolicy,
+    graphql.ErrorPolicy? errorPolicy,
+    graphql.CacheRereadPolicy? cacheRereadPolicy,
     Object? optimisticResult,
     Mutation$CreateUser? typedOptimisticResult,
-    super.context,
+    graphql.Context? context,
     OnMutationCompleted$Mutation$CreateUser? onCompleted,
-    super.update,
-    super.onError,
+    graphql.OnMutationUpdate<Mutation$CreateUser>? update,
+    graphql.OnError? onError,
   })  : onCompletedWithParsed = onCompleted,
         super(
+          operationName: operationName,
+          fetchPolicy: fetchPolicy,
+          errorPolicy: errorPolicy,
+          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
+          context: context,
           onCompleted: onCompleted == null
               ? null
               : (data) => onCompleted(
                     data,
                     data == null ? null : _parserFn$Mutation$CreateUser(data),
                   ),
+          update: update,
+          onError: onError,
           document: documentNodeMutationCreateUser,
           parserFn: _parserFn$Mutation$CreateUser,
         );
@@ -491,10 +487,11 @@ typedef Builder$Mutation$CreateUser = widgets.Widget Function(
 class Mutation$CreateUser$Widget
     extends graphql_flutter.Mutation<Mutation$CreateUser> {
   Mutation$CreateUser$Widget({
-    super.key,
+    widgets.Key? key,
     WidgetOptions$Mutation$CreateUser? options,
     required Builder$Mutation$CreateUser builder,
   }) : super(
+          key: key,
           options: options ?? WidgetOptions$Mutation$CreateUser(),
           builder: (
             run,
@@ -521,9 +518,6 @@ class Mutation$CreateUser$createUser {
     required this.id,
     required this.email,
     required this.name,
-    required this.preferredClimbingStyle,
-    required this.preferredGym,
-    required this.skillLevel,
     this.$__typename = 'User',
   });
 
@@ -531,17 +525,11 @@ class Mutation$CreateUser$createUser {
     final l$id = json['id'];
     final l$email = json['email'];
     final l$name = json['name'];
-    final l$preferredClimbingStyle = json['preferredClimbingStyle'];
-    final l$preferredGym = json['preferredGym'];
-    final l$skillLevel = json['skillLevel'];
     final l$$__typename = json['__typename'];
     return Mutation$CreateUser$createUser(
       id: (l$id as int),
       email: (l$email as String),
       name: (l$name as String),
-      preferredClimbingStyle: (l$preferredClimbingStyle as String),
-      preferredGym: (l$preferredGym as String),
-      skillLevel: (l$skillLevel as int),
       $__typename: (l$$__typename as String),
     );
   }
@@ -552,31 +540,19 @@ class Mutation$CreateUser$createUser {
 
   final String name;
 
-  final String preferredClimbingStyle;
-
-  final String preferredGym;
-
-  final int skillLevel;
-
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$id = id;
-    resultData['id'] = l$id;
+    _resultData['id'] = l$id;
     final l$email = email;
-    resultData['email'] = l$email;
+    _resultData['email'] = l$email;
     final l$name = name;
-    resultData['name'] = l$name;
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    resultData['preferredClimbingStyle'] = l$preferredClimbingStyle;
-    final l$preferredGym = preferredGym;
-    resultData['preferredGym'] = l$preferredGym;
-    final l$skillLevel = skillLevel;
-    resultData['skillLevel'] = l$skillLevel;
+    _resultData['name'] = l$name;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -584,17 +560,11 @@ class Mutation$CreateUser$createUser {
     final l$id = id;
     final l$email = email;
     final l$name = name;
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    final l$preferredGym = preferredGym;
-    final l$skillLevel = skillLevel;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
       l$email,
       l$name,
-      l$preferredClimbingStyle,
-      l$preferredGym,
-      l$skillLevel,
       l$$__typename,
     ]);
   }
@@ -604,7 +574,7 @@ class Mutation$CreateUser$createUser {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Mutation$CreateUser$createUser ||
+    if (!(other is Mutation$CreateUser$createUser) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -621,21 +591,6 @@ class Mutation$CreateUser$createUser {
     final l$name = name;
     final lOther$name = other.name;
     if (l$name != lOther$name) {
-      return false;
-    }
-    final l$preferredClimbingStyle = preferredClimbingStyle;
-    final lOther$preferredClimbingStyle = other.preferredClimbingStyle;
-    if (l$preferredClimbingStyle != lOther$preferredClimbingStyle) {
-      return false;
-    }
-    final l$preferredGym = preferredGym;
-    final lOther$preferredGym = other.preferredGym;
-    if (l$preferredGym != lOther$preferredGym) {
-      return false;
-    }
-    final l$skillLevel = skillLevel;
-    final lOther$skillLevel = other.skillLevel;
-    if (l$skillLevel != lOther$skillLevel) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -669,9 +624,6 @@ abstract class CopyWith$Mutation$CreateUser$createUser<TRes> {
     int? id,
     String? email,
     String? name,
-    String? preferredClimbingStyle,
-    String? preferredGym,
-    int? skillLevel,
     String? $__typename,
   });
 }
@@ -689,14 +641,10 @@ class _CopyWithImpl$Mutation$CreateUser$createUser<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? id = _undefined,
     Object? email = _undefined,
     Object? name = _undefined,
-    Object? preferredClimbingStyle = _undefined,
-    Object? preferredGym = _undefined,
-    Object? skillLevel = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(Mutation$CreateUser$createUser(
@@ -707,16 +655,6 @@ class _CopyWithImpl$Mutation$CreateUser$createUser<TRes>
         name: name == _undefined || name == null
             ? _instance.name
             : (name as String),
-        preferredClimbingStyle: preferredClimbingStyle == _undefined ||
-                preferredClimbingStyle == null
-            ? _instance.preferredClimbingStyle
-            : (preferredClimbingStyle as String),
-        preferredGym: preferredGym == _undefined || preferredGym == null
-            ? _instance.preferredGym
-            : (preferredGym as String),
-        skillLevel: skillLevel == _undefined || skillLevel == null
-            ? _instance.skillLevel
-            : (skillLevel as int),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
@@ -727,16 +665,12 @@ class _CopyWithStubImpl$Mutation$CreateUser$createUser<TRes>
     implements CopyWith$Mutation$CreateUser$createUser<TRes> {
   _CopyWithStubImpl$Mutation$CreateUser$createUser(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     int? id,
     String? email,
     String? name,
-    String? preferredClimbingStyle,
-    String? preferredGym,
-    int? skillLevel,
     String? $__typename,
   }) =>
       _res;

@@ -14,9 +14,6 @@ struct NewUserInput {
     name: String,
     email: String,
     password: String,
-    skill_level: i32,
-    preferred_climbing_style: Option<String>,
-    preferred_gym: Option<String>,
 }
 #[derive(GraphQLInputObject)]
 struct LoginInput {

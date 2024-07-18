@@ -3,7 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GraphQLService {
-  static HttpLink httpLink = HttpLink('http://localhost:3000/graphql');
+  static HttpLink httpLink = HttpLink('http://localhost:3001/api/graphql');
 
   static Future<ValueNotifier<GraphQLClient>> initializeClient() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
