@@ -1,3 +1,5 @@
+import 'package:client/models/user.dart';
+import 'package:client/screens/chat_screen/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -75,6 +77,18 @@ class UserListScreen extends HookWidget {
                     Text(user.email,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                user: User.fromJson(user.toJson()),
+                              ),
+                            ));
+                      },
+                      child: const Text('Chat'),
+                    ),
                   ],
                 ),
               ),

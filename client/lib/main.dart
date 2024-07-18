@@ -2,6 +2,7 @@ import 'package:client/providers/current_user_provider.dart';
 import 'package:client/screens/add_user_screen/add_user_screen.dart';
 import 'package:client/screens/home_screen/home_screen.dart';
 import 'package:client/screens/user_list_screen/user_list_screen.dart';
+import 'package:client/services/websocket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,10 @@ void main() {
   registerPlugins(webPluginRegistrar);
   runApp(const ClimbrApp());
 }
+
+// const wsUrl = 'ws://localhost:3000/ws/';
+const wsUrl =
+    'ws://192.168.86.43:3000/ws/?user_id=1&receiver_id=2&conversation_id=7';
 
 class ClimbrApp extends StatelessWidget {
   const ClimbrApp({super.key});
@@ -50,8 +55,15 @@ class ClimbrApp extends StatelessWidget {
           );
         }
 
-        return ChangeNotifierProvider(
-          create: (context) => CurrentUserProvider(),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => CurrentUserProvider()),
+            ChangeNotifierProvider(create: (context) {
+              final wsService = WebSocketService();
+              wsService.connect(wsUrl);
+              return wsService;
+            })
+          ],
           child: GraphQLProvider(
             client: snapshot.data!,
             child: MaterialApp(

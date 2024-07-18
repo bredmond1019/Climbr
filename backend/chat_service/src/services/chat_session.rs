@@ -84,6 +84,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for ChatSession {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(ws::Message::Text(text)) => {
+                info!("Received message: {:?}", text);
                 let message: ClientMessage = match serde_json::from_str(&text) {
                     Ok(msg) => msg,
                     Err(err) => {
