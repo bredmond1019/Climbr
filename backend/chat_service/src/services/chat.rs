@@ -43,14 +43,17 @@ fn get_session_data(params: Vec<(String, String)>) -> (i32, Vec<i32>, Option<i32
     let mut conversation_id: Option<i32> = None;
 
     for (key, value) in params {
-        if key == "user_id" {
-            sender_id = value.parse().unwrap();
+        if key == "sender_id" {
+            sender_id = value.parse::<i32>().expect("Invalid user ID");
             conversation_member_ids.push(sender_id);
         } else if key == "receiver_id" {
-            let user_id: i32 = value.parse().unwrap();
+            let user_id: i32 = value.parse().expect("Invalid receiver ID");
             conversation_member_ids.push(user_id);
         } else if key == "conversation_id" {
-            conversation_id = Some(value.parse().unwrap());
+            conversation_id = match value.parse() {
+                Ok(id) => Some(id),
+                Err(_) => None,
+            };
         }
     }
     info!(

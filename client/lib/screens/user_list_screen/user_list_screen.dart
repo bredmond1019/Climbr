@@ -83,7 +83,7 @@ class UserListScreen extends HookWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatScreen(
-                                user: User.fromJson(user.toJson()),
+                                receiver: User.fromJson(user.toJson()),
                               ),
                             ));
                       },

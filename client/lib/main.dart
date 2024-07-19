@@ -21,10 +21,6 @@ void main() {
   runApp(const ClimbrApp());
 }
 
-// const wsUrl = 'ws://localhost:3000/ws/';
-const wsUrl =
-    'ws://192.168.86.43:3000/ws/?user_id=1&receiver_id=2&conversation_id=7';
-
 class ClimbrApp extends StatelessWidget {
   const ClimbrApp({super.key});
 
@@ -58,11 +54,7 @@ class ClimbrApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => CurrentUserProvider()),
-            ChangeNotifierProvider(create: (context) {
-              final wsService = WebSocketService();
-              wsService.connect(wsUrl);
-              return wsService;
-            })
+            ChangeNotifierProvider(create: (context) => WebSocketService())
           ],
           child: GraphQLProvider(
             client: snapshot.data!,

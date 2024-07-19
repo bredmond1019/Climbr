@@ -1,38 +1,53 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'package:client/screens/chat_screen/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
-class WebSocketService with ChangeNotifier {
+class WebSocketService extends ChangeNotifier {
   WebSocketChannel? _channel;
-  final StreamController<String> _streamController = StreamController<String>();
+  int? _conversationId;
+  List<String> _messages = [];
 
-  Stream<String> get stream => _streamController.stream;
+  int? get conversationId => _conversationId;
+  List<String> get messages => _messages;
 
-  void connect(String url) {
-    _channel = WebSocketChannel.connect(Uri.parse(url));
+  void connect(String url, InitialConnectionData params) {
+    final uri = Uri.parse(url).replace(queryParameters: {
+      'sender_id': params.sender_id,
+      'receiver_id': params.receiver_id,
+      'conversation_id': params.conversation_id,
+    });
+    _channel = WebSocketChannel.connect(uri);
     _channel!.stream.listen((message) {
-      _streamController.add(message);
+      _handleMessage(message);
       notifyListeners();
+    }, onError: (error) {
+      // Handle error
+    }, onDone: () {
+      // Handle connection closed
     });
   }
 
-  void send(String message, int userId, int conversationId) {
-    _channel?.sink.add(jsonEncode({
-      'sender_id': userId,
-      'content': message,
-      'conversation_id': conversationId,
-    }));
+  void _handleMessage(String message) {
+    final parsedMessage = jsonDecode(message);
+    if (parsedMessage['conversation_id'] != null) {
+      _conversationId = parsedMessage['conversation_id'];
+      // Notify listeners about the new conversation ID
+    }
+    if (parsedMessage['content'] != null) {
+      _messages.add(parsedMessage['content']);
+    }
+    notifyListeners();
+    // Handle other messages
   }
 
-  void sendTypingEvent() {
-    // Implement your typing event logic here
+  void send(String message) {
+    _channel!.sink.add(message);
   }
 
-  @override
-  void dispose() {
+  void disconnect() {
     _channel?.sink.close();
-    _streamController.close();
-    super.dispose();
+    _channel = null;
   }
 }
