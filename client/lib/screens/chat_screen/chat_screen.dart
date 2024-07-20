@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/models/message.dart';
 import 'package:client/models/user.dart';
 import 'package:client/providers/current_user_provider.dart';
 import 'package:client/services/websocket_service.dart';
@@ -8,27 +9,19 @@ import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final User receiver;
-  final int? conversationID;
+  final String? conversationId;
 
-  const ChatScreen({super.key, required this.receiver, this.conversationID});
+  const ChatScreen({super.key, required this.receiver, this.conversationId});
 
   @override
   ChatScreenState createState() => ChatScreenState();
 }
 
-class InitialConnectionData {
-  String sender_id;
-  String receiver_id;
-  String conversation_id;
-
-  InitialConnectionData(this.sender_id, this.receiver_id, this.conversation_id);
-}
-
 class ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _controller = TextEditingController();
+  late InitialConnectionParams initialConnectionParams;
   late WebSocketService webSocketService;
   late CurrentUserProvider userProvider;
-  final TextEditingController _controller = TextEditingController();
-  late InitialConnectionData initialConnectionData;
 
   @override
   void didChangeDependencies() {
@@ -36,22 +29,17 @@ class ChatScreenState extends State<ChatScreen> {
     userProvider = Provider.of<CurrentUserProvider>(context, listen: false);
     webSocketService = Provider.of<WebSocketService>(context, listen: false);
 
-    initialConnectionData = InitialConnectionData(
-      userProvider.user?.id.toString() ?? '1',
-      widget.receiver.id.toString(),
-      webSocketService.conversationId.toString(),
+    initialConnectionParams = InitialConnectionParams(
+      senderId: userProvider.user?.id.toString() ?? '1',
+      receiverId: widget.receiver.id.toString(),
+      conversationId: widget.conversationId ?? '',
     );
+
     webSocketService.connect(
       'ws://localhost:3000/ws/',
-      initialConnectionData,
+      initialConnectionParams,
     );
   }
-
-  // void setConversationID(int id) {
-  //   setState(() {
-  //     conversationID = id;
-  //   });
-  // }
 
   @override
   void dispose() {
@@ -69,16 +57,32 @@ class ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Consumer<WebSocketService>(
-              builder: (context, webSocketService, child) {
-                return ListView.builder(
-                  itemCount: webSocketService.messages.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(webSocketService.messages[index]),
+            child: StreamBuilder(
+              stream: webSocketService.stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final incomingMessage = snapshot.data;
+                  final List<Message> messages = webSocketService.messages;
+
+                  if (incomingMessage is IncomingMessage) {
+                    Message newMessage = Message(
+                      content: incomingMessage.content,
+                      senderId: incomingMessage.senderId,
                     );
-                  },
-                );
+                    messages.add(newMessage);
+                  }
+
+                  return ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return _buildMessageItem(messages[index]);
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               },
             ),
           ),
@@ -99,6 +103,32 @@ class ChatScreenState extends State<ChatScreen> {
                   onPressed: _sendMessage,
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageItem(Message message) {
+    final CurrentUserProvider userProvider =
+        Provider.of<CurrentUserProvider>(context);
+    bool isSentByMe = message.senderId == (userProvider.user?.id ?? 1);
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Row(
+        mainAxisAlignment:
+            isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isSentByMe ? Colors.blue : Colors.grey[300],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              message.content,
+              style: TextStyle(color: isSentByMe ? Colors.white : Colors.black),
             ),
           ),
         ],

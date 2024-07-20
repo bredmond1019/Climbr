@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:client/screens/add_user_screen/createUser.graphql.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import 'package:client/screens/add_user_screen/form_fields.dart';
+
 class AddUserScreen extends HookWidget {
   const AddUserScreen({super.key});
 
@@ -38,7 +40,6 @@ class AddUserScreen extends HookWidget {
             SnackBar(content: Text('Error: ${result.exception.toString()}')),
           );
         } else if (result.data != null) {
-          // Handle successful response
           final responseData = result.data!;
           print('User created: $responseData');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -50,10 +51,6 @@ class AddUserScreen extends HookWidget {
             const SnackBar(content: Text('No data received')),
           );
         }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Exception occurred: $e')),
-        );
       } finally {
         loading.value = false;
       }
@@ -73,35 +70,10 @@ class AddUserScreen extends HookWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter an email';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a password';
-                }
-                return null;
-              },
+            FormFieldsWidget(
+              emailController: emailController,
+              nameController: nameController,
+              passwordController: passwordController,
             ),
             const SizedBox(
               height: 20,
