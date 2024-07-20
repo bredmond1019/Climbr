@@ -1,33 +1,7 @@
-type User {
-  id: Int!
-  name: String!
-  email: String!
-  password: String!
-}
+#import "./query_type.graphql"
+#import "./mutation_type.graphql"
 
-input NewUserInput {
-  name: String!
-  email: String!
-  password: String!
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-type LoginResponse {
-  user: User!
-  token: String!
-}
-
-type Query {
+schema {
   query: Query
-  users: [User!]!
-}
-
-type Mutation {
   mutation: Mutation
-  login(params: LoginInput!): LoginResponse!
-  createUser(params: NewUserInput!): User!
 }
