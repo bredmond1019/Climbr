@@ -1,13 +1,15 @@
 class Availability {
   final String id;
   final String gymId;
-  final DateTime startTime;
-  final DateTime endTime;
+  final String date;
+  final String startTime;
+  final String endTime;
   final String userId;
 
   Availability({
     required this.id,
     required this.gymId,
+    required this.date,
     required this.startTime,
     required this.endTime,
     required this.userId,
@@ -16,26 +18,28 @@ class Availability {
   factory Availability.fromJson(Map<String, dynamic> json) {
     return Availability(
       id: json['id'],
-      gymId: json['gymId'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      userId: json['userId'],
+      gymId: json['gym_id'],
+      date: json['date'],
+      startTime: json['start_time'],
+      endTime: json['end_time'],
+      userId: json['user_id'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'gymId': gymId,
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime.toIso8601String(),
-      'userId': userId,
+      'gym_id': gymId,
+      'date': date,
+      'start_time': startTime,
+      'end_time': endTime,
+      'user_id': userId,
     };
   }
 }
 
 class NewAvailability {
-  final String gymId;
+  final int gymId;
   final String startTime;
   final String endTime;
   final String date;
@@ -49,9 +53,10 @@ class NewAvailability {
 
   Map<String, dynamic> toJson() {
     return {
-      'gym_d': gymId,
-      'start_time': startTime,
-      'end_time': endTime,
+      'gymId': gymId,
+      'startTime': startTime,
+      'endTime': endTime,
+      'date': date,
     };
   }
 }

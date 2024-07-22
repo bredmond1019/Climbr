@@ -4,47 +4,45 @@ import 'package:gql/ast.dart';
 import 'package:graphql/client.dart' as graphql;
 import 'package:graphql_flutter/graphql_flutter.dart' as graphql_flutter;
 
-class Variables$Query$SearchAvailability {
-  factory Variables$Query$SearchAvailability({
-    required String gymId,
+class Variables$Query$searchAvailability {
+  factory Variables$Query$searchAvailability({
+    required int gymId,
     required String startTime,
     required String endTime,
-    String? userId,
+    required String date,
   }) =>
-      Variables$Query$SearchAvailability._({
+      Variables$Query$searchAvailability._({
         r'gymId': gymId,
         r'startTime': startTime,
         r'endTime': endTime,
-        if (userId != null) r'userId': userId,
+        r'date': date,
       });
 
-  Variables$Query$SearchAvailability._(this._$data);
+  Variables$Query$searchAvailability._(this._$data);
 
-  factory Variables$Query$SearchAvailability.fromJson(
+  factory Variables$Query$searchAvailability.fromJson(
       Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
     final l$gymId = data['gymId'];
-    result$data['gymId'] = (l$gymId as String);
+    result$data['gymId'] = (l$gymId as int);
     final l$startTime = data['startTime'];
     result$data['startTime'] = (l$startTime as String);
     final l$endTime = data['endTime'];
     result$data['endTime'] = (l$endTime as String);
-    if (data.containsKey('userId')) {
-      final l$userId = data['userId'];
-      result$data['userId'] = (l$userId as String?);
-    }
-    return Variables$Query$SearchAvailability._(result$data);
+    final l$date = data['date'];
+    result$data['date'] = (l$date as String);
+    return Variables$Query$searchAvailability._(result$data);
   }
 
   Map<String, dynamic> _$data;
 
-  String get gymId => (_$data['gymId'] as String);
+  int get gymId => (_$data['gymId'] as int);
 
   String get startTime => (_$data['startTime'] as String);
 
   String get endTime => (_$data['endTime'] as String);
 
-  String? get userId => (_$data['userId'] as String?);
+  String get date => (_$data['date'] as String);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -54,16 +52,14 @@ class Variables$Query$SearchAvailability {
     result$data['startTime'] = l$startTime;
     final l$endTime = endTime;
     result$data['endTime'] = l$endTime;
-    if (_$data.containsKey('userId')) {
-      final l$userId = userId;
-      result$data['userId'] = l$userId;
-    }
+    final l$date = date;
+    result$data['date'] = l$date;
     return result$data;
   }
 
-  CopyWith$Variables$Query$SearchAvailability<
-          Variables$Query$SearchAvailability>
-      get copyWith => CopyWith$Variables$Query$SearchAvailability(
+  CopyWith$Variables$Query$searchAvailability<
+          Variables$Query$searchAvailability>
+      get copyWith => CopyWith$Variables$Query$searchAvailability(
             this,
             (i) => i,
           );
@@ -73,7 +69,7 @@ class Variables$Query$SearchAvailability {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Variables$Query$SearchAvailability) ||
+    if (!(other is Variables$Query$searchAvailability) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -92,12 +88,9 @@ class Variables$Query$SearchAvailability {
     if (l$endTime != lOther$endTime) {
       return false;
     }
-    final l$userId = userId;
-    final lOther$userId = other.userId;
-    if (_$data.containsKey('userId') != other._$data.containsKey('userId')) {
-      return false;
-    }
-    if (l$userId != lOther$userId) {
+    final l$date = date;
+    final lOther$date = other.date;
+    if (l$date != lOther$date) {
       return false;
     }
     return true;
@@ -108,43 +101,43 @@ class Variables$Query$SearchAvailability {
     final l$gymId = gymId;
     final l$startTime = startTime;
     final l$endTime = endTime;
-    final l$userId = userId;
+    final l$date = date;
     return Object.hashAll([
       l$gymId,
       l$startTime,
       l$endTime,
-      _$data.containsKey('userId') ? l$userId : const {},
+      l$date,
     ]);
   }
 }
 
-abstract class CopyWith$Variables$Query$SearchAvailability<TRes> {
-  factory CopyWith$Variables$Query$SearchAvailability(
-    Variables$Query$SearchAvailability instance,
-    TRes Function(Variables$Query$SearchAvailability) then,
-  ) = _CopyWithImpl$Variables$Query$SearchAvailability;
+abstract class CopyWith$Variables$Query$searchAvailability<TRes> {
+  factory CopyWith$Variables$Query$searchAvailability(
+    Variables$Query$searchAvailability instance,
+    TRes Function(Variables$Query$searchAvailability) then,
+  ) = _CopyWithImpl$Variables$Query$searchAvailability;
 
-  factory CopyWith$Variables$Query$SearchAvailability.stub(TRes res) =
-      _CopyWithStubImpl$Variables$Query$SearchAvailability;
+  factory CopyWith$Variables$Query$searchAvailability.stub(TRes res) =
+      _CopyWithStubImpl$Variables$Query$searchAvailability;
 
   TRes call({
-    String? gymId,
+    int? gymId,
     String? startTime,
     String? endTime,
-    String? userId,
+    String? date,
   });
 }
 
-class _CopyWithImpl$Variables$Query$SearchAvailability<TRes>
-    implements CopyWith$Variables$Query$SearchAvailability<TRes> {
-  _CopyWithImpl$Variables$Query$SearchAvailability(
+class _CopyWithImpl$Variables$Query$searchAvailability<TRes>
+    implements CopyWith$Variables$Query$searchAvailability<TRes> {
+  _CopyWithImpl$Variables$Query$searchAvailability(
     this._instance,
     this._then,
   );
 
-  final Variables$Query$SearchAvailability _instance;
+  final Variables$Query$searchAvailability _instance;
 
-  final TRes Function(Variables$Query$SearchAvailability) _then;
+  final TRes Function(Variables$Query$searchAvailability) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -152,55 +145,55 @@ class _CopyWithImpl$Variables$Query$SearchAvailability<TRes>
     Object? gymId = _undefined,
     Object? startTime = _undefined,
     Object? endTime = _undefined,
-    Object? userId = _undefined,
+    Object? date = _undefined,
   }) =>
-      _then(Variables$Query$SearchAvailability._({
+      _then(Variables$Query$searchAvailability._({
         ..._instance._$data,
-        if (gymId != _undefined && gymId != null) 'gymId': (gymId as String),
+        if (gymId != _undefined && gymId != null) 'gymId': (gymId as int),
         if (startTime != _undefined && startTime != null)
           'startTime': (startTime as String),
         if (endTime != _undefined && endTime != null)
           'endTime': (endTime as String),
-        if (userId != _undefined) 'userId': (userId as String?),
+        if (date != _undefined && date != null) 'date': (date as String),
       }));
 }
 
-class _CopyWithStubImpl$Variables$Query$SearchAvailability<TRes>
-    implements CopyWith$Variables$Query$SearchAvailability<TRes> {
-  _CopyWithStubImpl$Variables$Query$SearchAvailability(this._res);
+class _CopyWithStubImpl$Variables$Query$searchAvailability<TRes>
+    implements CopyWith$Variables$Query$searchAvailability<TRes> {
+  _CopyWithStubImpl$Variables$Query$searchAvailability(this._res);
 
   TRes _res;
 
   call({
-    String? gymId,
+    int? gymId,
     String? startTime,
     String? endTime,
-    String? userId,
+    String? date,
   }) =>
       _res;
 }
 
-class Query$SearchAvailability {
-  Query$SearchAvailability({
+class Query$searchAvailability {
+  Query$searchAvailability({
     this.availabilities,
     this.$__typename = 'Query',
   });
 
-  factory Query$SearchAvailability.fromJson(Map<String, dynamic> json) {
+  factory Query$searchAvailability.fromJson(Map<String, dynamic> json) {
     final l$availabilities = json['availabilities'];
     final l$$__typename = json['__typename'];
-    return Query$SearchAvailability(
+    return Query$searchAvailability(
       availabilities: (l$availabilities as List<dynamic>?)
           ?.map((e) => e == null
               ? null
-              : Query$SearchAvailability$availabilities.fromJson(
+              : Query$searchAvailability$availabilities.fromJson(
                   (e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
     );
   }
 
-  final List<Query$SearchAvailability$availabilities?>? availabilities;
+  final List<Query$searchAvailability$availabilities?>? availabilities;
 
   final String $__typename;
 
@@ -231,7 +224,7 @@ class Query$SearchAvailability {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$SearchAvailability) ||
+    if (!(other is Query$searchAvailability) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -260,46 +253,46 @@ class Query$SearchAvailability {
   }
 }
 
-extension UtilityExtension$Query$SearchAvailability
-    on Query$SearchAvailability {
-  CopyWith$Query$SearchAvailability<Query$SearchAvailability> get copyWith =>
-      CopyWith$Query$SearchAvailability(
+extension UtilityExtension$Query$searchAvailability
+    on Query$searchAvailability {
+  CopyWith$Query$searchAvailability<Query$searchAvailability> get copyWith =>
+      CopyWith$Query$searchAvailability(
         this,
         (i) => i,
       );
 }
 
-abstract class CopyWith$Query$SearchAvailability<TRes> {
-  factory CopyWith$Query$SearchAvailability(
-    Query$SearchAvailability instance,
-    TRes Function(Query$SearchAvailability) then,
-  ) = _CopyWithImpl$Query$SearchAvailability;
+abstract class CopyWith$Query$searchAvailability<TRes> {
+  factory CopyWith$Query$searchAvailability(
+    Query$searchAvailability instance,
+    TRes Function(Query$searchAvailability) then,
+  ) = _CopyWithImpl$Query$searchAvailability;
 
-  factory CopyWith$Query$SearchAvailability.stub(TRes res) =
-      _CopyWithStubImpl$Query$SearchAvailability;
+  factory CopyWith$Query$searchAvailability.stub(TRes res) =
+      _CopyWithStubImpl$Query$searchAvailability;
 
   TRes call({
-    List<Query$SearchAvailability$availabilities?>? availabilities,
+    List<Query$searchAvailability$availabilities?>? availabilities,
     String? $__typename,
   });
   TRes availabilities(
-      Iterable<Query$SearchAvailability$availabilities?>? Function(
+      Iterable<Query$searchAvailability$availabilities?>? Function(
               Iterable<
-                  CopyWith$Query$SearchAvailability$availabilities<
-                      Query$SearchAvailability$availabilities>?>?)
+                  CopyWith$Query$searchAvailability$availabilities<
+                      Query$searchAvailability$availabilities>?>?)
           _fn);
 }
 
-class _CopyWithImpl$Query$SearchAvailability<TRes>
-    implements CopyWith$Query$SearchAvailability<TRes> {
-  _CopyWithImpl$Query$SearchAvailability(
+class _CopyWithImpl$Query$searchAvailability<TRes>
+    implements CopyWith$Query$searchAvailability<TRes> {
+  _CopyWithImpl$Query$searchAvailability(
     this._instance,
     this._then,
   );
 
-  final Query$SearchAvailability _instance;
+  final Query$searchAvailability _instance;
 
-  final TRes Function(Query$SearchAvailability) _then;
+  final TRes Function(Query$searchAvailability) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
@@ -307,39 +300,39 @@ class _CopyWithImpl$Query$SearchAvailability<TRes>
     Object? availabilities = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$SearchAvailability(
+      _then(Query$searchAvailability(
         availabilities: availabilities == _undefined
             ? _instance.availabilities
             : (availabilities
-                as List<Query$SearchAvailability$availabilities?>?),
+                as List<Query$searchAvailability$availabilities?>?),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 
   TRes availabilities(
-          Iterable<Query$SearchAvailability$availabilities?>? Function(
+          Iterable<Query$searchAvailability$availabilities?>? Function(
                   Iterable<
-                      CopyWith$Query$SearchAvailability$availabilities<
-                          Query$SearchAvailability$availabilities>?>?)
+                      CopyWith$Query$searchAvailability$availabilities<
+                          Query$searchAvailability$availabilities>?>?)
               _fn) =>
       call(
           availabilities: _fn(_instance.availabilities?.map((e) => e == null
               ? null
-              : CopyWith$Query$SearchAvailability$availabilities(
+              : CopyWith$Query$searchAvailability$availabilities(
                   e,
                   (i) => i,
                 )))?.toList());
 }
 
-class _CopyWithStubImpl$Query$SearchAvailability<TRes>
-    implements CopyWith$Query$SearchAvailability<TRes> {
-  _CopyWithStubImpl$Query$SearchAvailability(this._res);
+class _CopyWithStubImpl$Query$searchAvailability<TRes>
+    implements CopyWith$Query$searchAvailability<TRes> {
+  _CopyWithStubImpl$Query$searchAvailability(this._res);
 
   TRes _res;
 
   call({
-    List<Query$SearchAvailability$availabilities?>? availabilities,
+    List<Query$searchAvailability$availabilities?>? availabilities,
     String? $__typename,
   }) =>
       _res;
@@ -347,15 +340,15 @@ class _CopyWithStubImpl$Query$SearchAvailability<TRes>
   availabilities(_fn) => _res;
 }
 
-const documentNodeQuerySearchAvailability = DocumentNode(definitions: [
+const documentNodeQuerysearchAvailability = DocumentNode(definitions: [
   OperationDefinitionNode(
     type: OperationType.query,
-    name: NameNode(value: 'SearchAvailability'),
+    name: NameNode(value: 'searchAvailability'),
     variableDefinitions: [
       VariableDefinitionNode(
         variable: VariableNode(name: NameNode(value: 'gymId')),
         type: NamedTypeNode(
-          name: NameNode(value: 'ID'),
+          name: NameNode(value: 'Int'),
           isNonNull: true,
         ),
         defaultValue: DefaultValueNode(value: null),
@@ -380,10 +373,10 @@ const documentNodeQuerySearchAvailability = DocumentNode(definitions: [
         directives: [],
       ),
       VariableDefinitionNode(
-        variable: VariableNode(name: NameNode(value: 'userId')),
+        variable: VariableNode(name: NameNode(value: 'date')),
         type: NamedTypeNode(
-          name: NameNode(value: 'ID'),
-          isNonNull: false,
+          name: NameNode(value: 'String'),
+          isNonNull: true,
         ),
         defaultValue: DefaultValueNode(value: null),
         directives: [],
@@ -396,20 +389,20 @@ const documentNodeQuerySearchAvailability = DocumentNode(definitions: [
         alias: null,
         arguments: [
           ArgumentNode(
-            name: NameNode(value: 'gym_id'),
+            name: NameNode(value: 'gymId'),
             value: VariableNode(name: NameNode(value: 'gymId')),
           ),
           ArgumentNode(
-            name: NameNode(value: 'start_time'),
+            name: NameNode(value: 'startTime'),
             value: VariableNode(name: NameNode(value: 'startTime')),
           ),
           ArgumentNode(
-            name: NameNode(value: 'end_time'),
+            name: NameNode(value: 'endTime'),
             value: VariableNode(name: NameNode(value: 'endTime')),
           ),
           ArgumentNode(
-            name: NameNode(value: 'user_id'),
-            value: VariableNode(name: NameNode(value: 'userId')),
+            name: NameNode(value: 'date'),
+            value: VariableNode(name: NameNode(value: 'date')),
           ),
         ],
         directives: [],
@@ -422,28 +415,28 @@ const documentNodeQuerySearchAvailability = DocumentNode(definitions: [
             selectionSet: null,
           ),
           FieldNode(
-            name: NameNode(value: 'user_id'),
+            name: NameNode(value: 'userId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null,
           ),
           FieldNode(
-            name: NameNode(value: 'gym_id'),
+            name: NameNode(value: 'gymId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null,
           ),
           FieldNode(
-            name: NameNode(value: 'start_time'),
+            name: NameNode(value: 'startTime'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null,
           ),
           FieldNode(
-            name: NameNode(value: 'end_time'),
+            name: NameNode(value: 'endTime'),
             alias: null,
             arguments: [],
             directives: [],
@@ -468,27 +461,27 @@ const documentNodeQuerySearchAvailability = DocumentNode(definitions: [
     ]),
   ),
 ]);
-Query$SearchAvailability _parserFn$Query$SearchAvailability(
+Query$searchAvailability _parserFn$Query$searchAvailability(
         Map<String, dynamic> data) =>
-    Query$SearchAvailability.fromJson(data);
-typedef OnQueryComplete$Query$SearchAvailability = FutureOr<void> Function(
+    Query$searchAvailability.fromJson(data);
+typedef OnQueryComplete$Query$searchAvailability = FutureOr<void> Function(
   Map<String, dynamic>?,
-  Query$SearchAvailability?,
+  Query$searchAvailability?,
 );
 
-class Options$Query$SearchAvailability
-    extends graphql.QueryOptions<Query$SearchAvailability> {
-  Options$Query$SearchAvailability({
+class Options$Query$searchAvailability
+    extends graphql.QueryOptions<Query$searchAvailability> {
+  Options$Query$searchAvailability({
     String? operationName,
-    required Variables$Query$SearchAvailability variables,
+    required Variables$Query$searchAvailability variables,
     graphql.FetchPolicy? fetchPolicy,
     graphql.ErrorPolicy? errorPolicy,
     graphql.CacheRereadPolicy? cacheRereadPolicy,
     Object? optimisticResult,
-    Query$SearchAvailability? typedOptimisticResult,
+    Query$searchAvailability? typedOptimisticResult,
     Duration? pollInterval,
     graphql.Context? context,
-    OnQueryComplete$Query$SearchAvailability? onComplete,
+    OnQueryComplete$Query$searchAvailability? onComplete,
     graphql.OnQueryError? onError,
   })  : onCompleteWithParsed = onComplete,
         super(
@@ -506,14 +499,14 @@ class Options$Query$SearchAvailability
                     data,
                     data == null
                         ? null
-                        : _parserFn$Query$SearchAvailability(data),
+                        : _parserFn$Query$searchAvailability(data),
                   ),
           onError: onError,
-          document: documentNodeQuerySearchAvailability,
-          parserFn: _parserFn$Query$SearchAvailability,
+          document: documentNodeQuerysearchAvailability,
+          parserFn: _parserFn$Query$searchAvailability,
         );
 
-  final OnQueryComplete$Query$SearchAvailability? onCompleteWithParsed;
+  final OnQueryComplete$Query$searchAvailability? onCompleteWithParsed;
 
   @override
   List<Object?> get properties => [
@@ -524,16 +517,16 @@ class Options$Query$SearchAvailability
       ];
 }
 
-class WatchOptions$Query$SearchAvailability
-    extends graphql.WatchQueryOptions<Query$SearchAvailability> {
-  WatchOptions$Query$SearchAvailability({
+class WatchOptions$Query$searchAvailability
+    extends graphql.WatchQueryOptions<Query$searchAvailability> {
+  WatchOptions$Query$searchAvailability({
     String? operationName,
-    required Variables$Query$SearchAvailability variables,
+    required Variables$Query$searchAvailability variables,
     graphql.FetchPolicy? fetchPolicy,
     graphql.ErrorPolicy? errorPolicy,
     graphql.CacheRereadPolicy? cacheRereadPolicy,
     Object? optimisticResult,
-    Query$SearchAvailability? typedOptimisticResult,
+    Query$searchAvailability? typedOptimisticResult,
     graphql.Context? context,
     Duration? pollInterval,
     bool? eagerlyFetchResults,
@@ -547,80 +540,80 @@ class WatchOptions$Query$SearchAvailability
           cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
           context: context,
-          document: documentNodeQuerySearchAvailability,
+          document: documentNodeQuerysearchAvailability,
           pollInterval: pollInterval,
           eagerlyFetchResults: eagerlyFetchResults,
           carryForwardDataOnException: carryForwardDataOnException,
           fetchResults: fetchResults,
-          parserFn: _parserFn$Query$SearchAvailability,
+          parserFn: _parserFn$Query$searchAvailability,
         );
 }
 
-class FetchMoreOptions$Query$SearchAvailability
+class FetchMoreOptions$Query$searchAvailability
     extends graphql.FetchMoreOptions {
-  FetchMoreOptions$Query$SearchAvailability({
+  FetchMoreOptions$Query$searchAvailability({
     required graphql.UpdateQuery updateQuery,
-    required Variables$Query$SearchAvailability variables,
+    required Variables$Query$searchAvailability variables,
   }) : super(
           updateQuery: updateQuery,
           variables: variables.toJson(),
-          document: documentNodeQuerySearchAvailability,
+          document: documentNodeQuerysearchAvailability,
         );
 }
 
-extension ClientExtension$Query$SearchAvailability on graphql.GraphQLClient {
-  Future<graphql.QueryResult<Query$SearchAvailability>>
-      query$SearchAvailability(
-              Options$Query$SearchAvailability options) async =>
+extension ClientExtension$Query$searchAvailability on graphql.GraphQLClient {
+  Future<graphql.QueryResult<Query$searchAvailability>>
+      query$searchAvailability(
+              Options$Query$searchAvailability options) async =>
           await this.query(options);
-  graphql.ObservableQuery<Query$SearchAvailability>
-      watchQuery$SearchAvailability(
-              WatchOptions$Query$SearchAvailability options) =>
+  graphql.ObservableQuery<Query$searchAvailability>
+      watchQuery$searchAvailability(
+              WatchOptions$Query$searchAvailability options) =>
           this.watchQuery(options);
-  void writeQuery$SearchAvailability({
-    required Query$SearchAvailability data,
-    required Variables$Query$SearchAvailability variables,
+  void writeQuery$searchAvailability({
+    required Query$searchAvailability data,
+    required Variables$Query$searchAvailability variables,
     bool broadcast = true,
   }) =>
       this.writeQuery(
         graphql.Request(
           operation:
-              graphql.Operation(document: documentNodeQuerySearchAvailability),
+              graphql.Operation(document: documentNodeQuerysearchAvailability),
           variables: variables.toJson(),
         ),
         data: data.toJson(),
         broadcast: broadcast,
       );
-  Query$SearchAvailability? readQuery$SearchAvailability({
-    required Variables$Query$SearchAvailability variables,
+  Query$searchAvailability? readQuery$searchAvailability({
+    required Variables$Query$searchAvailability variables,
     bool optimistic = true,
   }) {
     final result = this.readQuery(
       graphql.Request(
         operation:
-            graphql.Operation(document: documentNodeQuerySearchAvailability),
+            graphql.Operation(document: documentNodeQuerysearchAvailability),
         variables: variables.toJson(),
       ),
       optimistic: optimistic,
     );
-    return result == null ? null : Query$SearchAvailability.fromJson(result);
+    return result == null ? null : Query$searchAvailability.fromJson(result);
   }
 }
 
-graphql_flutter.QueryHookResult<Query$SearchAvailability>
-    useQuery$SearchAvailability(Options$Query$SearchAvailability options) =>
+graphql_flutter.QueryHookResult<Query$searchAvailability>
+    useQuery$searchAvailability(Options$Query$searchAvailability options) =>
         graphql_flutter.useQuery(options);
-graphql.ObservableQuery<Query$SearchAvailability>
-    useWatchQuery$SearchAvailability(
-            WatchOptions$Query$SearchAvailability options) =>
+graphql.ObservableQuery<Query$searchAvailability>
+    useWatchQuery$searchAvailability(
+            WatchOptions$Query$searchAvailability options) =>
         graphql_flutter.useWatchQuery(options);
 
-class Query$SearchAvailability$Widget
-    extends graphql_flutter.Query<Query$SearchAvailability> {
-  Query$SearchAvailability$Widget({
+class Query$searchAvailability$Widget
+    extends graphql_flutter.Query<Query$searchAvailability> {
+  Query$searchAvailability$Widget({
     widgets.Key? key,
-    required Options$Query$SearchAvailability options,
-    required graphql_flutter.QueryBuilder<Query$SearchAvailability> builder,
+    required Options$Query$searchAvailability options,
+    required graphql_flutter.QueryBuilder<Query$searchAvailability> builder,
   }) : super(
           key: key,
           options: options,
@@ -628,43 +621,43 @@ class Query$SearchAvailability$Widget
         );
 }
 
-class Query$SearchAvailability$availabilities {
-  Query$SearchAvailability$availabilities({
+class Query$searchAvailability$availabilities {
+  Query$searchAvailability$availabilities({
     required this.id,
-    required this.user_id,
-    required this.gym_id,
-    required this.start_time,
-    required this.end_time,
+    required this.userId,
+    required this.gymId,
+    required this.startTime,
+    required this.endTime,
     this.$__typename = 'Availability',
   });
 
-  factory Query$SearchAvailability$availabilities.fromJson(
+  factory Query$searchAvailability$availabilities.fromJson(
       Map<String, dynamic> json) {
     final l$id = json['id'];
-    final l$user_id = json['user_id'];
-    final l$gym_id = json['gym_id'];
-    final l$start_time = json['start_time'];
-    final l$end_time = json['end_time'];
+    final l$userId = json['userId'];
+    final l$gymId = json['gymId'];
+    final l$startTime = json['startTime'];
+    final l$endTime = json['endTime'];
     final l$$__typename = json['__typename'];
-    return Query$SearchAvailability$availabilities(
+    return Query$searchAvailability$availabilities(
       id: (l$id as int),
-      user_id: (l$user_id as int),
-      gym_id: (l$gym_id as int),
-      start_time: (l$start_time as String),
-      end_time: (l$end_time as String),
+      userId: (l$userId as int),
+      gymId: (l$gymId as int),
+      startTime: (l$startTime as String),
+      endTime: (l$endTime as String),
       $__typename: (l$$__typename as String),
     );
   }
 
   final int id;
 
-  final int user_id;
+  final int userId;
 
-  final int gym_id;
+  final int gymId;
 
-  final String start_time;
+  final String startTime;
 
-  final String end_time;
+  final String endTime;
 
   final String $__typename;
 
@@ -672,14 +665,14 @@ class Query$SearchAvailability$availabilities {
     final _resultData = <String, dynamic>{};
     final l$id = id;
     _resultData['id'] = l$id;
-    final l$user_id = user_id;
-    _resultData['user_id'] = l$user_id;
-    final l$gym_id = gym_id;
-    _resultData['gym_id'] = l$gym_id;
-    final l$start_time = start_time;
-    _resultData['start_time'] = l$start_time;
-    final l$end_time = end_time;
-    _resultData['end_time'] = l$end_time;
+    final l$userId = userId;
+    _resultData['userId'] = l$userId;
+    final l$gymId = gymId;
+    _resultData['gymId'] = l$gymId;
+    final l$startTime = startTime;
+    _resultData['startTime'] = l$startTime;
+    final l$endTime = endTime;
+    _resultData['endTime'] = l$endTime;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -688,17 +681,17 @@ class Query$SearchAvailability$availabilities {
   @override
   int get hashCode {
     final l$id = id;
-    final l$user_id = user_id;
-    final l$gym_id = gym_id;
-    final l$start_time = start_time;
-    final l$end_time = end_time;
+    final l$userId = userId;
+    final l$gymId = gymId;
+    final l$startTime = startTime;
+    final l$endTime = endTime;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
-      l$user_id,
-      l$gym_id,
-      l$start_time,
-      l$end_time,
+      l$userId,
+      l$gymId,
+      l$startTime,
+      l$endTime,
       l$$__typename,
     ]);
   }
@@ -708,7 +701,7 @@ class Query$SearchAvailability$availabilities {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$SearchAvailability$availabilities) ||
+    if (!(other is Query$searchAvailability$availabilities) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -717,24 +710,24 @@ class Query$SearchAvailability$availabilities {
     if (l$id != lOther$id) {
       return false;
     }
-    final l$user_id = user_id;
-    final lOther$user_id = other.user_id;
-    if (l$user_id != lOther$user_id) {
+    final l$userId = userId;
+    final lOther$userId = other.userId;
+    if (l$userId != lOther$userId) {
       return false;
     }
-    final l$gym_id = gym_id;
-    final lOther$gym_id = other.gym_id;
-    if (l$gym_id != lOther$gym_id) {
+    final l$gymId = gymId;
+    final lOther$gymId = other.gymId;
+    if (l$gymId != lOther$gymId) {
       return false;
     }
-    final l$start_time = start_time;
-    final lOther$start_time = other.start_time;
-    if (l$start_time != lOther$start_time) {
+    final l$startTime = startTime;
+    final lOther$startTime = other.startTime;
+    if (l$startTime != lOther$startTime) {
       return false;
     }
-    final l$end_time = end_time;
-    final lOther$end_time = other.end_time;
-    if (l$end_time != lOther$end_time) {
+    final l$endTime = endTime;
+    final lOther$endTime = other.endTime;
+    if (l$endTime != lOther$endTime) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -746,88 +739,88 @@ class Query$SearchAvailability$availabilities {
   }
 }
 
-extension UtilityExtension$Query$SearchAvailability$availabilities
-    on Query$SearchAvailability$availabilities {
-  CopyWith$Query$SearchAvailability$availabilities<
-          Query$SearchAvailability$availabilities>
-      get copyWith => CopyWith$Query$SearchAvailability$availabilities(
+extension UtilityExtension$Query$searchAvailability$availabilities
+    on Query$searchAvailability$availabilities {
+  CopyWith$Query$searchAvailability$availabilities<
+          Query$searchAvailability$availabilities>
+      get copyWith => CopyWith$Query$searchAvailability$availabilities(
             this,
             (i) => i,
           );
 }
 
-abstract class CopyWith$Query$SearchAvailability$availabilities<TRes> {
-  factory CopyWith$Query$SearchAvailability$availabilities(
-    Query$SearchAvailability$availabilities instance,
-    TRes Function(Query$SearchAvailability$availabilities) then,
-  ) = _CopyWithImpl$Query$SearchAvailability$availabilities;
+abstract class CopyWith$Query$searchAvailability$availabilities<TRes> {
+  factory CopyWith$Query$searchAvailability$availabilities(
+    Query$searchAvailability$availabilities instance,
+    TRes Function(Query$searchAvailability$availabilities) then,
+  ) = _CopyWithImpl$Query$searchAvailability$availabilities;
 
-  factory CopyWith$Query$SearchAvailability$availabilities.stub(TRes res) =
-      _CopyWithStubImpl$Query$SearchAvailability$availabilities;
+  factory CopyWith$Query$searchAvailability$availabilities.stub(TRes res) =
+      _CopyWithStubImpl$Query$searchAvailability$availabilities;
 
   TRes call({
     int? id,
-    int? user_id,
-    int? gym_id,
-    String? start_time,
-    String? end_time,
+    int? userId,
+    int? gymId,
+    String? startTime,
+    String? endTime,
     String? $__typename,
   });
 }
 
-class _CopyWithImpl$Query$SearchAvailability$availabilities<TRes>
-    implements CopyWith$Query$SearchAvailability$availabilities<TRes> {
-  _CopyWithImpl$Query$SearchAvailability$availabilities(
+class _CopyWithImpl$Query$searchAvailability$availabilities<TRes>
+    implements CopyWith$Query$searchAvailability$availabilities<TRes> {
+  _CopyWithImpl$Query$searchAvailability$availabilities(
     this._instance,
     this._then,
   );
 
-  final Query$SearchAvailability$availabilities _instance;
+  final Query$searchAvailability$availabilities _instance;
 
-  final TRes Function(Query$SearchAvailability$availabilities) _then;
+  final TRes Function(Query$searchAvailability$availabilities) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
     Object? id = _undefined,
-    Object? user_id = _undefined,
-    Object? gym_id = _undefined,
-    Object? start_time = _undefined,
-    Object? end_time = _undefined,
+    Object? userId = _undefined,
+    Object? gymId = _undefined,
+    Object? startTime = _undefined,
+    Object? endTime = _undefined,
     Object? $__typename = _undefined,
   }) =>
-      _then(Query$SearchAvailability$availabilities(
+      _then(Query$searchAvailability$availabilities(
         id: id == _undefined || id == null ? _instance.id : (id as int),
-        user_id: user_id == _undefined || user_id == null
-            ? _instance.user_id
-            : (user_id as int),
-        gym_id: gym_id == _undefined || gym_id == null
-            ? _instance.gym_id
-            : (gym_id as int),
-        start_time: start_time == _undefined || start_time == null
-            ? _instance.start_time
-            : (start_time as String),
-        end_time: end_time == _undefined || end_time == null
-            ? _instance.end_time
-            : (end_time as String),
+        userId: userId == _undefined || userId == null
+            ? _instance.userId
+            : (userId as int),
+        gymId: gymId == _undefined || gymId == null
+            ? _instance.gymId
+            : (gymId as int),
+        startTime: startTime == _undefined || startTime == null
+            ? _instance.startTime
+            : (startTime as String),
+        endTime: endTime == _undefined || endTime == null
+            ? _instance.endTime
+            : (endTime as String),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
 }
 
-class _CopyWithStubImpl$Query$SearchAvailability$availabilities<TRes>
-    implements CopyWith$Query$SearchAvailability$availabilities<TRes> {
-  _CopyWithStubImpl$Query$SearchAvailability$availabilities(this._res);
+class _CopyWithStubImpl$Query$searchAvailability$availabilities<TRes>
+    implements CopyWith$Query$searchAvailability$availabilities<TRes> {
+  _CopyWithStubImpl$Query$searchAvailability$availabilities(this._res);
 
   TRes _res;
 
   call({
     int? id,
-    int? user_id,
-    int? gym_id,
-    String? start_time,
-    String? end_time,
+    int? userId,
+    int? gymId,
+    String? startTime,
+    String? endTime,
     String? $__typename,
   }) =>
       _res;

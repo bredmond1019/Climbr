@@ -5,6 +5,8 @@ use juniper::http::graphiql::graphiql_source;
 use juniper::http::playground::playground_source;
 use juniper::http::GraphQLRequest;
 
+use log::info;
+
 use crate::graphql::schema::Schema;
 
 use crate::db::DbPool;
@@ -30,6 +32,9 @@ pub async fn graphql_handler(
 ) -> HttpResponse {
     let ctx = create_context(pool.get_ref().clone());
 
+    info!("Executing query: {:?}", data);
+
     let res = data.execute(&schema, &ctx).await;
+    info!("Response: {:?}", res);
     HttpResponse::Ok().json(res)
 }

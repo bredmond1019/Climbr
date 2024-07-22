@@ -1,12 +1,12 @@
 class Input$NewAvailabilityInput {
   factory Input$NewAvailabilityInput({
-    required int userId,
+    required String date,
     required int gymId,
     required String startTime,
     required String endTime,
   }) =>
       Input$NewAvailabilityInput._({
-        r'userId': userId,
+        r'date': date,
         r'gymId': gymId,
         r'startTime': startTime,
         r'endTime': endTime,
@@ -16,8 +16,8 @@ class Input$NewAvailabilityInput {
 
   factory Input$NewAvailabilityInput.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
-    final l$userId = data['userId'];
-    result$data['userId'] = (l$userId as int);
+    final l$date = data['date'];
+    result$data['date'] = (l$date as String);
     final l$gymId = data['gymId'];
     result$data['gymId'] = (l$gymId as int);
     final l$startTime = data['startTime'];
@@ -29,7 +29,7 @@ class Input$NewAvailabilityInput {
 
   Map<String, dynamic> _$data;
 
-  int get userId => (_$data['userId'] as int);
+  String get date => (_$data['date'] as String);
 
   int get gymId => (_$data['gymId'] as int);
 
@@ -39,8 +39,8 @@ class Input$NewAvailabilityInput {
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
-    final l$userId = userId;
-    result$data['userId'] = l$userId;
+    final l$date = date;
+    result$data['date'] = l$date;
     final l$gymId = gymId;
     result$data['gymId'] = l$gymId;
     final l$startTime = startTime;
@@ -65,9 +65,9 @@ class Input$NewAvailabilityInput {
         runtimeType != other.runtimeType) {
       return false;
     }
-    final l$userId = userId;
-    final lOther$userId = other.userId;
-    if (l$userId != lOther$userId) {
+    final l$date = date;
+    final lOther$date = other.date;
+    if (l$date != lOther$date) {
       return false;
     }
     final l$gymId = gymId;
@@ -90,12 +90,12 @@ class Input$NewAvailabilityInput {
 
   @override
   int get hashCode {
-    final l$userId = userId;
+    final l$date = date;
     final l$gymId = gymId;
     final l$startTime = startTime;
     final l$endTime = endTime;
     return Object.hashAll([
-      l$userId,
+      l$date,
       l$gymId,
       l$startTime,
       l$endTime,
@@ -113,7 +113,7 @@ abstract class CopyWith$Input$NewAvailabilityInput<TRes> {
       _CopyWithStubImpl$Input$NewAvailabilityInput;
 
   TRes call({
-    int? userId,
+    String? date,
     int? gymId,
     String? startTime,
     String? endTime,
@@ -134,14 +134,14 @@ class _CopyWithImpl$Input$NewAvailabilityInput<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
-    Object? userId = _undefined,
+    Object? date = _undefined,
     Object? gymId = _undefined,
     Object? startTime = _undefined,
     Object? endTime = _undefined,
   }) =>
       _then(Input$NewAvailabilityInput._({
         ..._instance._$data,
-        if (userId != _undefined && userId != null) 'userId': (userId as int),
+        if (date != _undefined && date != null) 'date': (date as String),
         if (gymId != _undefined && gymId != null) 'gymId': (gymId as int),
         if (startTime != _undefined && startTime != null)
           'startTime': (startTime as String),
@@ -157,7 +157,7 @@ class _CopyWithStubImpl$Input$NewAvailabilityInput<TRes>
   TRes _res;
 
   call({
-    int? userId,
+    String? date,
     int? gymId,
     String? startTime,
     String? endTime,

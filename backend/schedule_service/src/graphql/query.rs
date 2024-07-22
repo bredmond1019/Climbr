@@ -1,11 +1,12 @@
 use crate::graphql::schema::Context;
-use chrono::NaiveDateTime;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::graphql_object;
 use log::info;
 
 use crate::models::availability::Availability;
 use crate::schema::availabilities::{self, columns};
+use chrono::NaiveDate;
+use chrono::NaiveTime;
 
 pub struct Query;
 
@@ -14,9 +15,9 @@ impl Query {
     fn availabilities(
         context: &Context,
         gym_id: i32,
-        date: NaiveDateTime,
-        start_time: NaiveDateTime,
-        end_time: NaiveDateTime,
+        date: String,
+        start_time: String,
+        end_time: String,
     ) -> Vec<Availability> {
         let mut connection = context
             .pool
@@ -27,10 +28,23 @@ impl Query {
         info!("Start time: {}", start_time);
         info!("End time: {}", end_time);
 
+        let parsed_date =
+            NaiveDate::parse_from_str(&date, "%Y-%m-%d").expect("Invalid date format");
+
+        // Parse the start and end times
+        let parsed_start_time =
+            NaiveTime::parse_from_str(&start_time, "%H:%M").expect("Invalid time format");
+        let parsed_end_time =
+            NaiveTime::parse_from_str(&end_time, "%H:%M").expect("Invalid time format");
+
+        // Combine the date with start and end times
+        let start_datetime = parsed_date.and_time(parsed_start_time);
+        let end_datetime = parsed_date.and_time(parsed_end_time);
+
         let current_availabilities = availabilities::table
             .filter(columns::gym_id.eq(gym_id))
-            .filter(columns::start_time.le(end_time))
-            .filter(columns::end_time.ge(start_time))
+            .filter(columns::start_time.le(end_datetime))
+            .filter(columns::end_time.ge(start_datetime))
             .load::<Availability>(&mut connection)
             .expect("Error loading availabilities");
 

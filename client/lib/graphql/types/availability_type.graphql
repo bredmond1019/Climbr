@@ -1,15 +1,15 @@
 type Availability {
   id: Int!
-  user_id: Int!
-  gym_id: Int!
-  start_time: String!
-  end_time: String!
-  created_at: String!
-  updated_at: String!
+  userId: Int!
+  gymId: Int!
+  startTime: String!
+  endTime: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 input NewAvailabilityInput {
-  userId: Int!
+  date: String!
   gymId: Int!
   startTime: String!
   endTime: String!

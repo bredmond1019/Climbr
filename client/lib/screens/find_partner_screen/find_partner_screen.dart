@@ -13,7 +13,7 @@ class FindPartnerScreen extends HookWidget {
     final client = useGraphQLClient();
     final timeList = _generateTimeList();
 
-    final climbingGym = useState<String>('gym1');
+    final climbingGym = useState<String>('1');
     final startTime = useState<String>(timeList[0]);
     final endTime = useState<String>(timeList[0]);
     final date =
@@ -24,7 +24,7 @@ class FindPartnerScreen extends HookWidget {
       loading.value = true;
 
       NewAvailability availabilityParams = NewAvailability(
-        gymId: climbingGym.value,
+        gymId: int.parse(climbingGym.value),
         date: date.value,
         startTime: startTime.value,
         endTime: endTime.value,
@@ -33,7 +33,7 @@ class FindPartnerScreen extends HookWidget {
       print('Availability Params: ${availabilityParams.toJson()}');
 
       final QueryOptions options = QueryOptions(
-        document: documentNodeQuerySearchAvailability,
+        document: documentNodeQuerysearchAvailability,
         variables: availabilityParams.toJson(),
       );
 
@@ -53,7 +53,7 @@ class FindPartnerScreen extends HookWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Partner found successfully!')),
           );
-          Navigator.pushNamed(context, '/user_list');
+          // Navigator.pushNamed(context, '/user_list');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('No data received')),
@@ -78,8 +78,8 @@ class FindPartnerScreen extends HookWidget {
                 climbingGym.value = value!;
               },
               items: const [
-                DropdownMenuItem(value: 'gym1', child: Text('Gym 1')),
-                DropdownMenuItem(value: 'gym2', child: Text('Gym 2')),
+                DropdownMenuItem(value: '1', child: Text('Gym 1')),
+                DropdownMenuItem(value: '2', child: Text('Gym 2')),
               ],
               decoration: const InputDecoration(labelText: 'Select Gym'),
             ),
