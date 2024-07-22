@@ -1,4 +1,5 @@
 import 'package:client/models/user.dart';
+import 'package:client/screens/find_partner_screen/find_partner_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -45,11 +46,41 @@ class HomeScreen extends StatelessWidget {
                     : const Text('Welcome!')),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/user_list');
-                },
-                child: const Text('User List'),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigator.pushNamed(context, '/find_partner');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FindPartnerScreen(),
+                          ));
+                    },
+                    child: const Text('Find Partner'),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/user_list');
+                    },
+                    child: const Text('User List'),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    child: const Text('Profile'),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                    child: const Text('Settings'),
+                  ),
+                ],
               ),
             ),
           ],

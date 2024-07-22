@@ -33,3 +33,25 @@ class Availability {
     };
   }
 }
+
+class NewAvailability {
+  final String gymId;
+  final String startTime;
+  final String endTime;
+  final String date;
+
+  NewAvailability({
+    required this.gymId,
+    required this.startTime,
+    required this.endTime,
+    required this.date,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'gym_d': gymId,
+      'start_time': startTime,
+      'end_time': endTime,
+    };
+  }
+}

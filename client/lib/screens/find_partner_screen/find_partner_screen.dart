@@ -1,132 +1,159 @@
+import 'package:client/models/availability.dart';
+import 'package:client/screens/find_partner_screen/queryAvailablePartners.graphql.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
-class FindPartnerPage extends StatefulWidget {
-  @override
-  _FindPartnerPageState createState() => _FindPartnerPageState();
-}
-
-class _FindPartnerPageState extends State<FindPartnerPage> {
-  String _selectedGymId;
-  DateTime _startTime;
-  DateTime _endTime;
-  List<SearchAvailability$Query$Availability> _availabilities = [];
-
-  void _searchAvailability() async {
-    final client = GraphQLConfig.getClient();
-
-    final options = QueryOptions(
-      document: SEARCH_AVAILABILITY_QUERY_DOCUMENT,
-      variables: SearchAvailabilityArguments(
-        gymId: _selectedGymId,
-        startTime: _startTime.toIso8601String(),
-        endTime: _endTime.toIso8601String(),
-      ).toJson(),
-    );
-
-    final result = await client.query(options);
-
-    if (result.hasException) {
-      print(result.exception.toString());
-      return;
-    }
-
-    final searchResult = SearchAvailability$Query.fromJson(result.data);
-    setState(() {
-      _availabilities = searchResult.searchAvailability;
-    });
-  }
+class FindPartnerScreen extends HookWidget {
+  const FindPartnerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final client = useGraphQLClient();
+    final timeList = _generateTimeList();
+
+    final climbingGym = useState<String>('gym1');
+    final startTime = useState<String>(timeList[0]);
+    final endTime = useState<String>(timeList[0]);
+    final date =
+        useState<String>(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    final loading = useState(false);
+
+    Future<void> findPartner() async {
+      loading.value = true;
+
+      NewAvailability availabilityParams = NewAvailability(
+        gymId: climbingGym.value,
+        date: date.value,
+        startTime: startTime.value,
+        endTime: endTime.value,
+      );
+
+      print('Availability Params: ${availabilityParams.toJson()}');
+
+      final QueryOptions options = QueryOptions(
+        document: documentNodeQuerySearchAvailability,
+        variables: availabilityParams.toJson(),
+      );
+
+      try {
+        final QueryResult result = await client.query(options);
+
+        if (!context.mounted) return;
+
+        if (result.hasException) {
+          print('Error: ${result.exception.toString()}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${result.exception.toString()}')),
+          );
+        } else if (result.data != null) {
+          final responseData = result.data!;
+          print('Partner found: $responseData');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Partner found successfully!')),
+          );
+          Navigator.pushNamed(context, '/user_list');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No data received')),
+          );
+        }
+      } finally {
+        loading.value = false;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Find a Climbing Partner'),
+        title: const Text('Find Partner'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Gym Selection
             DropdownButtonFormField<String>(
-              value: _selectedGymId,
+              value: climbingGym.value,
               onChanged: (value) {
-                setState(() {
-                  _selectedGymId = value;
-                });
+                climbingGym.value = value!;
               },
-              items: [
-                // Replace with dynamic gym options
+              items: const [
                 DropdownMenuItem(value: 'gym1', child: Text('Gym 1')),
                 DropdownMenuItem(value: 'gym2', child: Text('Gym 2')),
               ],
-              decoration: InputDecoration(labelText: 'Select Gym'),
+              decoration: const InputDecoration(labelText: 'Select Gym'),
             ),
-            SizedBox(height: 16.0),
-            // DateTime Pickers
-            TextButton(
-              onPressed: () {
-                DatePicker.showDateTimePicker(context, showTitleActions: true,
-                    onConfirm: (date) {
-                  setState(() {
-                    _startTime = date;
-                  });
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
+            TextField(
+              //editing controller of this TextField
+              decoration: const InputDecoration(
+                  icon: Icon(Icons.calendar_today), //icon of text field
+                  labelText: "Enter Date" //label text of field
+                  ),
+              readOnly: true,
+              //set it true, so that user will not able to edit text
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime(2100));
+
+                if (pickedDate != null) {
+                  print(
+                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(pickedDate);
+                  print(
+                      formattedDate); //formatted date output using intl package =>  2021-03-16
+
+                  date.value = formattedDate;
+                } else {}
               },
-              child: Text(
-                'Select Start Time',
-                style: TextStyle(color: Colors.blue),
-              ),
             ),
-            Text(_startTime != null
-                ? _startTime.toString()
-                : 'No start time selected'),
-            SizedBox(height: 16.0),
-            TextButton(
-              onPressed: () {
-                DatePicker.showDateTimePicker(context, showTitleActions: true,
-                    onConfirm: (date) {
-                  setState(() {
-                    _endTime = date;
-                  });
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
+            const SizedBox(height: 16.0),
+            // Time Pickers
+            DropdownButtonFormField<String>(
+              value: startTime.value,
+              onChanged: (value) {
+                startTime.value = value!;
               },
-              child: Text(
-                'Select End Time',
-                style: TextStyle(color: Colors.blue),
-              ),
+              items: timeList.map((time) {
+                return DropdownMenuItem(value: time, child: Text(time));
+              }).toList(),
+              decoration: const InputDecoration(labelText: 'Select Start Time'),
             ),
-            Text(_endTime != null
-                ? _endTime.toString()
-                : 'No end time selected'),
-            SizedBox(height: 16.0),
-            // Search Button
+            const SizedBox(height: 16.0),
+            DropdownButtonFormField<String>(
+              value: endTime.value,
+              onChanged: (value) {
+                endTime.value = value!;
+              },
+              items: timeList.map((time) {
+                return DropdownMenuItem(value: time, child: Text(time));
+              }).toList(),
+              decoration: const InputDecoration(labelText: 'Select End Time'),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
-              onPressed: _searchAvailability,
-              child: Text('Search'),
-            ),
-            SizedBox(height: 16.0),
-            // Display Results
-            Expanded(
-              child: ListView.builder(
-                itemCount: _availabilities.length,
-                itemBuilder: (context, index) {
-                  final availability = _availabilities[index];
-                  return ListTile(
-                    title: Text(availability.user.name),
-                    subtitle: Text(
-                        'Available from ${availability.startTime} to ${availability.endTime}'),
-                    onTap: () {
-                      // Implement chat or request session functionality here
-                    },
-                  );
-                },
-              ),
+              onPressed: loading.value ? null : findPartner,
+              child: loading.value
+                  ? const CircularProgressIndicator()
+                  : const Text('Find Partner'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<String> _generateTimeList() {
+    List<String> times = [];
+    for (int hour = 0; hour < 24; hour++) {
+      times.add('${hour.toString().padLeft(2, '0')}:00');
+      times.add('${hour.toString().padLeft(2, '0')}:30');
+    }
+    return times;
   }
 }
