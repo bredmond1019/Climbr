@@ -964,6 +964,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "gateway_service"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "actix-cors",
+ "actix-web",
+ "actix-web-actors",
+ "actix-web-httpauth",
+ "bcrypt",
+ "chrono",
+ "diesel",
+ "dotenv",
+ "env_logger",
+ "futures-util",
+ "jsonwebtoken",
+ "juniper 0.15.12",
+ "juniper_actix",
+ "lazy_static",
+ "log",
+ "serde",
+ "serde_json",
+ "serde_qs",
+ "serde_urlencoded",
+ "shared",
+ "tokio",
+ "uuid 1.10.0",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

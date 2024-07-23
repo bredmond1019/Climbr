@@ -1,1 +1,9 @@
+pub mod availability;
+pub mod chat_message;
+pub mod conversation;
+pub mod conversation_membership;
+pub mod event;
+pub mod event_member;
+pub mod gym;
+pub mod gym_membership;
 pub mod user;
