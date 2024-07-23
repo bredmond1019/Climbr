@@ -10,7 +10,6 @@ use log::info;
 use services::chat_server::ChatServer;
 use shared::db;
 
-mod models;
 mod schema;
 mod services;
 

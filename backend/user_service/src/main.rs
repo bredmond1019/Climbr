@@ -15,9 +15,7 @@ use shared::{config, db};
 use tokio::sync::Mutex;
 mod auth;
 mod graphql;
-mod models;
 mod routes;
-mod schema;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -39,7 +37,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(context.clone()))
             .wrap(Logger::default())
             .wrap(Cors::permissive())
-            .service(routes::login::login)
+            // .service(routes::login::login)
             .service(web::resource("/playground").route(web::get().to(graphql_playground)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
             .service(

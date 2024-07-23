@@ -11,8 +11,6 @@ use graphql::schema::create_schema;
 
 use shared::db;
 mod graphql;
-mod models;
-mod schema;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

@@ -4,7 +4,7 @@ use actix_web_actors::ws;
 use log::info;
 
 use crate::db::DbPool;
-use crate::models::conversation::Conversation;
+use shared::models::conversation::Conversation;
 
 use crate::services::chat_session::ChatSession;
 use crate::ChatServer;

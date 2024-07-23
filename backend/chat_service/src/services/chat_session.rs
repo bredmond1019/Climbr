@@ -1,13 +1,13 @@
-use crate::models::conversation::ConversationId;
-use crate::models::{
-    chat_message::ClientMessage, conversation::Conversation,
-    conversation_membership::ConversationMembership,
-};
 use crate::ChatServer;
 use actix::prelude::*;
 use actix_web_actors::ws;
 use log::info;
 use serde::{Deserialize, Serialize};
+use shared::models::conversation::ConversationId;
+use shared::models::{
+    chat_message::ClientMessage, conversation::Conversation,
+    conversation_membership::ConversationMembership,
+};
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]

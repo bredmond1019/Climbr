@@ -1,11 +1,13 @@
 use juniper::graphql_object;
 
 use crate::graphql::schema::Context;
-use crate::models::availability::{Availability, NewAvailability};
-use crate::models::event::{Event, NewEvent};
-use crate::models::event_member::NewEventMember;
-
 use diesel::RunQueryDsl;
+use shared::models::{
+    availability::Availability, availability::NewAvailability, event::Event, event::NewEvent,
+    event_member::NewEventMember,
+};
+
+use shared::schema::{availabilities, event_members, events};
 
 pub struct Mutation;
 
@@ -18,8 +20,6 @@ impl Mutation {
         start_time: chrono::NaiveDateTime,
         end_time: chrono::NaiveDateTime,
     ) -> Availability {
-        use crate::schema::availabilities;
-
         let mut connection = context
             .pool
             .get()
@@ -41,8 +41,6 @@ impl Mutation {
         start_time: chrono::NaiveDateTime,
         end_time: chrono::NaiveDateTime,
     ) -> Event {
-        use crate::schema::events;
-
         let mut connection = context
             .pool
             .get()
@@ -58,7 +56,7 @@ impl Mutation {
         for user_id in additional_users {
             let new_event_member = NewEventMember::new(event.id, user_id);
 
-            diesel::insert_into(crate::schema::event_members::table)
+            diesel::insert_into(event_members::table)
                 .values(&new_event_member)
                 .execute(&mut connection)
                 .expect("Error adding event member");

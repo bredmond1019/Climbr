@@ -1,6 +1,8 @@
-use crate::{
-    graphql::schema::Context,
+use crate::graphql::schema::Context;
+
+use shared::{
     models::{gym::Gym, gym_membership::GymMembership},
+    schema::{gym_memberships, gyms},
 };
 
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
@@ -27,18 +29,19 @@ impl Query {
     }
 
     fn gym(context: &Context, gym_id: i32) -> Option<Gym> {
-        use crate::schema::gyms::dsl::*;
         let mut connection = context.pool.get().expect("Error getting db connection");
 
-        gyms.filter(id.eq(gym_id)).first(&mut connection).ok()
+        gyms::table
+            .filter(gyms::columns::id.eq(gym_id))
+            .first(&mut connection)
+            .ok()
     }
 
     fn gym_memberships(context: &Context, member_id: i32) -> Vec<GymMembership> {
-        use crate::schema::gym_memberships::dsl::*;
         let mut connection = context.pool.get().expect("Error getting db connection");
 
-        gym_memberships
-            .filter(user_id.eq(member_id))
+        gym_memberships::table
+            .filter(gym_memberships::columns::user_id.eq(member_id))
             .load(&mut connection)
             .expect("Error loading gym memberships")
     }

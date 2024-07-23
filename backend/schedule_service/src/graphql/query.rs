@@ -3,10 +3,10 @@ use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::graphql_object;
 use log::info;
 
-use crate::models::availability::Availability;
-use crate::schema::availabilities::{self, columns};
 use chrono::NaiveDate;
 use chrono::NaiveTime;
+use shared::models::availability::Availability;
+use shared::schema::availabilities::{self, columns};
 
 pub struct Query;
 

@@ -9,10 +9,12 @@ use diesel::PgConnection;
 use dotenv::dotenv;
 
 use auth::auth::authenticator;
+use graphql::schema::{create_context, create_schema};
 use shared::{config, db};
 
 mod auth;
 mod graphql;
+mod routes;
 mod websocket;
 
 #[actix_web::main]
@@ -24,7 +26,7 @@ async fn main() -> std::io::Result<()> {
 
     let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
     let schema = Arc::new(create_schema());
-    let ctx = create_context(pool.get_ref().clone());
+    let context = create_context(pool.clone());
 
     HttpServer::new(move || {
         let auth_middleware = HttpAuthentication::bearer(authenticator);

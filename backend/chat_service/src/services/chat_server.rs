@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
-use crate::models::chat_message::ClientMessage;
-use crate::models::conversation::ConversationId;
-use crate::{db::DbPool, models::chat_message::ChatMessage};
+use crate::db::DbPool;
 use actix::{Actor, Addr, Context, Handler};
 use log::info;
+use shared::models::chat_message::{ChatMessage, ClientMessage};
+use shared::models::conversation::ConversationId;
 
 use super::chat_session::{ChatServerConnect, ChatServerDisconnect, ChatSession, SessionId};
 
