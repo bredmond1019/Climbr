@@ -19,20 +19,26 @@ pub async fn chat_route(
     server: web::Data<Addr<ChatServer>>,
     pool: web::Data<DbPool>,
 ) -> impl Responder {
+    // Parse Query String and Get Params
     let query_string = req.query_string();
     let params = serde_urlencoded::from_str::<Vec<(String, String)>>(query_string)
         .expect("Failed to parse query string");
     info!("Query: {}", query_string);
     info!("Params: {:?}", params);
+
+    // Convert Params to Session Data
     let (sender_id, conversation_member_ids, conversation_id) = get_session_data(params);
 
+    // Get DB Connection and Chat Server Address
     let mut conn = pool.get().expect("Failed to get DB connection");
     let chat_server_address = server.get_ref().clone();
 
+    // Find or Create Conversation and Session Member
     let conversation =
         Conversation::find_or_create(&mut conn, conversation_id, conversation_member_ids);
     let session_member = conversation.find_membership_by_user_id(sender_id, &mut conn);
 
+    // Create Chat Session
     let session = ChatSession::new(chat_server_address, conversation, session_member);
     ws::start(session, &req, stream)
 }
