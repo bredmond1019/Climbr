@@ -1,5 +1,4 @@
-use crate::graphql::schema::Context;
-use crate::graphql::utils::get_graphql_response;
+use crate::graphql::{schema::Context, utils::graphql_request};
 
 use juniper::{graphql_object, FieldResult};
 use log::info;
@@ -11,7 +10,13 @@ pub struct Query;
 impl Query {
     async fn users(&self, context: &Context) -> FieldResult<Vec<UserDTO>> {
         let query_string = "{ users { id name email password createdAt updatedAt } }";
-        let response = get_graphql_response(query_string, context).await;
+
+        let response = graphql_request(
+            query_string,
+            &context.client,
+            context.get_user_service_url(),
+        )
+        .await;
 
         let users = response["data"]["users"].clone();
         info!("Users: {:?}", users);
@@ -21,10 +26,29 @@ impl Query {
 
     async fn user(context: &mut Context, user_id: i32) -> Option<User> {
         let query_string = format!("{{ user(id: {}) {{ id name email }} }}", user_id);
-        let response = get_graphql_response(&query_string, context).await;
-
+        let response = graphql_request(
+            &query_string,
+            &context.client,
+            context.get_user_service_url(),
+        )
+        .await;
         let user = response["data"]["user"].clone();
         let user: User = serde_json::from_value(user).expect("Error parsing user");
         Some(user)
+    }
+
+    async fn availabilities(context: &Context, user_id: i32) -> FieldResult<Vec<String>> {
+        let query_string = format!("{{ availabilities(userId: {}) }}", user_id);
+        let response = graphql_request(
+            &query_string,
+            &context.client,
+            context.get_schedule_service_url(),
+        )
+        .await;
+
+        let availabilities = response["data"]["availabilities"].clone();
+        let availabilities: Vec<String> =
+            serde_json::from_value(availabilities).expect("Error parsing availabilities");
+        Ok(availabilities)
     }
 }
