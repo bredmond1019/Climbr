@@ -11,15 +11,14 @@ use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use diesel::PgConnection;
 use dotenv::dotenv;
-use models::user::User;
 
-pub async fn get_user(pool: web::Data<DbPool>) -> Vec<User> {
-    let mut conn: PooledConnection<ConnectionManager<PgConnection>> = pool.get().unwrap();
-    let all_users: Result<Vec<User>, diesel::result::Error> =
-        web::block(move || User::find_all(&mut conn)).await.unwrap();
+// pub async fn get_user(pool: web::Data<DbPool>) -> Vec<User> {
+//     let mut conn: PooledConnection<ConnectionManager<PgConnection>> = pool.get().unwrap();
+//     let all_users: Result<Vec<User>, diesel::result::Error> =
+//         web::block(move || User::find_all(&mut conn)).await.unwrap();
 
-    all_users.unwrap()
-}
+//     all_users.unwrap()
+// }
 
 pub fn establish_connection() -> PgConnection {
     dotenv().ok();

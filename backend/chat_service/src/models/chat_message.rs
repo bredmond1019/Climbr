@@ -10,12 +10,11 @@ use serde::{Deserialize, Serialize};
 use crate::schema::chat_messages;
 
 use super::conversation::{Conversation, ConversationId};
-use shared::models::user::User;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Clone, GraphQLObject, Associations)]
 #[diesel(table_name = crate::schema::chat_messages)]
 #[diesel(belongs_to(Conversation))]
-#[diesel(belongs_to(User))]
+
 pub struct ChatMessage {
     pub id: i32,
     pub conversation_id: i32,

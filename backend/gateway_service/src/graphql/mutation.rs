@@ -1,12 +1,15 @@
 use juniper::GraphQLObject;
 use juniper::{graphql_object, FieldResult};
-use shared::models::user::User;
+use serde::Deserialize;
+use shared::models::user_dto::UserDTO;
 
 use crate::graphql::schema::Context;
 
 pub struct Mutation;
 
 use juniper::GraphQLInputObject;
+
+use super::utils::graphql_request;
 
 #[derive(GraphQLInputObject)]
 struct NewUserInput {
@@ -20,37 +23,76 @@ struct LoginInput {
     password: String,
 }
 
-#[derive(GraphQLObject, Debug)]
+#[derive(GraphQLObject, Debug, Deserialize)]
 struct LoginResponse {
-    user: User,
+    user: UserDTO,
     token: String,
 }
 
 #[graphql_object(context = Context)]
 impl Mutation {
-    fn create_user(context: &Context, params: NewUserInput) -> FieldResult<User> {
-        // let mut new_user = NewUser {
-        //     name: params.name,
-        //     email: params.email,
-        //     password: params.password,
-        //     created_at: chrono::Local::now().naive_local(),
-        //     updated_at: chrono::Local::now().naive_local(),
-        // };
+    async fn create_user(context: &Context, params: NewUserInput) -> FieldResult<UserDTO> {
+        let query_string = format!(
+            "mutation {{
+                createUser(input: {{
+                    name: \"{}\",
+                    email: \"{}\",
+                    password: \"{}\"
+                }}) {{
+                    id
+                    name
+                    email
+                    password
+                    createdAt
+                    updatedAt
+                }}
+            }}",
+            params.name, params.email, params.password
+        );
 
-        // new_user.hash_password()?;
+        let response = graphql_request(
+            &query_string,
+            &context.client,
+            context.get_user_service_url(),
+        )
+        .await;
 
-        // let mut conn = context.pool.get()?;
-        // let user = User::create(new_user, &mut conn);
-        // Ok(user)
-
-        let user = User {
-            id: 6,
-            name: params.name,
-            email: params.email,
-            password: params.password,
-            created_at: chrono::Local::now().naive_local(),
-            updated_at: chrono::Local::now().naive_local(),
-        };
+        let user = response["data"]["createUser"].clone();
+        let user: UserDTO = serde_json::from_value(user).expect("Error parsing user");
         Ok(user)
+    }
+
+    async fn login(context: &Context, params: LoginInput) -> FieldResult<LoginResponse> {
+        let query_string = format!(
+            "mutation {{
+                login(input: {{
+                    email: \"{}\",
+                    password: \"{}\"
+                }}) {{
+                    user {{
+                        id
+                        name
+                        email
+                        password
+                        createdAt
+                        updatedAt
+                    }}
+                    token
+                }}
+            }}",
+            params.email, params.password
+        );
+
+        let response = graphql_request(
+            &query_string,
+            &context.client,
+            context.get_user_service_url(),
+        )
+        .await;
+
+        let login_response = response["data"]["login"].clone();
+        let login_response: LoginResponse =
+            serde_json::from_value(login_response).expect("Error parsing login response");
+        Ok(login_response)
     }
 }

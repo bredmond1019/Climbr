@@ -2,7 +2,7 @@ use crate::graphql::{schema::Context, utils::graphql_request};
 
 use juniper::{graphql_object, FieldResult};
 use log::info;
-use shared::models::{user::User, user_dto::UserDTO};
+use shared::models::{availability_dto::AvailabilityDTO, user_dto::UserDTO};
 
 pub struct Query;
 
@@ -24,7 +24,7 @@ impl Query {
         Ok(users)
     }
 
-    async fn user(context: &mut Context, user_id: i32) -> Option<User> {
+    async fn user(context: &mut Context, user_id: i32) -> Option<UserDTO> {
         let query_string = format!("{{ user(id: {}) {{ id name email }} }}", user_id);
         let response = graphql_request(
             &query_string,
@@ -33,11 +33,11 @@ impl Query {
         )
         .await;
         let user = response["data"]["user"].clone();
-        let user: User = serde_json::from_value(user).expect("Error parsing user");
+        let user: UserDTO = serde_json::from_value(user).expect("Error parsing user");
         Some(user)
     }
 
-    async fn availabilities(context: &Context, user_id: i32) -> FieldResult<Vec<String>> {
+    async fn availabilities(context: &Context, user_id: i32) -> FieldResult<Vec<AvailabilityDTO>> {
         let query_string = format!("{{ availabilities(userId: {}) }}", user_id);
         let response = graphql_request(
             &query_string,
@@ -47,7 +47,7 @@ impl Query {
         .await;
 
         let availabilities = response["data"]["availabilities"].clone();
-        let availabilities: Vec<String> =
+        let availabilities: Vec<AvailabilityDTO> =
             serde_json::from_value(availabilities).expect("Error parsing availabilities");
         Ok(availabilities)
     }

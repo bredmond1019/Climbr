@@ -1,4 +1,5 @@
 use crate::graphql::schema::Context;
+use chrono::{NaiveDate, NaiveTime};
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::graphql_object;
 use log::info;
@@ -6,8 +7,6 @@ use uuid::timestamp::context;
 
 use crate::models::availability::Availability;
 use crate::schema::availabilities::{self, columns};
-use chrono::NaiveDate;
-use chrono::NaiveTime;
 
 pub struct Query;
 

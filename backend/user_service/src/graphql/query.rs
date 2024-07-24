@@ -1,14 +1,11 @@
 use crate::{
     graphql::schema::Context,
-    models::{gym::Gym, gym_membership::GymMembership},
+    models::{gym::Gym, gym_membership::GymMembership, user::User},
 };
 
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::{graphql_object, FieldResult};
-use shared::{
-    models::{user::User, user_dto::UserDTO},
-    schema::users,
-};
+use shared::{models::user_dto::UserDTO, schema::users};
 
 pub struct Query;
 

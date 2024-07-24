@@ -1,9 +1,19 @@
-use crate::db::DbPool;
+use actix_web::web::Data;
 use actix_web::{get, post, web, HttpResponse, Responder};
+use shared::models::user_dto::UserDTO;
+use std::sync::Arc;
+
+use diesel::query_dsl::methods::FilterDsl;
 use diesel::r2d2::{ConnectionManager, PooledConnection};
-use diesel::PgConnection;
+use diesel::{ExpressionMethods, PgConnection, RunQueryDsl};
+use futures_util::lock::Mutex;
 use log::info;
-use shared::models::user::{NewUser, User, UserData};
+use serde::Deserialize;
+
+use crate::db::DbPool;
+use crate::graphql::schema::Context;
+use crate::models::user::{NewUser, User, UserData};
+use crate::schema::users;
 
 #[get("/users")]
 async fn get_user(pool: web::Data<DbPool>) -> impl Responder {
@@ -34,4 +44,40 @@ async fn create_user(pool: web::Data<DbPool>, item: web::Json<UserData>) -> impl
 
     info!("Created user: {:?}", created_user);
     HttpResponse::Ok().json(created_user)
+}
+
+#[derive(Deserialize, Debug)]
+struct LoginInfo {
+    email: String,
+    password: String,
+}
+
+#[post("/login")]
+pub async fn user_login(
+    info: web::Json<LoginInfo>,
+    ctx: Data<Arc<Mutex<Context>>>,
+) -> impl Responder {
+    let mut conn = ctx.lock().await.pool.get().unwrap();
+    let email_address = info.email.clone();
+    let pass = &info.password;
+
+    let user = web::block(move || {
+        users::table
+            .filter(users::columns::email.eq(&email_address))
+            .first::<User>(&mut conn)
+    })
+    .await
+    .expect("Error loading user");
+
+    info!("User: {:?}", user);
+    match user {
+        Ok(user) => {
+            if user.verify_password(&pass).unwrap() {
+                return HttpResponse::Ok().json(UserDTO::from(user));
+            } else {
+                return HttpResponse::InternalServerError().finish();
+            }
+        }
+        Err(_) => HttpResponse::InternalServerError().finish(),
+    }
 }

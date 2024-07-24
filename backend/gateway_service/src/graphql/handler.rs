@@ -4,14 +4,11 @@ use actix_web::{web, HttpResponse};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::playground::playground_source;
 use juniper::http::GraphQLRequest;
-
 use log::info;
 
-use crate::graphql::schema::Schema;
-
-use crate::db::DbPool;
-
 use super::schema::create_context;
+use crate::db::DbPool;
+use crate::graphql::schema::Schema;
 
 pub async fn graphql_playground() -> HttpResponse {
     HttpResponse::Ok()

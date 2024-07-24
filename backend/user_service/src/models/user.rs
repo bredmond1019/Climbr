@@ -1,5 +1,6 @@
 use crate::schema::users;
 use bcrypt::{hash, verify, DEFAULT_COST};
+use chrono::{TimeZone, Utc};
 use diesel::{
     deserialize::Queryable,
     prelude::Insertable,
@@ -9,6 +10,7 @@ use diesel::{
 use juniper::GraphQLObject;
 use log::info;
 use serde::{Deserialize, Serialize};
+use shared::models::user_dto::UserDTO;
 
 #[derive(Queryable, Serialize, Debug, Clone, GraphQLObject, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,6 +22,20 @@ pub struct User {
     pub password: String,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+}
+
+// Conversion from User to UserDTO
+impl From<User> for UserDTO {
+    fn from(user: User) -> Self {
+        UserDTO {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            created_at: TimeZone::from_utc_datetime(&Utc, &user.created_at),
+            updated_at: TimeZone::from_utc_datetime(&Utc, &user.updated_at),
+        }
+    }
 }
 
 #[derive(Deserialize, Insertable)]

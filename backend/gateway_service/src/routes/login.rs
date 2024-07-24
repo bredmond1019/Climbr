@@ -1,27 +1,22 @@
-use std::sync::Arc;
-
 use actix_web::web::Data;
 use actix_web::{post, web, HttpResponse, Responder};
+
 use diesel::deserialize::Queryable;
-use diesel::RunQueryDsl;
-use diesel::{query_dsl::methods::FilterDsl, ExpressionMethods};
-use log::info;
 use serde::{Deserialize, Serialize};
-use shared::models::user::User;
-use shared::schema::users;
-use tokio::sync::Mutex;
+
+use shared::models::user_dto::UserDTO;
 
 use crate::auth::{create_jwt, UserResponse};
 use crate::graphql::schema::Context;
 
-#[derive(Queryable, Serialize, Debug, Clone)]
+#[derive(Queryable, Serialize, Debug, Clone, Deserialize)]
 struct LoginResponse {
     user: UserResponse,
     token: String,
 }
 
-impl From<User> for UserResponse {
-    fn from(user: User) -> Self {
+impl From<UserDTO> for UserResponse {
+    fn from(user: UserDTO) -> Self {
         UserResponse {
             id: user.id,
             email: user.email.to_string(),
@@ -30,50 +25,39 @@ impl From<User> for UserResponse {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 struct LoginInfo {
     email: String,
     password: String,
 }
 
 #[post("/login")]
-pub async fn user_login(
-    info: web::Json<LoginInfo>,
-    ctx: Data<Arc<Mutex<Context>>>,
-) -> impl Responder {
-    info!("Login request: {:?}", info);
-    info!("Context: {:?}", ctx.as_ref());
-    let mut conn = ctx.lock().await.pool.get().unwrap();
-    let email_address = info.email.clone();
-    let pass = &info.password;
+pub async fn user_login(info: web::Json<LoginInfo>, ctx: Data<Context>) -> impl Responder {
+    let client = ctx.client.clone();
+    let user_service_url = ctx.get_user_service_url();
+    let login_info = info.into_inner();
 
-    let user = web::block(move || {
-        users::table
-            .filter(users::columns::email.eq(&email_address))
-            .first::<User>(&mut conn)
-    })
-    .await
-    .expect("Error loading user");
+    let response = client
+        .post(&format!("{}/login", user_service_url))
+        .json(&login_info)
+        .send()
+        .await;
 
-    info!("User: {:?}", user);
+    match response {
+        Ok(res) => {
+            if res.status().is_success() {
+                let user: UserDTO = res.json().await.unwrap();
+                let token = create_jwt(&user.email).expect("Error creating JWT");
 
-    match user {
-        Ok(user) => {
-            if user.verify_password(&pass).unwrap() {
-                let user_response = UserResponse::from(user);
-                let token = create_jwt(&user_response.email).expect("Failed to create JWT");
-                info!("Token: {:?}", token);
-
-                return HttpResponse::Ok().json(LoginResponse {
-                    user: user_response,
-                    token: token,
-                });
+                let login_response = LoginResponse {
+                    user: user.into(),
+                    token,
+                };
+                HttpResponse::Ok().json(login_response)
             } else {
-                return HttpResponse::InternalServerError().finish();
+                HttpResponse::InternalServerError().finish()
             }
         }
-        Err(_) => {
-            return HttpResponse::Unauthorized().finish();
-        }
+        Err(_) => HttpResponse::InternalServerError().finish(),
     }
 }

@@ -9,12 +9,10 @@ use diesel::{
 
 use super::conversation::Conversation;
 use crate::schema::{conversation_memberships, conversations};
-use shared::models::user::User;
 
 #[derive(Queryable, Associations, Identifiable, Debug, Clone, PartialEq, Eq, Hash)]
 #[diesel(table_name = conversation_memberships)]
 #[diesel(belongs_to(Conversation))]
-#[diesel(belongs_to(User))]
 pub struct ConversationMembership {
     pub id: i32,
     pub conversation_id: i32,
