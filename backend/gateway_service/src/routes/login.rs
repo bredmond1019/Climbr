@@ -11,7 +11,7 @@ use shared::models::user::User;
 use shared::schema::users;
 use tokio::sync::Mutex;
 
-use crate::auth::auth::{create_jwt, UserResponse};
+use crate::auth::{create_jwt, UserResponse};
 use crate::graphql::schema::Context;
 
 #[derive(Queryable, Serialize, Debug, Clone)]
@@ -37,7 +37,10 @@ struct LoginInfo {
 }
 
 #[post("/login")]
-pub async fn login(info: web::Json<LoginInfo>, ctx: Data<Arc<Mutex<Context>>>) -> impl Responder {
+pub async fn user_login(
+    info: web::Json<LoginInfo>,
+    ctx: Data<Arc<Mutex<Context>>>,
+) -> impl Responder {
     info!("Login request: {:?}", info);
     info!("Context: {:?}", ctx.as_ref());
     let mut conn = ctx.lock().await.pool.get().unwrap();

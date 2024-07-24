@@ -5,16 +5,21 @@ use crate::{
 
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::{graphql_object, FieldResult};
-use shared::{models::user::User, schema::users};
+use shared::{
+    models::{user::User, user_dto::UserDTO},
+    schema::users,
+};
 
 pub struct Query;
 
 #[graphql_object(context = Context)]
 impl Query {
-    async fn users(&self, context: &Context) -> FieldResult<Vec<User>> {
+    async fn users(&self, context: &Context) -> FieldResult<Vec<UserDTO>> {
         let mut connection = context.pool.get()?;
-        let result = User::find_all(&mut connection)?;
-        Ok(result)
+        let results = User::find_all(&mut connection)?;
+
+        let user_dtos: Vec<UserDTO> = results.into_iter().map(UserDTO::from).collect();
+        Ok(user_dtos)
     }
 
     fn user(context: &mut Context, user_id: i32) -> Option<User> {

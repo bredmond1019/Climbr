@@ -10,12 +10,20 @@ pub fn create_schema() -> Schema {
 }
 
 pub fn create_context(pool: db::DbPool) -> Context {
-    Context { pool }
+    Context {
+        pool: pool,
+        user_service_url: "http://localhost:3001".to_string(),
+        schedule_service_url: "http://localhost:3002".to_string(),
+        client: reqwest::Client::new(),
+    }
 }
 
 #[derive(Clone, Debug)]
 pub struct Context {
     pub pool: db::DbPool,
+    pub user_service_url: String,
+    pub schedule_service_url: String,
+    pub client: reqwest::Client,
 }
 
 impl juniper::Context for Context {}

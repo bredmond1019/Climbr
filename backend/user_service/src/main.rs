@@ -2,13 +2,12 @@ use std::env;
 use std::sync::Arc;
 
 use actix_cors::Cors;
-use actix_web::{middleware::Logger, web, web::Data, App, HttpServer};
+use actix_web::{middleware::Logger, web::Data, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use auth::authenticator;
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use dotenv::dotenv;
-use graphql::handlers::{graphiql, graphql_handler, graphql_playground};
 use graphql::schema::{create_context, create_schema};
 
 use shared::{config, db};
@@ -39,19 +38,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(context.clone()))
             .wrap(Logger::default())
             .wrap(Cors::permissive())
-            .service(routes::login::login)
-            .service(web::resource("/playground").route(web::get().to(graphql_playground)))
-            .service(web::resource("/graphiql").route(web::get().to(graphiql)))
-            .service(
-                web::scope("/api")
-                    // .wrap(auth_middleware)
-                    .configure(routes::init_routes)
-                    .service(
-                        web::resource("/graphql")
-                            .route(web::get().to(graphql_handler))
-                            .route(web::post().to(graphql_handler)),
-                    ),
-            )
+            // .wrap(auth_middleware)
+            .configure(graphql::init)
     })
     .bind("0.0.0.0:3001")?
     .run()

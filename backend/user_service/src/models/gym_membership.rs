@@ -7,4 +7,6 @@ pub struct GymMembership {
     pub id: i32,
     pub user_id: i32,
     pub gym_id: i32,
+    pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
 }

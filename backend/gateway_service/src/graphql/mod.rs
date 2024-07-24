@@ -5,6 +5,7 @@ pub mod handler;
 pub mod mutation;
 pub mod query;
 pub mod schema;
+mod utils;
 
 pub fn init(cfg: &mut ServiceConfig) {
     cfg.service(

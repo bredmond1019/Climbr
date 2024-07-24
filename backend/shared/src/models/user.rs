@@ -10,7 +10,8 @@ use juniper::GraphQLObject;
 use log::info;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Serialize, Debug, Clone, GraphQLObject)]
+#[derive(Queryable, Serialize, Debug, Clone, GraphQLObject, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[diesel(table_name = crate::schema::users)]
 pub struct User {
     pub id: i32,

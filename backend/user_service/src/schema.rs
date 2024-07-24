@@ -5,6 +5,8 @@ diesel::table! {
         id -> Int4,
         user_id -> Int4,
         gym_id -> Int4,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -12,6 +14,8 @@ diesel::table! {
     gyms (id) {
         id -> Int4,
         name -> Varchar,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
