@@ -7,12 +7,12 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use dotenv::dotenv;
 use log::info;
-use services::chat_server::ChatServer;
 use shared::db;
+use websocket::chat_server::ChatServer;
 
 mod models;
 mod schema;
-mod services;
+mod websocket;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -32,7 +32,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(chat_server.clone()))
             .wrap(Logger::default())
             .wrap(Cors::permissive())
-            .configure(services::chat::init_routes)
+            .configure(websocket::init)
     })
     .bind("0.0.0.0:3000")?
     .run()

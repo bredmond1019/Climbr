@@ -1,43 +1,36 @@
-use actix::Addr;
-use actix_web::{web, HttpRequest, Responder};
-use actix_web_actors::ws;
 use log::info;
 
-use crate::db::DbPool;
-use crate::models::conversation::Conversation;
+/// Parses the query string and extracts session data.
+///
+/// # Arguments
+///
+/// * `query_string` - The query string containing the session data.
+///
+/// # Returns
+///
+/// A tuple containing the sender ID, conversation member IDs, and conversation ID.
+///
+/// # Panics
+///
+/// This function will panic if the user IDs in the query string are invalid or if the
+/// conversation IDs are invalid or missing.
+///
+/// # Examples
+///
+/// ```
+/// let query_string = "sender_id=1&receiver_id=2&conversation_id=3";
+/// let (sender_id, conversation_member_ids, conversation_id) = get_session_data(query_string);
+/// assert_eq!(sender_id, 1);
+/// assert_eq!(conversation_member_ids, vec![1, 2]);
+/// assert_eq!(conversation_id, Some(3));
+/// ```
 
-use crate::services::chat_session::ChatSession;
-use crate::ChatServer;
-
-pub fn init_routes(cfg: &mut web::ServiceConfig) {
-    cfg.route("/ws/", web::get().to(chat_route));
-}
-
-pub async fn chat_route(
-    req: HttpRequest,
-    stream: web::Payload,
-    server: web::Data<Addr<ChatServer>>,
-    pool: web::Data<DbPool>,
-) -> impl Responder {
-    let query_string = req.query_string();
+pub fn get_session_data(query_string: &str) -> (i32, Vec<i32>, Option<i32>) {
     let params = serde_urlencoded::from_str::<Vec<(String, String)>>(query_string)
         .expect("Failed to parse query string");
     info!("Query: {}", query_string);
     info!("Params: {:?}", params);
-    let (sender_id, conversation_member_ids, conversation_id) = get_session_data(params);
 
-    let mut conn = pool.get().expect("Failed to get DB connection");
-    let chat_server_address = server.get_ref().clone();
-
-    let conversation =
-        Conversation::find_or_create(&mut conn, conversation_id, conversation_member_ids);
-    let session_member = conversation.find_membership_by_user_id(sender_id, &mut conn);
-
-    let session = ChatSession::new(chat_server_address, conversation, session_member);
-    ws::start(session, &req, stream)
-}
-
-fn get_session_data(params: Vec<(String, String)>) -> (i32, Vec<i32>, Option<i32>) {
     let mut sender_id = 0;
     let mut conversation_member_ids: Vec<i32> = Vec::new();
     let mut conversation_id: Option<i32> = None;

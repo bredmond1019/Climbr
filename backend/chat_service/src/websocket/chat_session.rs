@@ -3,12 +3,14 @@ use crate::models::{
     chat_message::ClientMessage, conversation::Conversation,
     conversation_membership::ConversationMembership,
 };
-use crate::ChatServer;
+
 use actix::prelude::*;
 use actix_web_actors::ws;
 use log::info;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+
+use super::chat_server::ChatServer;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct SessionId(pub Uuid);
