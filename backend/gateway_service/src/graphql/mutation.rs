@@ -1,6 +1,5 @@
 use juniper::GraphQLObject;
 use juniper::{graphql_object, FieldResult};
-use shared::models::user::NewUser;
 use shared::models::user::User;
 
 use crate::graphql::schema::Context;
