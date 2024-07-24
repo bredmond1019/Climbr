@@ -4,7 +4,7 @@ members = [
     "chat_service",
     "user_service",
     "shared"
-    , "schedule_service"]
+    , "schedule_service", "gateway_service"]
 resolver="2"
 
 [workspace.package]
