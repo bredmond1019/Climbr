@@ -1,7 +1,11 @@
-use reqwest::Client;
+use reqwest::{Client, Error};
 use serde_json::Value;
 
-pub async fn graphql_request(query_string: &str, client: &Client, service_url: &str) -> Value {
+pub async fn graphql_request(
+    query_string: &str,
+    client: &Client,
+    service_url: &str,
+) -> Result<Value, Error> {
     let url = format!("{}/graphql", service_url);
     let response = client
         .post(&url)
@@ -9,13 +13,11 @@ pub async fn graphql_request(query_string: &str, client: &Client, service_url: &
             "query": query_string
         }))
         .send()
-        .await
-        .expect("Error sending request")
+        .await?
         .json::<serde_json::Value>()
-        .await
-        .expect("Error parsing response");
+        .await?;
 
-    response
+    Ok(response)
 }
 
 pub async fn graphql_request_with_token(

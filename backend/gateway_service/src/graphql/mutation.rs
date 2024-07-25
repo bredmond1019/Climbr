@@ -55,7 +55,7 @@ impl Mutation {
             &context.client,
             context.get_user_service_url(),
         )
-        .await;
+        .await?;
 
         let user = response["data"]["createUser"].clone();
         let user: UserDTO = serde_json::from_value(user).expect("Error parsing user");
@@ -88,7 +88,7 @@ impl Mutation {
             &context.client,
             context.get_user_service_url(),
         )
-        .await;
+        .await?;
 
         let login_response = response["data"]["login"].clone();
         let login_response: LoginResponse =

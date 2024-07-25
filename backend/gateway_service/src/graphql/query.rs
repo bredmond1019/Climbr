@@ -16,25 +16,25 @@ impl Query {
             &context.client,
             context.get_user_service_url(),
         )
-        .await;
+        .await?;
 
         let users = response["data"]["users"].clone();
         info!("Users: {:?}", users);
-        let users: Vec<UserDTO> = serde_json::from_value(users).expect("Error parsing users");
+        let users: Vec<UserDTO> = serde_json::from_value(users)?;
         Ok(users)
     }
 
-    async fn user(context: &mut Context, user_id: i32) -> Option<UserDTO> {
+    async fn user(context: &mut Context, user_id: i32) -> FieldResult<UserDTO> {
         let query_string = format!("{{ user(id: {}) {{ id name email }} }}", user_id);
         let response = graphql_request(
             &query_string,
             &context.client,
             context.get_user_service_url(),
         )
-        .await;
+        .await?;
         let user = response["data"]["user"].clone();
         let user: UserDTO = serde_json::from_value(user).expect("Error parsing user");
-        Some(user)
+        Ok(user)
     }
 
     async fn availabilities(context: &Context, user_id: i32) -> FieldResult<Vec<AvailabilityDTO>> {
@@ -44,11 +44,10 @@ impl Query {
             &context.client,
             context.get_schedule_service_url(),
         )
-        .await;
+        .await?;
 
         let availabilities = response["data"]["availabilities"].clone();
-        let availabilities: Vec<AvailabilityDTO> =
-            serde_json::from_value(availabilities).expect("Error parsing availabilities");
+        let availabilities: Vec<AvailabilityDTO> = serde_json::from_value(availabilities)?;
         Ok(availabilities)
     }
 }
