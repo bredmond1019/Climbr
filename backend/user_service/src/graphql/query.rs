@@ -5,6 +5,7 @@ use crate::{
 
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use juniper::{graphql_object, FieldResult};
+use log::info;
 use shared::{models::user_dto::UserDTO, schema::users};
 
 pub struct Query;
@@ -16,6 +17,7 @@ impl Query {
         let results = User::find_all(&mut connection)?;
 
         let user_dtos: Vec<UserDTO> = results.into_iter().map(UserDTO::from).collect();
+        info!("Users: {:?}", user_dtos);
         Ok(user_dtos)
     }
 

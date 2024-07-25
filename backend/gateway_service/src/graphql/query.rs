@@ -9,7 +9,7 @@ pub struct Query;
 #[graphql_object(context = Context)]
 impl Query {
     async fn users(&self, context: &Context) -> FieldResult<Vec<UserDTO>> {
-        let query_string = "{ users { id name email password createdAt updatedAt } }";
+        let query_string = "{ users { id name email createdAt updatedAt } }";
 
         let response = graphql_request(
             query_string,
@@ -38,7 +38,10 @@ impl Query {
     }
 
     async fn availabilities(context: &Context, user_id: i32) -> FieldResult<Vec<AvailabilityDTO>> {
-        let query_string = format!("{{ availabilities(userId: {}) }}", user_id);
+        let query_string = format!(
+            "{{ availabilities(userId: {}) {{ id gymId startTime endTime }} }}",
+            user_id
+        );
         let response = graphql_request(
             &query_string,
             &context.client,

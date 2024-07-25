@@ -31,7 +31,6 @@ impl From<User> for UserDTO {
             id: user.id,
             name: user.name,
             email: user.email,
-            password: user.password,
             created_at: TimeZone::from_utc_datetime(&Utc, &user.created_at),
             updated_at: TimeZone::from_utc_datetime(&Utc, &user.updated_at),
         }
