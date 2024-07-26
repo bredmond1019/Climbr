@@ -61,7 +61,7 @@ class Input$NewAvailabilityInput {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Input$NewAvailabilityInput) ||
+    if (other is! Input$NewAvailabilityInput ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -133,6 +133,7 @@ class _CopyWithImpl$Input$NewAvailabilityInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? date = _undefined,
     Object? gymId = _undefined,
@@ -154,8 +155,9 @@ class _CopyWithStubImpl$Input$NewAvailabilityInput<TRes>
     implements CopyWith$Input$NewAvailabilityInput<TRes> {
   _CopyWithStubImpl$Input$NewAvailabilityInput(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     String? date,
     int? gymId,

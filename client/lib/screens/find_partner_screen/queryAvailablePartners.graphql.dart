@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart' as widgets;
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart' as graphql;
 import 'package:graphql_flutter/graphql_flutter.dart' as graphql_flutter;
@@ -69,7 +68,7 @@ class Variables$Query$searchAvailability {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Variables$Query$searchAvailability) ||
+    if (other is! Variables$Query$searchAvailability ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -141,6 +140,7 @@ class _CopyWithImpl$Variables$Query$searchAvailability<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? gymId = _undefined,
     Object? startTime = _undefined,
@@ -162,8 +162,9 @@ class _CopyWithStubImpl$Variables$Query$searchAvailability<TRes>
     implements CopyWith$Variables$Query$searchAvailability<TRes> {
   _CopyWithStubImpl$Variables$Query$searchAvailability(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     int? gymId,
     String? startTime,
@@ -198,13 +199,13 @@ class Query$searchAvailability {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$availabilities = availabilities;
-    _resultData['availabilities'] =
+    resultData['availabilities'] =
         l$availabilities?.map((e) => e?.toJson()).toList();
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -224,7 +225,7 @@ class Query$searchAvailability {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$searchAvailability) ||
+    if (other is! Query$searchAvailability ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -280,7 +281,7 @@ abstract class CopyWith$Query$searchAvailability<TRes> {
               Iterable<
                   CopyWith$Query$searchAvailability$availabilities<
                       Query$searchAvailability$availabilities>?>?)
-          _fn);
+          fn);
 }
 
 class _CopyWithImpl$Query$searchAvailability<TRes>
@@ -296,6 +297,7 @@ class _CopyWithImpl$Query$searchAvailability<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? availabilities = _undefined,
     Object? $__typename = _undefined,
@@ -310,14 +312,15 @@ class _CopyWithImpl$Query$searchAvailability<TRes>
             : ($__typename as String),
       ));
 
+  @override
   TRes availabilities(
           Iterable<Query$searchAvailability$availabilities?>? Function(
                   Iterable<
                       CopyWith$Query$searchAvailability$availabilities<
                           Query$searchAvailability$availabilities>?>?)
-              _fn) =>
+              fn) =>
       call(
-          availabilities: _fn(_instance.availabilities?.map((e) => e == null
+          availabilities: fn(_instance.availabilities?.map((e) => e == null
               ? null
               : CopyWith$Query$searchAvailability$availabilities(
                   e,
@@ -329,15 +332,17 @@ class _CopyWithStubImpl$Query$searchAvailability<TRes>
     implements CopyWith$Query$searchAvailability<TRes> {
   _CopyWithStubImpl$Query$searchAvailability(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     List<Query$searchAvailability$availabilities?>? availabilities,
     String? $__typename,
   }) =>
       _res;
 
-  availabilities(_fn) => _res;
+  @override
+  availabilities(fn) => _res;
 }
 
 const documentNodeQuerysearchAvailability = DocumentNode(definitions: [
@@ -472,27 +477,21 @@ typedef OnQueryComplete$Query$searchAvailability = FutureOr<void> Function(
 class Options$Query$searchAvailability
     extends graphql.QueryOptions<Query$searchAvailability> {
   Options$Query$searchAvailability({
-    String? operationName,
+    super.operationName,
     required Variables$Query$searchAvailability variables,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Query$searchAvailability? typedOptimisticResult,
-    Duration? pollInterval,
-    graphql.Context? context,
+    super.pollInterval,
+    super.context,
     OnQueryComplete$Query$searchAvailability? onComplete,
-    graphql.OnQueryError? onError,
+    super.onError,
   })  : onCompleteWithParsed = onComplete,
         super(
           variables: variables.toJson(),
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          pollInterval: pollInterval,
-          context: context,
           onComplete: onComplete == null
               ? null
               : (data) => onComplete(
@@ -501,7 +500,6 @@ class Options$Query$searchAvailability
                         ? null
                         : _parserFn$Query$searchAvailability(data),
                   ),
-          onError: onError,
           document: documentNodeQuerysearchAvailability,
           parserFn: _parserFn$Query$searchAvailability,
         );
@@ -520,31 +518,22 @@ class Options$Query$searchAvailability
 class WatchOptions$Query$searchAvailability
     extends graphql.WatchQueryOptions<Query$searchAvailability> {
   WatchOptions$Query$searchAvailability({
-    String? operationName,
+    super.operationName,
     required Variables$Query$searchAvailability variables,
-    graphql.FetchPolicy? fetchPolicy,
-    graphql.ErrorPolicy? errorPolicy,
-    graphql.CacheRereadPolicy? cacheRereadPolicy,
+    super.fetchPolicy,
+    super.errorPolicy,
+    super.cacheRereadPolicy,
     Object? optimisticResult,
     Query$searchAvailability? typedOptimisticResult,
-    graphql.Context? context,
-    Duration? pollInterval,
-    bool? eagerlyFetchResults,
-    bool carryForwardDataOnException = true,
-    bool fetchResults = false,
+    super.context,
+    super.pollInterval,
+    super.eagerlyFetchResults,
+    super.carryForwardDataOnException,
+    super.fetchResults,
   }) : super(
           variables: variables.toJson(),
-          operationName: operationName,
-          fetchPolicy: fetchPolicy,
-          errorPolicy: errorPolicy,
-          cacheRereadPolicy: cacheRereadPolicy,
           optimisticResult: optimisticResult ?? typedOptimisticResult?.toJson(),
-          context: context,
           document: documentNodeQuerysearchAvailability,
-          pollInterval: pollInterval,
-          eagerlyFetchResults: eagerlyFetchResults,
-          carryForwardDataOnException: carryForwardDataOnException,
-          fetchResults: fetchResults,
           parserFn: _parserFn$Query$searchAvailability,
         );
 }
@@ -552,10 +541,9 @@ class WatchOptions$Query$searchAvailability
 class FetchMoreOptions$Query$searchAvailability
     extends graphql.FetchMoreOptions {
   FetchMoreOptions$Query$searchAvailability({
-    required graphql.UpdateQuery updateQuery,
+    required super.updateQuery,
     required Variables$Query$searchAvailability variables,
   }) : super(
-          updateQuery: updateQuery,
           variables: variables.toJson(),
           document: documentNodeQuerysearchAvailability,
         );
@@ -565,20 +553,20 @@ extension ClientExtension$Query$searchAvailability on graphql.GraphQLClient {
   Future<graphql.QueryResult<Query$searchAvailability>>
       query$searchAvailability(
               Options$Query$searchAvailability options) async =>
-          await this.query(options);
+          await query(options);
   graphql.ObservableQuery<Query$searchAvailability>
       watchQuery$searchAvailability(
               WatchOptions$Query$searchAvailability options) =>
-          this.watchQuery(options);
+          watchQuery(options);
   void writeQuery$searchAvailability({
     required Query$searchAvailability data,
     required Variables$Query$searchAvailability variables,
     bool broadcast = true,
   }) =>
-      this.writeQuery(
+      writeQuery(
         graphql.Request(
           operation:
-              graphql.Operation(document: documentNodeQuerysearchAvailability),
+              const graphql.Operation(document: documentNodeQuerysearchAvailability),
           variables: variables.toJson(),
         ),
         data: data.toJson(),
@@ -588,10 +576,10 @@ extension ClientExtension$Query$searchAvailability on graphql.GraphQLClient {
     required Variables$Query$searchAvailability variables,
     bool optimistic = true,
   }) {
-    final result = this.readQuery(
+    final result = readQuery(
       graphql.Request(
         operation:
-            graphql.Operation(document: documentNodeQuerysearchAvailability),
+            const graphql.Operation(document: documentNodeQuerysearchAvailability),
         variables: variables.toJson(),
       ),
       optimistic: optimistic,
@@ -610,15 +598,11 @@ graphql.ObservableQuery<Query$searchAvailability>
 
 class Query$searchAvailability$Widget
     extends graphql_flutter.Query<Query$searchAvailability> {
-  Query$searchAvailability$Widget({
-    widgets.Key? key,
-    required Options$Query$searchAvailability options,
-    required graphql_flutter.QueryBuilder<Query$searchAvailability> builder,
-  }) : super(
-          key: key,
-          options: options,
-          builder: builder,
-        );
+  const Query$searchAvailability$Widget({
+    super.key,
+    required Options$Query$searchAvailability super.options,
+    required super.builder,
+  });
 }
 
 class Query$searchAvailability$availabilities {
@@ -662,20 +646,20 @@ class Query$searchAvailability$availabilities {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$id = id;
-    _resultData['id'] = l$id;
+    resultData['id'] = l$id;
     final l$userId = userId;
-    _resultData['userId'] = l$userId;
+    resultData['userId'] = l$userId;
     final l$gymId = gymId;
-    _resultData['gymId'] = l$gymId;
+    resultData['gymId'] = l$gymId;
     final l$startTime = startTime;
-    _resultData['startTime'] = l$startTime;
+    resultData['startTime'] = l$startTime;
     final l$endTime = endTime;
-    _resultData['endTime'] = l$endTime;
+    resultData['endTime'] = l$endTime;
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -701,7 +685,7 @@ class Query$searchAvailability$availabilities {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Query$searchAvailability$availabilities) ||
+    if (other is! Query$searchAvailability$availabilities ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -781,6 +765,7 @@ class _CopyWithImpl$Query$searchAvailability$availabilities<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? id = _undefined,
     Object? userId = _undefined,
@@ -813,8 +798,9 @@ class _CopyWithStubImpl$Query$searchAvailability$availabilities<TRes>
     implements CopyWith$Query$searchAvailability$availabilities<TRes> {
   _CopyWithStubImpl$Query$searchAvailability$availabilities(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     int? id,
     int? userId,

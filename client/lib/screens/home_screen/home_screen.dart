@@ -1,20 +1,23 @@
-import 'package:client/screens/find_partner_screen/find_partner_screen.dart';
+import 'package:client/screens/gym/gym_list.dart';
+import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Welcome to Climbr!',
                   style: TextStyle(
@@ -23,15 +26,19 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               SectionCard(
                 title: 'Find a Gym',
                 color: Colors.blue,
                 onTap: () {
-                  // TODO: Implement navigation to Find a Gym page
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GymListPage(),
+                      ));
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               SectionCard(
                 title: 'Go to Profile Page',
                 color: Colors.green,
@@ -39,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/profile');
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               SectionCard(
                 title: 'Look for a Climbing Partner',
                 color: Colors.orange,
@@ -47,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const FindPartnerScreen(),
+                        builder: (context) => const UserListScreen(),
                       ));
                 },
               ),
@@ -62,7 +69,7 @@ class SectionCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const SectionCard({
+  const SectionCard({super.key, 
     required this.title,
     required this.color,
     required this.onTap,
@@ -74,7 +81,7 @@ class SectionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 100,
-        margin: EdgeInsets.symmetric(horizontal: 16),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(8),
@@ -82,7 +89,7 @@ class SectionCard extends StatelessWidget {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,

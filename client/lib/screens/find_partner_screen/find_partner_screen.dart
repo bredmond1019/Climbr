@@ -37,31 +37,33 @@ class FindPartnerScreen extends HookWidget {
         variables: availabilityParams.toJson(),
       );
 
-      try {
-        final QueryResult result = await client.query(options);
+      Navigator.pushNamed(context, '/user_list');
 
-        if (!context.mounted) return;
+      // try {
+      //   final QueryResult result = await client.query(options);
 
-        if (result.hasException) {
-          print('Error: ${result.exception.toString()}');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${result.exception.toString()}')),
-          );
-        } else if (result.data != null) {
-          final responseData = result.data!;
-          print('Partner found: $responseData');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Partner found successfully!')),
-          );
-          // Navigator.pushNamed(context, '/user_list');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No data received')),
-          );
-        }
-      } finally {
-        loading.value = false;
-      }
+      //   if (!context.mounted) return;
+
+      //   if (result.hasException) {
+      //     print('Error: ${result.exception.toString()}');
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(content: Text('Error: ${result.exception.toString()}')),
+      //     );
+      //   } else if (result.data != null) {
+      //     final responseData = result.data!;
+      //     print('Partner found: $responseData');
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(content: Text('Partner found successfully!')),
+      //     );
+      //     Navigator.pushNamed(context, '/user_list');
+      //   } else {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(content: Text('No data received')),
+      //     );
+      //   }
+      // } finally {
+      //   loading.value = false;
+      // }
     }
 
     return Scaffold(

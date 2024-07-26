@@ -30,7 +30,7 @@ class ChatScreenState extends State<ChatScreen> {
     webSocketService = Provider.of<WebSocketService>(context, listen: false);
 
     initialConnectionParams = InitialConnectionParams(
-      senderId: userProvider.user?.id.toString() ?? '1',
+      senderId: userProvider.user.id.toString(),
       receiverId: widget.receiver.id.toString(),
       conversationId: widget.conversationId ?? '',
     );
@@ -113,7 +113,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget _buildMessageItem(Message message) {
     final CurrentUserProvider userProvider =
         Provider.of<CurrentUserProvider>(context);
-    bool isSentByMe = message.senderId == (userProvider.user?.id ?? 1);
+    bool isSentByMe = message.senderId == (userProvider.user.id);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
@@ -144,7 +144,7 @@ class ChatScreenState extends State<ChatScreen> {
         webSocketService.send(jsonEncode({
           'conversation_id': conversationId,
           'content': text,
-          'sender_id': userProvider.user?.id ?? 1,
+          'sender_id': userProvider.user.id,
         }));
         _controller.clear();
       } else {

@@ -88,10 +88,10 @@ class ClimbrApp extends StatelessWidget {
               initialRoute: '/',
               routes: {
                 // '/': (context) => const LoginPage(),
-                '/': (context) => HomeScreen(),
+                '/': (context) => const HomeScreen(),
                 '/user_list': (context) => const UserListScreen(),
                 '/add_user': (context) => const AddUserScreen(),
-                '/profile': (context) => ProfileScreen(),
+                '/profile': (context) => const ProfileScreen(),
               },
               debugShowCheckedModeBanner: false,
             ),
