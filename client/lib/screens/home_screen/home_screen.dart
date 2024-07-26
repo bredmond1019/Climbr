@@ -1,89 +1,95 @@
-import 'package:client/models/user.dart';
 import 'package:client/screens/find_partner_screen/find_partner_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Welcome to Climbr!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              SectionCard(
+                title: 'Find a Gym',
+                color: Colors.blue,
+                onTap: () {
+                  // TODO: Implement navigation to Find a Gym page
+                },
+              ),
+              SizedBox(height: 16),
+              SectionCard(
+                title: 'Go to Profile Page',
+                color: Colors.green,
+                onTap: () {
+                  Navigator.pushNamed(context, '/profile');
+                },
+              ),
+              SizedBox(height: 16),
+              SectionCard(
+                title: 'Look for a Climbing Partner',
+                color: Colors.orange,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FindPartnerScreen(),
+                      ));
+                },
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class SectionCard extends StatelessWidget {
+  final String title;
+  final Color color;
+  final VoidCallback onTap;
+
+  const SectionCard({
+    required this.title,
+    required this.color,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // final userProvider = Provider.of<CurrentUserProvider>(context);
-    // final user = userProvider.user;
-
-    final CurrentUser user =
-        CurrentUser(id: 1, name: 'John Doe', email: 'test@gmail.com');
-
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Climbr',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.8,
-                  )),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 100,
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
         ),
-        body: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Welcome to Climbr!'),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            Center(
-                child: user != null
-                    ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Welcome back, ${user.name}!'),
-                              const SizedBox(height: 10),
-                              Text('Name: ${user.name}'),
-                              Text('Email: ${user.email}'),
-                            ]))
-                    : const Text('Welcome!')),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigator.pushNamed(context, '/find_partner');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FindPartnerScreen(),
-                          ));
-                    },
-                    child: const Text('Find Partner'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/user_list');
-                    },
-                    child: const Text('User List'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/profile');
-                    },
-                    child: const Text('Profile'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                    child: const Text('Settings'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )));
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "726275822696",
+    "project_id": "climbr-bfbe2",
+    "storage_bucket": "climbr-bfbe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726275822696:android:a4daf2ca06df5c78f5d7dd",
+        "android_client_info": {
+          "package_name": "com.climbr.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhvKeDhcI2KoolRi1waASac4K55tHmlls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
