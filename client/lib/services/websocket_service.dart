@@ -20,7 +20,7 @@ class InitialConnectionParams {
     return jsonEncode({
       'sender_id': senderId,
       'receiver_id': receiverId,
-      'conversation_id': conversationId,
+      'conversation_id': int.parse(conversationId),
     });
   }
 }

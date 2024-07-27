@@ -88,7 +88,7 @@ class ClimbrApp extends StatelessWidget {
               initialRoute: '/',
               routes: {
                 // '/': (context) => const LoginPage(),
-                '/': (context) => const HomeScreen(),
+                '/': (context) => const HomePage(),
                 '/user_list': (context) => const UserListScreen(),
                 '/add_user': (context) => const AddUserScreen(),
                 '/profile': (context) => const ProfileScreen(),

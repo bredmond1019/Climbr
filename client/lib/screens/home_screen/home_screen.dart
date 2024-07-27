@@ -1,101 +1,64 @@
+import 'package:client/screens/conversations/conversation_list.dart';
 import 'package:client/screens/gym/gym_list.dart';
+import 'package:client/screens/profile_page/profile_page.dart';
 import 'package:client/screens/user_list_screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  static final List<Widget> _widgetOptions = <Widget>[
+    // ProfileScreen(),
+    const ProfilePage(),
+    const GymListPage(),
+    const UserListScreen(),
+    const ConversationList(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Welcome to Climbr!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SectionCard(
-                title: 'Find a Gym',
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GymListPage(),
-                      ));
-                },
-              ),
-              const SizedBox(height: 16),
-              SectionCard(
-                title: 'Go to Profile Page',
-                color: Colors.green,
-                onTap: () {
-                  Navigator.pushNamed(context, '/profile');
-                },
-              ),
-              const SizedBox(height: 16),
-              SectionCard(
-                title: 'Look for a Climbing Partner',
-                color: Colors.orange,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserListScreen(),
-                      ));
-                },
-              ),
-            ],
+      appBar: AppBar(
+        title: const Text('Climbr'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
-        ));
-  }
-}
-
-class SectionCard extends StatelessWidget {
-  final String title;
-  final Color color;
-  final VoidCallback onTap;
-
-  const SectionCard({super.key, 
-    required this.title,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 100,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'Gyms',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Messages',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
     );
   }

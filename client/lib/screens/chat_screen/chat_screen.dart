@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final User receiver;
+  final User? receiver;
   final String? conversationId;
+  final String? name;
 
-  const ChatScreen({super.key, required this.receiver, this.conversationId});
+  const ChatScreen({super.key, this.receiver, this.conversationId, this.name});
 
   @override
   ChatScreenState createState() => ChatScreenState();
@@ -31,8 +32,8 @@ class ChatScreenState extends State<ChatScreen> {
 
     initialConnectionParams = InitialConnectionParams(
       senderId: userProvider.user.id.toString(),
-      receiverId: widget.receiver.id.toString(),
-      conversationId: widget.conversationId ?? '',
+      receiverId: widget.receiver!.id.toString(),
+      conversationId: widget.conversationId ?? "12",
     );
 
     webSocketService.connect(
@@ -52,7 +53,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with ${widget.receiver.name}'),
+        title: Text('Chat with ${widget.name}'),
       ),
       body: Column(
         children: [
