@@ -33,7 +33,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let auth_middleware = HttpAuthentication::bearer(authenticator);
 
-        seed::seed_dev_data(&mut pool.get().expect("Error connecting to database"));
+        // seed::seed_dev_data(&mut pool.get().expect("Error connecting to database"));
 
         App::new()
             .app_data(Data::new(pool.clone()))
