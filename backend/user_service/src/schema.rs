@@ -33,8 +33,4 @@ diesel::table! {
 diesel::joinable!(gym_memberships -> gyms (gym_id));
 diesel::joinable!(gym_memberships -> users (user_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    gym_memberships,
-    gyms,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(gym_memberships, gyms, users,);

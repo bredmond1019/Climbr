@@ -1,18 +1,20 @@
 use crate::schema::users;
+
+use async_graphql::SimpleObject;
 use bcrypt::{hash, verify, DEFAULT_COST};
-use chrono::{TimeZone, Utc};
+
 use diesel::{
     deserialize::Queryable,
     prelude::Insertable,
     r2d2::{ConnectionManager, PooledConnection},
     PgConnection, RunQueryDsl,
 };
-use juniper::GraphQLObject;
+// use juniper::GraphQLObject;
 use log::info;
 use serde::{Deserialize, Serialize};
-use shared::models::user_dto::UserDTO;
+use shared::models::{datetime::DateTimeUTC, user_dto::UserDTO};
 
-#[derive(Queryable, Serialize, Debug, Clone, GraphQLObject, Deserialize)]
+#[derive(Queryable, Serialize, Debug, Clone, SimpleObject, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = crate::schema::users)]
 pub struct User {
@@ -20,8 +22,8 @@ pub struct User {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: DateTimeUTC,
+    pub updated_at: DateTimeUTC,
 }
 
 // Conversion from User to UserDTO
@@ -31,8 +33,8 @@ impl From<User> for UserDTO {
             id: user.id,
             name: user.name,
             email: user.email,
-            created_at: TimeZone::from_utc_datetime(&Utc, &user.created_at),
-            updated_at: TimeZone::from_utc_datetime(&Utc, &user.updated_at),
+            created_at: user.created_at,
+            updated_at: user.updated_at,
         }
     }
 }
@@ -43,8 +45,8 @@ pub struct NewUser {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: DateTimeUTC,
+    pub updated_at: DateTimeUTC,
 }
 
 #[derive(Deserialize)]
@@ -60,8 +62,8 @@ impl NewUser {
             name: user.name,
             email: user.email,
             password: user.password,
-            created_at: chrono::Local::now().naive_local(),
-            updated_at: chrono::Local::now().naive_local(),
+            created_at: DateTimeUTC(chrono::Local::now().naive_local()),
+            updated_at: DateTimeUTC(chrono::Local::now().naive_local()),
         }
     }
     pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {

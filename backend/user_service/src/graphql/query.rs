@@ -1,20 +1,24 @@
 use crate::{
-    graphql::schema::Context,
     models::{gym::Gym, gym_membership::GymMembership, user::User},
     schema::{gym_memberships, gyms},
 };
 
+use async_graphql::Context;
+use async_graphql::FieldResult;
+
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
-use juniper::{graphql_object, FieldResult};
 use log::info;
 use shared::{models::user_dto::UserDTO, schema::users};
 
+use super::schema::AppContext;
+
 pub struct Query;
 
-#[graphql_object(context = Context)]
+#[async_graphql::Object]
 impl Query {
-    async fn users(&self, context: &Context) -> FieldResult<Vec<UserDTO>> {
-        let mut connection = context.pool.get()?;
+    async fn users<'ctx>(&self, ctx: &Context<'ctx>) -> FieldResult<Vec<UserDTO>> {
+        let app_context = ctx.data::<AppContext>()?;
+        let mut connection = app_context.pool.get().expect("Error getting db connection");
         let results = User::find_all(&mut connection)?;
 
         let user_dtos: Vec<UserDTO> = results.into_iter().map(UserDTO::from).collect();
@@ -22,17 +26,18 @@ impl Query {
         Ok(user_dtos)
     }
 
-    fn user(context: &mut Context, user_id: i32) -> Option<User> {
-        let mut connection = context.pool.get().expect("Error getting db connection");
+    async fn user<'ctx>(&self, ctx: &Context<'ctx>, user_id: i32) -> FieldResult<Option<User>> {
+        let app_context = ctx.data::<AppContext>()?;
+        let mut connection = app_context.pool.get().expect("Error getting db connection");
         let user = users::table
             .filter(users::columns::id.eq(user_id))
-            .first::<User>(&mut connection)
-            .ok();
+            .first::<User>(&mut connection);
         user
     }
 
-    fn gym(context: &Context, gym_id: i32) -> Option<Gym> {
-        let mut connection = context.pool.get().expect("Error getting db connection");
+    async fn gym<'ctx>(&self, ctx: &Context<'ctx>, gym_id: i32) -> Option<Gym> {
+        let app_context = ctx.data::<AppContext>()?;
+        let mut connection = app_context.pool.get().expect("Error getting db connection");
 
         gyms::table
             .filter(gyms::columns::id.eq(gym_id))
@@ -40,8 +45,13 @@ impl Query {
             .ok()
     }
 
-    fn gym_memberships(context: &Context, member_id: i32) -> Vec<GymMembership> {
-        let mut connection = context.pool.get().expect("Error getting db connection");
+    async fn gym_memberships<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        member_id: i32,
+    ) -> Vec<GymMembership> {
+        let app_context = ctx.data::<AppContext>()?;
+        let mut connection = app_context.pool.get().expect("Error getting db connection");
 
         gym_memberships::table
             .filter(gym_memberships::columns::user_id.eq(member_id))

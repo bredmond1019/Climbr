@@ -3123,6 +3123,8 @@ dependencies = [
  "actix-web",
  "actix-web-actors",
  "actix-web-httpauth",
+ "async-graphql",
+ "async-graphql-actix-web",
  "bcrypt",
  "chrono",
  "diesel",
