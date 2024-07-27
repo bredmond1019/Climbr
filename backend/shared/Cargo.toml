@@ -31,3 +31,5 @@ chrono = { version = "0.4", features = ["serde"] }
 futures-util = "0.3.30"
 serde_qs = "0.13.0"
 serde_urlencoded = "0.7.1"
+async-graphql-actix-web = "7.0.7"
+async-graphql = "7.0.7"
