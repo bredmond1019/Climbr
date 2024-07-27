@@ -24,8 +24,8 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
-    let schema = Arc::new(create_schema());
     let context = create_context(pool.clone());
+    let schema = Arc::new(create_schema(context.clone()));
 
     HttpServer::new(move || {
         let auth_middleware = HttpAuthentication::bearer(authenticator);

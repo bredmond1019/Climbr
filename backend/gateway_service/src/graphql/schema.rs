@@ -1,12 +1,12 @@
-use juniper::{EmptySubscription, RootNode};
+use async_graphql::{EmptySubscription, Schema};
+use shared::db;
 
 use super::{mutation::Mutation, query::Query};
-use crate::db;
 
-pub type Schema = RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
-
-pub fn create_schema() -> Schema {
-    Schema::new(Query, Mutation, EmptySubscription::new())
+pub fn create_schema(ctx: Context) -> Schema<Query, Mutation, EmptySubscription> {
+    Schema::build(Query, Mutation, EmptySubscription)
+        .data(ctx.clone())
+        .finish()
 }
 
 pub fn create_context(pool: db::DbPool) -> Context {
@@ -41,7 +41,7 @@ pub struct Context {
     pub schedule_service_url: ServiceUrl,
 }
 
-impl juniper::Context for Context {}
+// impl async_graphql::Context for Context {}
 
 impl Context {
     pub fn get_user_service_url(&self) -> &str {
