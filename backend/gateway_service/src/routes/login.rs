@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use shared::models::user_dto::UserDTO;
 
 use crate::auth::{create_jwt, UserResponse};
-use crate::graphql::schema::Context;
+use crate::graphql::schema::AppContext;
 
 #[derive(Queryable, Serialize, Debug, Clone, Deserialize)]
 struct LoginResponse {
@@ -32,7 +32,7 @@ struct LoginInfo {
 }
 
 #[post("/login")]
-pub async fn user_login(info: web::Json<LoginInfo>, ctx: Data<Context>) -> impl Responder {
+pub async fn user_login(info: web::Json<LoginInfo>, ctx: Data<AppContext>) -> impl Responder {
     let client = ctx.client.clone();
     let user_service_url = ctx.get_user_service_url();
     let login_info = info.into_inner();

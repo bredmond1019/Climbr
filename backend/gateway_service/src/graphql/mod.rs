@@ -2,7 +2,10 @@ use actix_web::web::{self, ServiceConfig};
 use handler::graphql_handler;
 
 pub mod handler;
+pub mod mutation;
+pub mod query;
 pub mod schema;
+pub mod utils;
 
 pub fn init(cfg: &mut ServiceConfig) {
     cfg.service(

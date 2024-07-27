@@ -3,14 +3,14 @@ use shared::db;
 
 use super::{mutation::Mutation, query::Query};
 
-pub fn create_schema(ctx: Context) -> Schema<Query, Mutation, EmptySubscription> {
+pub fn create_schema(ctx: AppContext) -> Schema<Query, Mutation, EmptySubscription> {
     Schema::build(Query, Mutation, EmptySubscription)
         .data(ctx.clone())
         .finish()
 }
 
-pub fn create_context(pool: db::DbPool) -> Context {
-    Context {
+pub fn create_context(pool: db::DbPool) -> AppContext {
+    AppContext {
         pool: pool,
         user_service_url: ServiceUrl::User,
         schedule_service_url: ServiceUrl::Schedule,
@@ -34,16 +34,16 @@ impl ServiceUrl {
 }
 
 #[derive(Clone, Debug)]
-pub struct Context {
+pub struct AppContext {
     pub pool: db::DbPool,
     pub client: reqwest::Client,
     pub user_service_url: ServiceUrl,
     pub schedule_service_url: ServiceUrl,
 }
 
-// impl async_graphql::Context for Context {}
+// impl async_graphql::Context for AppContext {}
 
-impl Context {
+impl AppContext {
     pub fn get_user_service_url(&self) -> &str {
         self.user_service_url.url()
     }
