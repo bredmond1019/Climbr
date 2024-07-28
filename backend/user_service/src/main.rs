@@ -11,7 +11,6 @@ use dotenv::dotenv;
 use graphql::schema::{create_context, create_schema};
 
 use shared::{config, db};
-use tokio::sync::Mutex;
 mod auth;
 mod graphql;
 mod models;
@@ -27,8 +26,8 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
-    let schema = Arc::new(create_schema());
-    let context = Arc::new(Mutex::new(create_context(pool.clone())));
+    let context = create_context(pool.clone());
+    let schema = Arc::new(create_schema(context.clone()));
 
     HttpServer::new(move || {
         let auth_middleware = HttpAuthentication::bearer(authenticator);

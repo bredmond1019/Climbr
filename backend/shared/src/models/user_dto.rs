@@ -1,9 +1,7 @@
 use async_graphql::SimpleObject;
-// use juniper::GraphQLObject;
 
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-
-use super::datetime::DateTimeUTC;
 
 // #[derive(Debug, Serialize, Deserialize, GraphQLObject)]
 #[derive(Debug, Serialize, Deserialize, SimpleObject)]
@@ -12,6 +10,6 @@ pub struct UserDTO {
     pub id: i32,
     pub name: String,
     pub email: String,
-    pub created_at: DateTimeUTC,
-    pub updated_at: DateTimeUTC,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }

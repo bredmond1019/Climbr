@@ -4,15 +4,12 @@ use diesel::{
     deserialize::{self, FromSql, FromSqlRow},
     expression::AsExpression,
     pg::Pg,
-    prelude::Queryable,
     serialize::{self, Output, ToSql},
     sql_types::Timestamp,
-    Selectable,
 };
 use serde::{Deserialize, Serialize};
 use std::{io::Write, str::FromStr};
 
-// Define new types
 #[derive(Clone, Debug, Serialize, Deserialize, AsExpression, FromSqlRow)]
 #[diesel(sql_type = Timestamp)]
 pub struct DateTimeUTC(pub DateTime<Utc>);

@@ -1,14 +1,18 @@
-use juniper::GraphQLObject;
-use juniper::{graphql_object, FieldResult};
+use async_graphql::Context;
+use async_graphql::FieldResult;
+use async_graphql::InputObject;
+use async_graphql::SimpleObject;
+use chrono::Utc;
 
-use crate::graphql::schema::Context;
 use crate::models::user::{NewUser, User};
 
 pub struct Mutation;
 
 use juniper::GraphQLInputObject;
 
-#[derive(GraphQLInputObject)]
+use super::schema::AppContext;
+
+#[derive(InputObject)]
 struct NewUserInput {
     name: String,
     email: String,
@@ -20,24 +24,30 @@ struct LoginInput {
     password: String,
 }
 
-#[derive(GraphQLObject, Debug)]
+#[derive(SimpleObject, Debug)]
 struct LoginResponse {
     user: User,
     token: String,
 }
 
-#[graphql_object(context = Context)]
+#[async_graphql::Object]
 impl Mutation {
-    fn create_user(context: &Context, params: NewUserInput) -> FieldResult<User> {
+    async fn create_user<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        params: NewUserInput,
+    ) -> FieldResult<User> {
+        let now = Utc::now().naive_utc();
         let mut new_user = NewUser {
             name: params.name,
             email: params.email,
             password: params.password,
-            created_at: chrono::Local::now().naive_local(),
-            updated_at: chrono::Local::now().naive_local(),
+            created_at: now,
+            updated_at: now,
         };
 
         new_user.hash_password()?;
+        let context = ctx.data::<AppContext>()?;
 
         let mut conn = context.pool.get()?;
         let user = User::create(new_user, &mut conn);

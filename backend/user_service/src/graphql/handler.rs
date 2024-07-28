@@ -1,14 +1,11 @@
-use std::sync::Arc;
-
 use actix_web::{web, HttpResponse};
-use async_graphql::http::{playground_source, GraphQLPlaygroundConfig, GraphiQLSource};
-use async_graphql_actix_web::GraphQLRequest;
-// use juniper::http::playground::playground_source;
-// use juniper::http::GraphQLRequest;
+use async_graphql::{
+    http::{playground_source, GraphQLPlaygroundConfig, GraphiQLSource},
+    EmptySubscription, Schema,
+};
+use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
-use super::schema::create_context;
-use crate::db::DbPool;
-use crate::graphql::schema::Schema;
+use super::{mutation::Mutation, query::Query};
 
 pub async fn graphql_playground() -> HttpResponse {
     HttpResponse::Ok()
@@ -23,11 +20,8 @@ pub async fn graphiql() -> HttpResponse {
 }
 
 pub async fn graphql_handler(
-    pool: web::Data<DbPool>,
-    // schema: web::Data<Arc<Schema>>,
     schema: web::Data<Schema<Query, Mutation, EmptySubscription>>,
-    // req: HttpRequest,
-    data: web::Json<GraphQLRequest>,
-) -> HttpResponse {
+    req: GraphQLRequest,
+) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
 }

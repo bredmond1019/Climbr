@@ -3,16 +3,17 @@ use crate::schema::users;
 use async_graphql::SimpleObject;
 use bcrypt::{hash, verify, DEFAULT_COST};
 
+use chrono::{NaiveDateTime, Utc};
 use diesel::{
     deserialize::Queryable,
     prelude::Insertable,
     r2d2::{ConnectionManager, PooledConnection},
     PgConnection, RunQueryDsl,
 };
-// use juniper::GraphQLObject;
+
 use log::info;
 use serde::{Deserialize, Serialize};
-use shared::models::{datetime::DateTimeUTC, user_dto::UserDTO};
+use shared::models::user_dto::UserDTO;
 
 #[derive(Queryable, Serialize, Debug, Clone, SimpleObject, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -22,8 +23,8 @@ pub struct User {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub created_at: DateTimeUTC,
-    pub updated_at: DateTimeUTC,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 // Conversion from User to UserDTO
@@ -45,8 +46,8 @@ pub struct NewUser {
     pub name: String,
     pub email: String,
     pub password: String,
-    pub created_at: DateTimeUTC,
-    pub updated_at: DateTimeUTC,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Deserialize)]
@@ -58,12 +59,13 @@ pub struct UserData {
 
 impl NewUser {
     pub fn new(user: UserData) -> NewUser {
+        let now = Utc::now().naive_utc();
         NewUser {
             name: user.name,
             email: user.email,
             password: user.password,
-            created_at: DateTimeUTC(chrono::Local::now().naive_local()),
-            updated_at: DateTimeUTC(chrono::Local::now().naive_local()),
+            created_at: now,
+            updated_at: now,
         }
     }
     pub fn hash_password(&mut self) -> Result<(), bcrypt::BcryptError> {

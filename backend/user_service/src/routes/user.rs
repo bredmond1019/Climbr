@@ -11,7 +11,7 @@ use log::info;
 use serde::Deserialize;
 
 use crate::db::DbPool;
-use crate::graphql::schema::Context;
+use crate::graphql::schema::AppContext;
 use crate::models::user::{NewUser, User, UserData};
 use crate::schema::users;
 
@@ -55,7 +55,7 @@ struct LoginInfo {
 #[post("/login")]
 pub async fn user_login(
     info: web::Json<LoginInfo>,
-    ctx: Data<Arc<Mutex<Context>>>,
+    ctx: Data<Arc<Mutex<AppContext>>>,
 ) -> impl Responder {
     let mut conn = ctx.lock().await.pool.get().unwrap();
     let email_address = info.email.clone();

@@ -1,16 +1,18 @@
+use async_graphql::SimpleObject;
 use diesel::{deserialize::Queryable, prelude::Insertable};
-use juniper::GraphQLObject;
+
 use serde::{Deserialize, Serialize};
+use shared::models::datetime::DateTimeUTC;
 
 use crate::schema::gym_memberships;
 
-#[derive(Queryable, Serialize, Deserialize, GraphQLObject)]
+#[derive(Queryable, Serialize, Deserialize, SimpleObject)]
 pub struct GymMembership {
     pub id: i32,
     pub user_id: i32,
     pub gym_id: i32,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: DateTimeUTC,
+    pub updated_at: DateTimeUTC,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -18,8 +20,8 @@ pub struct GymMembership {
 pub struct NewGymMembership {
     pub user_id: i32,
     pub gym_id: i32,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: DateTimeUTC,
+    pub updated_at: DateTimeUTC,
 }
 
 impl NewGymMembership {
@@ -27,8 +29,8 @@ impl NewGymMembership {
         Self {
             user_id: user_id,
             gym_id: gym_id,
-            created_at: chrono::Utc::now().naive_utc(),
-            updated_at: chrono::Utc::now().naive_utc(),
+            created_at: DateTimeUTC(chrono::Utc::now()),
+            updated_at: DateTimeUTC(chrono::Utc::now()),
         }
     }
 }

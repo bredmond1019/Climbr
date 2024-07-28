@@ -1,16 +1,15 @@
+use async_graphql::Context;
+use async_graphql::FieldResult;
+use log::info;
+
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+
+use super::schema::AppContext;
 use crate::{
     models::{gym::Gym, gym_membership::GymMembership, user::User},
     schema::{gym_memberships, gyms},
 };
-
-use async_graphql::Context;
-use async_graphql::FieldResult;
-
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
-use log::info;
 use shared::{models::user_dto::UserDTO, schema::users};
-
-use super::schema::AppContext;
 
 pub struct Query;
 
@@ -32,30 +31,34 @@ impl Query {
         let user = users::table
             .filter(users::columns::id.eq(user_id))
             .first::<User>(&mut connection);
-        user
+        Ok(user.ok())
     }
 
-    async fn gym<'ctx>(&self, ctx: &Context<'ctx>, gym_id: i32) -> Option<Gym> {
+    async fn gym<'ctx>(&self, ctx: &Context<'ctx>, gym_id: i32) -> FieldResult<Option<Gym>> {
         let app_context = ctx.data::<AppContext>()?;
         let mut connection = app_context.pool.get().expect("Error getting db connection");
 
-        gyms::table
+        let gyms = gyms::table
             .filter(gyms::columns::id.eq(gym_id))
             .first(&mut connection)
-            .ok()
+            .ok();
+
+        Ok(gyms)
     }
 
     async fn gym_memberships<'ctx>(
         &self,
         ctx: &Context<'ctx>,
         member_id: i32,
-    ) -> Vec<GymMembership> {
+    ) -> FieldResult<Vec<GymMembership>> {
         let app_context = ctx.data::<AppContext>()?;
         let mut connection = app_context.pool.get().expect("Error getting db connection");
 
-        gym_memberships::table
+        let gym_memberships = gym_memberships::table
             .filter(gym_memberships::columns::user_id.eq(member_id))
             .load(&mut connection)
-            .expect("Error loading gym memberships")
+            .expect("Error loading gym memberships");
+
+        Ok(gym_memberships)
     }
 }
