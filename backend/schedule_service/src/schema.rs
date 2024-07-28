@@ -7,8 +7,8 @@ diesel::table! {
         gym_id -> Int4,
         start_time -> Timestamp,
         end_time -> Timestamp,
-        created_at -> Timestamptz,
-        updated_at -> Timestamptz,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -29,15 +29,11 @@ diesel::table! {
         requester_id -> Int4,
         start_time -> Timestamp,
         end_time -> Timestamp,
-        created_at -> Timestamptz,
-        updated_at -> Timestamptz,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
 diesel::joinable!(event_members -> events (event_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    availabilities,
-    event_members,
-    events,
-);
+diesel::allow_tables_to_appear_in_same_query!(availabilities, event_members, events,);

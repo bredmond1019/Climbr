@@ -1,22 +1,23 @@
-use crate::graphql::schema::Context;
-use chrono::{NaiveDate, NaiveTime};
+use async_graphql::{Context, FieldResult};
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
-use juniper::graphql_object;
 use log::info;
-use uuid::timestamp::context;
 
+use super::schema::AppContext;
 use crate::models::availability::Availability;
 use crate::schema::availabilities::{self, columns};
 
 pub struct Query;
 
-#[graphql_object(context = Context)]
+#[async_graphql::Object]
 impl Query {
-    pub fn availabilities(context: &Context, user_id: i32) -> Vec<Availability> {
-        let mut connection = context
-            .pool
-            .get()
-            .expect("Error connecting to the database");
+    pub async fn availabilities<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        user_id: i32,
+    ) -> FieldResult<Vec<Availability>> {
+        let app_context = ctx.data::<AppContext>()?;
+        let mut connection = app_context.pool.get().expect("Error getting db connection");
+
         info!("Fetching availabilities for user_id: {}", user_id);
 
         let current_availabilities = availabilities::table
@@ -24,7 +25,7 @@ impl Query {
             .load::<Availability>(&mut connection)
             .expect("Error loading availabilities");
 
-        current_availabilities
+        Ok(current_availabilities)
     }
     // fn availabilities(
     //     context: &Context,

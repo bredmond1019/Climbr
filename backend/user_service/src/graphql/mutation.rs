@@ -8,8 +8,6 @@ use crate::models::user::{NewUser, User};
 
 pub struct Mutation;
 
-use juniper::GraphQLInputObject;
-
 use super::schema::AppContext;
 
 #[derive(InputObject)]
@@ -18,7 +16,7 @@ struct NewUserInput {
     email: String,
     password: String,
 }
-#[derive(GraphQLInputObject)]
+#[derive(InputObject)]
 struct LoginInput {
     email: String,
     password: String,

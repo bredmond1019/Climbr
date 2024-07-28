@@ -1,59 +1,48 @@
-use juniper::graphql_object;
+use async_graphql::{Context, FieldResult};
+use diesel::RunQueryDsl;
 
-use crate::graphql::schema::Context;
+use super::schema::AppContext;
 use crate::models::availability::{Availability, NewAvailability};
 use crate::models::event::{Event, NewEvent};
 use crate::models::event_member::NewEventMember;
 
-use diesel::RunQueryDsl;
-
 pub struct Mutation;
 
-#[graphql_object(context = Context)]
+#[async_graphql::Object]
 impl Mutation {
-    fn create_availability(
-        context: &Context,
+    async fn create_availability<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
         user_id: i32,
         gym_id: i32,
         start_time: chrono::NaiveDateTime,
         end_time: chrono::NaiveDateTime,
-    ) -> Availability {
-        use crate::schema::availabilities;
-
-        let mut connection = context
-            .pool
-            .get()
-            .expect("Error connecting to the database");
+    ) -> FieldResult<Availability> {
+        let context = ctx.data::<AppContext>()?;
+        let mut connection = context.pool.get()?;
 
         let new_availability = NewAvailability::new(user_id, gym_id, start_time, end_time);
 
-        diesel::insert_into(availabilities::table)
-            .values(&new_availability)
-            .get_result(&mut connection)
-            .expect("Error creating availability")
+        let availability = Availability::create(new_availability, &mut connection);
+
+        Ok(availability)
     }
 
-    fn book_event(
-        context: &Context,
+    async fn book_event<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
         gym_id: i32,
         requester_id: i32,
         additional_users: Vec<i32>,
         start_time: chrono::NaiveDateTime,
         end_time: chrono::NaiveDateTime,
-    ) -> Event {
-        use crate::schema::events;
-
-        let mut connection = context
-            .pool
-            .get()
-            .expect("Error connecting to the database");
+    ) -> FieldResult<Event> {
+        let context = ctx.data::<AppContext>()?;
+        let mut connection = context.pool.get()?;
 
         let new_event = NewEvent::new(gym_id, requester_id, start_time, end_time);
 
-        let event: Event = diesel::insert_into(events::table)
-            .values(&new_event)
-            .get_result(&mut connection)
-            .expect("Error booking event");
+        let event = Event::create(new_event, &mut connection);
 
         for user_id in additional_users {
             let new_event_member = NewEventMember::new(event.id, user_id);
@@ -64,6 +53,6 @@ impl Mutation {
                 .expect("Error adding event member");
         }
 
-        event
+        Ok(event)
     }
 }

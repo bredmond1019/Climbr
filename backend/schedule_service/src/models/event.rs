@@ -1,11 +1,12 @@
+use async_graphql::SimpleObject;
 use chrono::NaiveDateTime;
-use diesel::{deserialize::Queryable, prelude::Insertable, Selectable};
-use juniper::GraphQLObject;
+use diesel::RunQueryDsl;
+use diesel::{deserialize::Queryable, prelude::Insertable, PgConnection, Selectable};
 use serde::{Deserialize, Serialize};
 
 use crate::schema::events;
 
-#[derive(Queryable, Serialize, Deserialize, GraphQLObject, Selectable)]
+#[derive(Queryable, Serialize, Deserialize, SimpleObject, Selectable)]
 #[diesel(table_name = crate::schema::events)]
 pub struct Event {
     pub id: i32,
@@ -43,5 +44,14 @@ impl NewEvent {
             created_at: chrono::Local::now().naive_local(),
             updated_at: chrono::Local::now().naive_local(),
         }
+    }
+}
+
+impl Event {
+    pub fn create(new_event: NewEvent, conn: &mut PgConnection) -> Self {
+        diesel::insert_into(events::table)
+            .values(&new_event)
+            .get_result(conn)
+            .expect("Error creating event")
     }
 }
