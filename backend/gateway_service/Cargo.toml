@@ -39,3 +39,4 @@ actix-codec = "0.5.2"
 reqwest = { version = "0.12.5", features = ["json"]}
 async-graphql = "7.0.7"
 async-graphql-actix-web = "7.0.7"
+futures = "0.3.30"

@@ -75,9 +75,11 @@ pub fn config_apollo_router() -> Output {
     let router_path = "router"; // Adjust the path as necessary
     let config_path = "router.yaml"; // Adjust the path as necessary
 
-    Command::new(router_path)
+    let output = Command::new(router_path)
         .arg("--config")
         .arg(config_path)
-        .output()
-        .expect("Failed to configure Apollo Router")
+        .output();
+
+    info!("Output: {:?}", output);
+    output.expect("Failed to start Apollo Router")
 }

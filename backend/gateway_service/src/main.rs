@@ -18,16 +18,12 @@ mod routes;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    env::set_var("RUST_LOG", "debug");
+    env::set_var("RUST_LOG", "info");
     env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
 
-    // let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
     let context = create_context();
     let schema = create_schema(context.clone());
-
-    // Publish schemas and configure Apollo Router
-    graphql::setup_apollo_router();
 
     // Start Apollo Router in a separate thread
     thread::spawn(|| {
@@ -56,7 +52,7 @@ async fn main() -> std::io::Result<()> {
             // .wrap(auth_middleware)
             .configure(graphql::init)
     })
-    .bind("0.0.0.0:4000")?
+    .bind("0.0.0.0:3000")?
     .run()
     .await
 }
