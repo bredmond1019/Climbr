@@ -1,0 +1,40 @@
+scalar DateTimeUTC
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type Gym {
+  id: Int!
+  name: String!
+  members: [GymMembership!]!
+  created_at: String!
+  updated_at: String!
+}
+
+type GymMembership {
+  id: Int!
+  user_id: Int!
+  gym_id: Int!
+  created_at: String!
+  updated_at: String!
+}
+
+type Query {
+  gyms: [Gym!]!
+  users: [User!]!
+  gymMemberships: [GymMembership!]!
+  gym(id: Int!): Gym
+  user(id: Int!): User
+  gymMembership(id: Int!): GymMembership
+}
+
+# Federation directives
+extend type Gym @key(fields: "id")
+extend type User @key(fields: "id")
+extend type GymMembership @key(fields: "id")

@@ -4,6 +4,7 @@ use async_graphql::{
     EmptySubscription, Schema,
 };
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
+use log::info;
 
 use super::{mutation::Mutation, query::Query};
 
@@ -23,5 +24,8 @@ pub async fn graphql_handler(
     schema: web::Data<Schema<Query, Mutation, EmptySubscription>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
-    schema.execute(req.into_inner()).await.into()
+    info!("Executing query: {:?}", req.0);
+    let res: GraphQLResponse = schema.execute(req.into_inner()).await.into();
+    info!("Response: {:?}", res.0);
+    res
 }

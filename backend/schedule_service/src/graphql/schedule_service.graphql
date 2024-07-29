@@ -1,0 +1,42 @@
+type Availability {
+  id: ID!
+  user_id: ID!
+  gym_id: ID!
+  start_time: String!
+  end_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type Event {
+  id: ID!
+  gym_id: ID!
+  requester_id: ID!
+  event_members: [EventMember!]!
+  start_time: String!
+  end_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type EventMember {
+  id: ID!
+  event_id: ID!
+  user_id: ID!
+  created_at: String!
+  updated_at: String!
+}
+
+type Query {
+  events: [Event!]!
+  availabilities: [Availability!]!
+  eventMembers: [EventMember!]!
+  event(id: ID!): Event
+  availability(id: ID!): Availability
+  eventMember(id: ID!): EventMember
+}
+
+# Federation directives
+extend type Event @key(fields: "id")
+extend type EventMember @key(fields: "id")
+extend type Availability @key(fields: "id")

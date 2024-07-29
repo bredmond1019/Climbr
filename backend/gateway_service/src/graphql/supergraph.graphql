@@ -1,0 +1,136 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION) {
+  query: Query
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(
+  graph: join__Graph
+  requires: join__FieldSet
+  provides: join__FieldSet
+  type: String
+  external: Boolean
+  override: String
+  usedOverridden: Boolean
+) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(
+  graph: join__Graph!
+  interface: String!
+) repeatable on OBJECT | INTERFACE
+
+directive @join__type(
+  graph: join__Graph!
+  key: join__FieldSet
+  extension: Boolean! = false
+  resolvable: Boolean! = true
+  isInterfaceObject: Boolean! = false
+) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(
+  graph: join__Graph!
+  member: String!
+) repeatable on UNION
+
+directive @link(
+  url: String
+  as: String
+  for: link__Purpose
+  import: [link__Import]
+) repeatable on SCHEMA
+
+type Availability @join__type(graph: SCHEDULE, key: "id", extension: true) {
+  id: ID!
+  user_id: ID!
+  gym_id: ID!
+  start_time: String!
+  end_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+scalar DateTimeUTC @join__type(graph: USER)
+
+type Event @join__type(graph: SCHEDULE, key: "id", extension: true) {
+  id: ID!
+  gym_id: ID!
+  requester_id: ID!
+  event_members: [EventMember!]!
+  start_time: String!
+  end_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type EventMember @join__type(graph: SCHEDULE, key: "id", extension: true) {
+  id: ID!
+  event_id: ID!
+  user_id: ID!
+  created_at: String!
+  updated_at: String!
+}
+
+type Gym @join__type(graph: USER, key: "id", extension: true) {
+  id: Int!
+  name: String!
+  members: [GymMembership!]!
+  created_at: String!
+  updated_at: String!
+}
+
+type GymMembership @join__type(graph: USER, key: "id", extension: true) {
+  id: Int!
+  user_id: Int!
+  gym_id: Int!
+  created_at: String!
+  updated_at: String!
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  SCHEDULE @join__graph(name: "schedule", url: "http://localhost:3002/graphql")
+  USER @join__graph(name: "user", url: "http://localhost:3001/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Query @join__type(graph: SCHEDULE) @join__type(graph: USER) {
+  events: [Event!]! @join__field(graph: SCHEDULE)
+  availabilities: [Availability!]! @join__field(graph: SCHEDULE)
+  eventMembers: [EventMember!]! @join__field(graph: SCHEDULE)
+  event(id: ID!): Event @join__field(graph: SCHEDULE)
+  availability(id: ID!): Availability @join__field(graph: SCHEDULE)
+  eventMember(id: ID!): EventMember @join__field(graph: SCHEDULE)
+  gyms: [Gym!]! @join__field(graph: USER)
+  users: [User!]! @join__field(graph: USER)
+  gymMemberships: [GymMembership!]! @join__field(graph: USER)
+  gym(id: Int!): Gym @join__field(graph: USER)
+  user(id: Int!): User @join__field(graph: USER)
+  gymMembership(id: Int!): GymMembership @join__field(graph: USER)
+}
+
+type User @join__type(graph: USER, key: "id", extension: true) {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  created_at: String!
+  updated_at: String!
+}

@@ -1,0 +1,10 @@
+federation_version: 2
+subgraphs:
+  user:
+    routing_url: http://localhost:3001/graphql
+    schema:
+      file: ../user_service/src/graphql/user_service.graphql
+  schedule:
+    routing_url: http://localhost:3002/graphql
+    schema:
+      file: ../schedule_service/src/graphql/schedule_service.graphql
