@@ -26,14 +26,15 @@ pub fn init(cfg: &mut ServiceConfig) {
 }
 
 pub fn setup_apollo_router() -> Output {
-    publish_schedule_service_schema();
-    publish_user_service_schema();
+    // publish_schedule_service_schema();
+    // publish_user_service_schema();
     config_apollo_router()
 }
 
 pub fn start_apollo_router() -> Child {
     let router_path = env::var("APOLLO_ROUTER_PATH").expect("APOLLO_ROUTER_PATH must be set");
-    let supergraph_path = env::var("SUPERGRAPH_PATH").expect("SUPERGRAPH_PATH must be set");
+    let supergraph_path =
+        env::var("SUPERGRAPH_SCHEMA_PATH").expect("SUPERGRAPH_SCHEMA_PATH must be set");
 
     Command::new(router_path)
         .arg("--dev")

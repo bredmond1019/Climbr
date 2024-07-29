@@ -1,5 +1,4 @@
 use async_graphql::{EmptySubscription, Schema};
-use shared::db;
 
 use super::{mutation::Mutation, query::Query};
 
@@ -9,9 +8,8 @@ pub fn create_schema(ctx: AppContext) -> Schema<Query, Mutation, EmptySubscripti
         .finish()
 }
 
-pub fn create_context(pool: db::DbPool) -> AppContext {
+pub fn create_context() -> AppContext {
     AppContext {
-        pool: pool,
         user_service_url: ServiceUrl::User,
         schedule_service_url: ServiceUrl::Schedule,
         client: reqwest::Client::new(),
@@ -35,13 +33,10 @@ impl ServiceUrl {
 
 #[derive(Clone, Debug)]
 pub struct AppContext {
-    pub pool: db::DbPool,
     pub client: reqwest::Client,
     pub user_service_url: ServiceUrl,
     pub schedule_service_url: ServiceUrl,
 }
-
-// impl async_graphql::Context for AppContext {}
 
 impl AppContext {
     pub fn get_user_service_url(&self) -> &str {

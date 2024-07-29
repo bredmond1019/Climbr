@@ -4,15 +4,12 @@ use std::{env, thread};
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web::Data, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
-use diesel::r2d2::{ConnectionManager, Pool};
-use diesel::PgConnection;
 use dotenv::dotenv;
 
 use auth::authenticator;
-
 use graphql::schema::{create_context, create_schema};
 use log::info;
-use shared::{config, db};
+use shared::config;
 
 mod auth;
 mod graphql;
@@ -25,8 +22,8 @@ async fn main() -> std::io::Result<()> {
     env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
 
-    let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
-    let context = create_context(pool.clone());
+    // let pool: Pool<ConnectionManager<PgConnection>> = db::init_pool();
+    let context = create_context();
     let schema = create_schema(context.clone());
 
     // Publish schemas and configure Apollo Router
@@ -50,7 +47,7 @@ async fn main() -> std::io::Result<()> {
         let auth_middleware = HttpAuthentication::bearer(authenticator);
 
         App::new()
-            .app_data(Data::new(pool.clone()))
+            // .app_data(Data::new(pool.clone()))
             .app_data(Data::new(schema.clone()))
             .app_data(Data::new(context.clone()))
             .wrap(Logger::default())
