@@ -1,7 +1,37 @@
+use actix_web::error::ErrorInternalServerError;
+use actix_web::{web, Error, HttpMessage, HttpRequest, HttpResponse};
 use log::{error, info};
 use std::env;
 use std::io::Write;
 use std::process::{Command, Output};
+
+pub async fn proxy_to_apollo_router(
+    req: HttpRequest,
+    payload: web::Payload,
+) -> Result<HttpResponse, Error> {
+    let client = awc::Client::default();
+
+    let mut forward_req = client
+        .request_from("http://localhost:4000/graphql", req.head())
+        .no_decompress();
+
+    for (key, value) in req.headers().iter() {
+        forward_req.headers_mut().insert(key.clone(), value.clone());
+    }
+
+    let mut res = forward_req
+        .send_stream(payload)
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
+
+    let mut client_resp = HttpResponse::build(res.status());
+
+    for (key, value) in res.headers().iter() {
+        client_resp.insert_header((key.clone(), value.clone()));
+    }
+
+    Ok(client_resp.streaming(res.take_payload()))
+}
 
 fn publish_schema(
     subgraph_name: String,
@@ -69,17 +99,4 @@ pub fn publish_schedule_service_schema() {
     if !output.status.success() {
         error!("Failed to publish schedule service schema: {:?}", output);
     }
-}
-
-pub fn config_apollo_router() -> Output {
-    let router_path = "router"; // Adjust the path as necessary
-    let config_path = "router.yaml"; // Adjust the path as necessary
-
-    let output = Command::new(router_path)
-        .arg("--config")
-        .arg(config_path)
-        .output();
-
-    info!("Output: {:?}", output);
-    output.expect("Failed to start Apollo Router")
 }

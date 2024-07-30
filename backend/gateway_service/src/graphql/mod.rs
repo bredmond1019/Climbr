@@ -9,10 +9,9 @@ use actix_web::{
     HttpMessage,
 };
 
-use actix_web::{Error, HttpRequest, HttpResponse, Result};
+use config::proxy_to_apollo_router;
 
-use config::config_apollo_router;
-use handler::graphql_handler;
+// use handler::graphql_handler;
 
 mod config;
 mod handler;
@@ -47,32 +46,4 @@ pub fn start_apollo_router() -> Child {
         .arg(supergraph_path)
         .spawn()
         .expect("Failed to start Apollo Router")
-}
-
-async fn proxy_to_apollo_router(
-    req: HttpRequest,
-    payload: web::Payload,
-) -> Result<HttpResponse, Error> {
-    let client = awc::Client::default();
-
-    let mut forward_req = client
-        .request_from("http://localhost:4000/graphql", req.head())
-        .no_decompress();
-
-    for (key, value) in req.headers().iter() {
-        forward_req.headers_mut().insert(key.clone(), value.clone());
-    }
-
-    let mut res = forward_req
-        .send_stream(payload)
-        .await
-        .map_err(|e| ErrorInternalServerError(e))?;
-
-    let mut client_resp = HttpResponse::build(res.status());
-
-    for (key, value) in res.headers().iter() {
-        client_resp.insert_header((key.clone(), value.clone()));
-    }
-
-    Ok(client_resp.streaming(res.take_payload()))
 }
